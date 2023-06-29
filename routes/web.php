@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PesertaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,7 +24,8 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    Route::get('/user/profile', function () {
-        // Uses first & second middleware...
-    });
+    // Kelola Akun/Profile
+    Route::get('/profil/{username}', [PesertaController::class, 'create'])->name('peserta.create');
+    Route::post('/profil/{username}/store', [PesertaController::class, 'store'])->name('peserta.store');
+    Route::get('/profil/{username}/show', [PesertaController::class, 'show'])->name('peserta.show');
 });

@@ -65,52 +65,64 @@
                         <button type="submit" class="btn btn-primary btn-rounded btn-login">Masuk</button>
                     </div>
                     <div class="login-account">
-                        <a href="#" id="show-signup" class="link">Belum punya akun ?</a>
+                        <a href="#daftar" id="show-signup" class="link">Belum punya akun ?</a>
                     </div>
                 </div>
             </form>
         </div>
 
         <div class="container container-signup animated fadeIn">
-            <h3 class="text-center">Sign Up</h3>
-            <div class="login-form">
-                <div class="form-group form-floating-label">
-                    <input id="fullname" name="fullname" type="text" class="form-control input-border-bottom"
-                        required>
-                    <label for="fullname" class="placeholder">Fullname</label>
-                </div>
-                <div class="form-group form-floating-label">
-                    <input id="email" name="email" type="email" class="form-control input-border-bottom"
-                        required>
-                    <label for="email" class="placeholder">Email</label>
-                </div>
-                <div class="form-group form-floating-label">
-                    <input id="passwordsignin" name="passwordsignin" type="password"
-                        class="form-control input-border-bottom" required>
-                    <label for="passwordsignin" class="placeholder">Password</label>
-                    <div class="show-password">
-                        <i class="icon-eye"></i>
+            <h3 class="text-center">Register</h3>
+            <form action="{{ route('register') }}" method="post">
+                @csrf
+                <div class="login-form">
+                    <div class="form-group form-floating-label">
+                        <input id="username" name="username" type="text" class="form-control input-border-bottom"
+                            required>
+                        <label for="username" class="placeholder">Username</label>
+                        @error('username')
+                            <span class="text-warning">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="form-group form-floating-label">
+                        <input id="email" name="email" type="email" class="form-control input-border-bottom"
+                            required>
+                        <label for="email" class="placeholder">Email</label>
+                        @error('email')
+                            <span class="text-warning">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="form-group form-floating-label">
+                        <input id="passwordsignin" name="password" type="password"
+                            class="form-control input-border-bottom" required>
+                        <label for="passwordsignin" class="placeholder">Password</label>
+                        <div class="show-password">
+                            <i class="icon-eye"></i>
+                        </div>
+                        @error('password')
+                            <span class="text-warning">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="form-group form-floating-label">
+                        <input id="confirmpassword" name="password_confirmation" type="password"
+                            class="form-control input-border-bottom" required>
+                        <label for="confirmpassword" class="placeholder">Confirm Password</label>
+                        <div class="show-password">
+                            <i class="icon-eye"></i>
+                        </div>
+                    </div>
+                    <div class="form-action">
+                        <a href="#login" id="show-signin" class="btn btn-danger btn-link btn-login mr-3">Kembali</a>
+                        <button type="submit" class="btn btn-primary btn-rounded btn-login">Daftar</button>
                     </div>
                 </div>
-                <div class="form-group form-floating-label">
-                    <input id="confirmpassword" name="confirmpassword" type="password"
-                        class="form-control input-border-bottom" required>
-                    <label for="confirmpassword" class="placeholder">Confirm Password</label>
-                    <div class="show-password">
-                        <i class="icon-eye"></i>
-                    </div>
-                </div>
-                <div class="row form-sub m-0">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" name="agree" id="agree">
-                        <label class="custom-control-label" for="agree">I Agree the terms and conditions.</label>
-                    </div>
-                </div>
-                <div class="form-action">
-                    <a href="#" id="show-signin" class="btn btn-danger btn-link btn-login mr-3">Cancel</a>
-                    <a href="#" class="btn btn-primary btn-rounded btn-login">Sign Up</a>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <script src="{{ asset('assets') }}/js/core/jquery.3.2.1.min.js"></script>

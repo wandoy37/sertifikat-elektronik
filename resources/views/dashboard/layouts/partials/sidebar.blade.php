@@ -7,7 +7,7 @@
                 </div>
                 <div class="info">
                     <a href="{{ route('dashboard.index') }}">
-                        <span class="text-capitalize">
+                        <span class="">
                             {{ Auth::user()->username }}
                         </span>
                         <small class="text-dark">
