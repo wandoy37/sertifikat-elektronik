@@ -30,6 +30,18 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">MENU MASTER</h4>
+                </li>
+                <li class="nav-item {{ request()->segment(1) == 'pengguna' ? 'active' : '' }}">
+                    <a href="{{ route('user.index') }}">
+                        <i class="fas fa-user"></i>
+                        <p>Penggun</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

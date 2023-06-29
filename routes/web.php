@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +24,14 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+    // Kelola Pengguna
+    Route::get('pengguna', [UserController::class, 'index'])->name('user.index');
+    Route::get('pengguna/tambah', [UserController::class, 'create'])->name('user.create');
+    Route::post('pengguna/store', [UserController::class, 'store'])->name('user.store');
+    Route::get('pengguna/{username}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::patch('pengguna/{username}/update', [UserController::class, 'update'])->name('user.update');
+    Route::delete('pengguna/{username}/delete', [UserController::class, 'destroy'])->name('user.delete');
 
     // Kelola Akun/Profile
     Route::get('/profil/{username}', [PesertaController::class, 'create'])->name('peserta.create');
