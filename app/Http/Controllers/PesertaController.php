@@ -18,7 +18,8 @@ class PesertaController extends Controller
      */
     public function index()
     {
-        //
+        $pesertas = Peserta::latest()->get();
+        return view('dashboard.peserta.index', compact('pesertas'));
     }
 
     /**
@@ -38,8 +39,9 @@ class PesertaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $username)
     {
+        $user = User::where('username', $username)->first();
         // Validator
         $validator = Validator::make(
             $request->all(),
@@ -68,7 +70,7 @@ class PesertaController extends Controller
                 'pangkat_golongan' => $request->pangkat_golongan,
                 'jabatan' => $request->jabatan,
                 'instansi' => $request->instansi,
-                'user_id' => Auth::user()->id,
+                'user_id' => $user->id,
             ]);
             return redirect()->route('dashboard.index')->with('success', 'profil berhasil di update');
         } catch (\Throwable $th) {
@@ -98,9 +100,11 @@ class PesertaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($username)
     {
-        //
+        $user = User::where('username', $username)->first();
+        $peserta = Peserta::where('user_id', $user->id)->first();
+        return view('dashboard.peserta.edit', compact('peserta'));
     }
 
     /**
@@ -110,9 +114,48 @@ class PesertaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $username)
     {
-        //
+        // Validator
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nama' => 'required',
+            ],
+            [
+                'nama.required' => 'Nama wajib diisi.',
+            ],
+        );
+
+        // If validator fails.
+        if ($validator->fails()) {
+            return redirect()->back()->withInput($request->all())->withErrors($validator);
+        }
+
+        // If validator success
+        DB::beginTransaction();
+        try {
+            $user = User::where('username', $username)->first();
+            $peserta = Peserta::where('user_id', $user->id)->first();
+            $peserta->update([
+                'nama' => $request->nama,
+                'nomor_identitas' => $request->nomor_identitas,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'pangkat_golongan' => $request->pangkat_golongan,
+                'jabatan' => $request->jabatan,
+                'instansi' => $request->instansi,
+                'user_id' => $user->id,
+            ]);
+
+            return redirect()->route('dashboard.index')->with('success', 'profil berhasil di update');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('dashboard.index')->with('fails', 'profil gagal di update');
+        } finally {
+            DB::commit();
+        }
     }
 
     /**
@@ -121,8 +164,19 @@ class PesertaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($username)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $user = User::where('username', $username)->first();
+            $peserta = Peserta::where('user_id', $user->id)->first();
+            $peserta->delete($peserta);
+            $user->delete($user);
+            return redirect()->route('user.index')->with('success', $user->username . ' berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('user.index')->with('fails', $user->username . ' gagal dihapus');
+        } finally {
+            DB::commit();
+        }
     }
 }

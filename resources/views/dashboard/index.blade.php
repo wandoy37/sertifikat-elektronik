@@ -55,6 +55,11 @@
                                         <a href="{{ route('peserta.show', Auth::user()->username) }}"
                                             class="btn btn-outline-primary">Lihat
                                             Profil</a>
+                                        <a href="{{ route('peserta.edit', Auth::user()->username) }}"
+                                            class="btn btn-primary">
+                                            <i class="fas fa-pen"></i>
+                                            Profil
+                                        </a>
                                     @endif
                                 </div>
                             </div>

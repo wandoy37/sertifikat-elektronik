@@ -1,37 +1,20 @@
 @extends('dashboard.layouts.app')
-@section('title', 'Pengguna')
+@section('title', 'Peserta')
 
 @section('content')
     <div class="page-inner">
         <div class="page-header">
-            <h4 class="page-title">Pengguna</h4>
+            <h4 class="page-title">Peserta</h4>
             <ul class="breadcrumbs">
                 <li class="nav-home">
                     <a href="#">
-                        <i class="fas fa-user"></i>
+                        <i class="fas fa-users"></i>
                     </a>
                 </li>
-                {{-- <li class="separator">
-                    <i class="flaticon-right-arrow"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('dashboard.index') }}">Dashboard</a>
-                </li> --}}
             </ul>
         </div>
 
-        {{-- Notify --}}
-        <div id="success" data-flash="{{ session('success') }}"></div>
-        <div id="fails" data-flash="{{ session('fails') }}"></div>
-        {{-- ====== --}}
-
         <div class="row">
-            <div class="col-lg-12">
-                <a href="{{ route('user.create') }}" class="btn btn-primary mb-4">
-                    <i class="fas fa-plus"></i>
-                    Pengguna
-                </a>
-            </div>
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
@@ -40,42 +23,23 @@
                                 width="100%">
                                 <thead>
                                     <tr>
-                                        <th>Nama</th>
                                         <th>Username</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
+                                        <th>Nama</th>
+                                        <th>No. Identitas</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $user)
+                                    @foreach ($pesertas as $peserta)
                                         <tr>
-                                            <td>
-                                                @if ($user->peserta == null)
-                                                    <a href="{{ route('peserta.create', $user->username) }}"
-                                                        class="btn btn-outline-primary btn-sm">
-                                                        Lengkapi Profil
-                                                    </a>
-                                                @else
-                                                    {{ $user->peserta->nama ?? '-' }}
-                                                @endif
-                                            </td>
-                                            <td>{{ $user->username }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->role }}</td>
+                                            <td>{{ $peserta->user->username }}</td>
+                                            <td>{{ $peserta->nama }}</td>
+                                            <td>{{ $peserta->nomor_identitas }}</td>
                                             <td class="form-inline">
-                                                <a href="{{ route('user.edit', $user->username) }}" class="text-primary">
+                                                <a href="{{ route('peserta.edit', $peserta->user->username) }}"
+                                                    class="text-primary">
                                                     <i class="fas fa-pen"></i>
                                                 </a>
-                                                <form id="form-delete-{{ $user->id }}"
-                                                    action="{{ route('peserta.delete', $user->username) }}" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                <button type="button" class="btn btn-link text-danger"
-                                                    onclick="btnDelete( {{ $user->id }} )">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -86,7 +50,6 @@
                 </div>
             </div>
         </div>
-
 
     </div>
 

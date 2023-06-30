@@ -39,7 +39,13 @@
                 <li class="nav-item {{ request()->segment(1) == 'pengguna' ? 'active' : '' }}">
                     <a href="{{ route('user.index') }}">
                         <i class="fas fa-user"></i>
-                        <p>Penggun</p>
+                        <p>Pengguna</p>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->segment(1) == 'peserta' ? 'active' : '' }}">
+                    <a href="{{ route('peserta.index') }}">
+                        <i class="fas fa-users"></i>
+                        <p>Peserta</p>
                     </a>
                 </li>
             </ul>

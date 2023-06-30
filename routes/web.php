@@ -37,4 +37,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profil/{username}', [PesertaController::class, 'create'])->name('peserta.create');
     Route::post('/profil/{username}/store', [PesertaController::class, 'store'])->name('peserta.store');
     Route::get('/profil/{username}/show', [PesertaController::class, 'show'])->name('peserta.show');
+    Route::get('/profil/{username}/edit', [PesertaController::class, 'edit'])->name('peserta.edit');
+    Route::patch('/profil/{username}/update', [PesertaController::class, 'update'])->name('peserta.update');
+    Route::delete('/profil/{username}/delete', [PesertaController::class, 'destroy'])->name('peserta.delete');
+
+
+    // Kelola Peserta
+    Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
 });
