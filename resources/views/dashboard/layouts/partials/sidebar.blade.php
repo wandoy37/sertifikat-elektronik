@@ -48,6 +48,12 @@
                         <p>Peserta</p>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->segment(1) == 'penandatangan' ? 'active' : '' }}">
+                    <a href="{{ route('penandatangan.index') }}">
+                        <i class="fas fa-file-signature"></i>
+                        <p>Penandatangan</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

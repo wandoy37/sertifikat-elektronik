@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PenandatanganController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -44,4 +45,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Kelola Peserta
     Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
+
+    // Kelola Penandanganan
+    Route::get('/penandatangan', [PenandatanganController::class, 'index'])->name('penandatangan.index');
+    Route::get('/penandatangan/create', [PenandatanganController::class, 'create'])->name('penandatangan.create');
+    Route::post('/penandatangan/store', [PenandatanganController::class, 'store'])->name('penandatangan.store');
+    Route::get('/penandatangan/{id}/edit', [PenandatanganController::class, 'edit'])->name('penandatangan.edit');
+    Route::patch('/penandatangan/{id}/update', [PenandatanganController::class, 'update'])->name('penandatangan.update');
+    Route::delete('/penandatangan/{id}/delete', [PenandatanganController::class, 'destroy'])->name('penandatangan.delete');
 });
