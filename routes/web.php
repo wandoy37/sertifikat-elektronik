@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PenandatanganController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\UserController;
@@ -53,4 +54,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/penandatangan/{id}/edit', [PenandatanganController::class, 'edit'])->name('penandatangan.edit');
     Route::patch('/penandatangan/{id}/update', [PenandatanganController::class, 'update'])->name('penandatangan.update');
     Route::delete('/penandatangan/{id}/delete', [PenandatanganController::class, 'destroy'])->name('penandatangan.delete');
+
+    // Kelola Kategori
+    Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
+    Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
+    Route::post('/kategori/store', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::get('/kategori/{id}/show', [KategoriController::class, 'show'])->name('kategori.show');
+    Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
+    Route::patch('/kategori/{id}/update', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::delete('/kategori/{id}/delete', [KategoriController::class, 'destroy'])->name('kategori.delete');
 });

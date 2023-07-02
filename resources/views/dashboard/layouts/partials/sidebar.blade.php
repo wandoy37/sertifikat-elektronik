@@ -54,6 +54,12 @@
                         <p>Penandatangan</p>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->segment(1) == 'kategori' ? 'active' : '' }}">
+                    <a href="{{ route('kategori.index') }}">
+                        <i class="fas fa-tag"></i>
+                        <p>Kategori</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
