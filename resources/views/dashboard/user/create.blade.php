@@ -40,7 +40,7 @@
                             </div>
                             <div class="form-group">
                                 <label>email</label>
-                                <input id="email" type="email" class="form-control" name="email" placeholder="email"
+                                <input id="email" type="text" class="form-control" name="email" placeholder="email"
                                     value="{{ old('email') }}">
                                 @error('email')
                                     <strong class="text-danger">{{ $message }}</strong>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -177,9 +178,18 @@ class UserController extends Controller
     public function destroy($username)
     {
         $user = User::where('username', $username)->first();
+
         DB::beginTransaction();
         try {
-            $user->delete($user);
+
+            if ($user->peserta == null) {
+                $user->delete($user);
+            } else {
+                $peserta = Peserta::find($user->peserta->id);
+                $peserta->delete($peserta);
+                $user->delete($user);
+            }
+
             return redirect()->route('user.index')->with('success', $user->username . ' berhasil dihapus');
         } catch (\Throwable $th) {
             return redirect()->route('user.index')->with('fails', $user->username . ' gagal dihapus');

@@ -41,7 +41,8 @@
                                     <div class="form-group form-group-default">
                                         <label>Nomor Identitas</label>
                                         <input type="text" class="form-control" name="nomor_identitas"
-                                            placeholder="Nomor Identitas...">
+                                            placeholder="Nomor Identitas..."
+                                            value="{{ old('nomor_identitas', Auth::user()->username) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">

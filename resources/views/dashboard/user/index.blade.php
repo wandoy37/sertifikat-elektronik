@@ -52,10 +52,14 @@
                                         <tr>
                                             <td>
                                                 @if ($user->peserta == null)
-                                                    <a href="{{ route('peserta.create', $user->username) }}"
-                                                        class="btn btn-outline-primary btn-sm">
-                                                        Lengkapi Profil
-                                                    </a>
+                                                    @if ($user->role == 'peserta')
+                                                        <a href="{{ route('peserta.create', $user->username) }}"
+                                                            class="btn btn-outline-primary btn-sm">
+                                                            Lengkapi Profil
+                                                        </a>
+                                                    @else
+                                                        <span class="text-center">admin</span>
+                                                    @endif
                                                 @else
                                                     {{ $user->peserta->nama ?? '-' }}
                                                 @endif
@@ -64,18 +68,26 @@
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->role }}</td>
                                             <td class="form-inline">
-                                                <a href="{{ route('user.edit', $user->username) }}" class="text-primary">
-                                                    <i class="fas fa-pen"></i>
-                                                </a>
-                                                <form id="form-delete-{{ $user->id }}"
-                                                    action="{{ route('peserta.delete', $user->username) }}" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                <button type="button" class="btn btn-link text-danger"
-                                                    onclick="btnDelete( {{ $user->id }} )">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
+                                                @if (Auth::user()->role == 'admin')
+                                                    <a href="{{ route('user.edit', $user->username) }}"
+                                                        class="text-primary">
+                                                        <i class="fas fa-pen"></i>
+                                                    </a>
+                                                    @if ($user->role == 'peserta')
+                                                        <form id="form-delete-{{ $user->id }}"
+                                                            action="{{ route('user.delete', $user->username) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button type="button" class="btn btn-link text-danger"
+                                                            onclick="btnDelete( {{ $user->id }} )">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    @endif
+                                                @else
+                                                    <span>aksi peserta</span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
