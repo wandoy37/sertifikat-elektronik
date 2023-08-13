@@ -1,14 +1,14 @@
 @extends('dashboard.layouts.app')
-@section('title', 'Kegiatan')
+@section('title', 'Sertifikat')
 
 @section('content')
     <div class="page-inner">
         <div class="page-header">
-            <h4 class="page-title">Kegiatan</h4>
+            <h4 class="page-title">Sertifikat</h4>
             <ul class="breadcrumbs">
                 <li class="nav-home">
                     <a href="#">
-                        <i class="fas fa-podcast"></i>
+                        <i class="fas fa-certificate"></i>
                     </a>
                 </li>
             </ul>
@@ -21,51 +21,37 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <a href="{{ route('kegiatan.create') }}" class="btn btn-primary mb-4">
-                    <i class="fas fa-plus"></i>
-                    Kegiatan
-                </a>
-            </div>
-            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="basic-datatables" class="display table table-striped table-hover" cellspacing="0"
                                 width="100%">
                                 <thead>
-                                    <tr class="text-center">
-                                        <th>Kode</th>
-                                        <th>Judul</th>
-                                        <th>Kategori</th>
-                                        <th>Tahun</th>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kegiatan</th>
                                         <th>Peserta</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($kegiatans as $kegiatan)
+                                    @php
+                                        $counter = 1;
+                                    @endphp
+                                    @foreach ($sertifikats as $sertifikat)
                                         <tr>
-                                            <td class="text-center">{{ $kegiatan->kode_kegiatan }}</td>
-                                            <td>{{ $kegiatan->judul_kegiatan }}</td>
-                                            <td class="text-center">{{ $kegiatan->kategori->title }}</td>
-                                            <td class="text-center">{{ $kegiatan->tahun_kegiatan }}</td>
-                                            <td class="text-center">{{ $kegiatan->peserta->count() }}</td>
+                                            <td>{{ $counter++ }}</td>
+                                            <td>{{ $sertifikat->judul_kegiatan }}</td>
+                                            <td>{{ $sertifikat->nama_peserta }}</td>
                                             <td class="form-inline d-flex justify-content-center">
-                                                <a href="{{ route('sertifikat.create.peserta', $kegiatan->id) }}"
-                                                    class="btn btn-secondary btn-sm mr-4">
-                                                    <i class="fas fa-plus"></i>
-                                                    Peserta
-                                                </a>
-                                                <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="text-primary">
-                                                    <i class="fas fa-pen"></i>
-                                                </a>
-                                                <form id="form-delete-{{ $kegiatan->id }}"
-                                                    action="{{ route('kegiatan.delete', $kegiatan->id) }}" method="post">
+                                                <form id="form-delete-{{ $sertifikat->id }}"
+                                                    action="{{ route('sertifikat.delete', $sertifikat->id) }}"
+                                                    method="post">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
                                                 <button type="button" class="btn btn-link text-danger"
-                                                    onclick="btnDelete( {{ $kegiatan->id }} )">
+                                                    onclick="btnDelete( {{ $sertifikat->id }} )">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>

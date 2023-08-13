@@ -12,8 +12,15 @@ class Peserta extends Model
     protected $table = 'pesertas';
     protected $guarded = [];
 
+    // protected $fillable = ['nama'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function kegiatan()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'sertifikats');
     }
 }

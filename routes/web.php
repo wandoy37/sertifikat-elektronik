@@ -5,6 +5,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PenandatanganController;
 use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,7 @@ Route::get('/', function () {
 });
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->prefix('operator')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
@@ -72,4 +73,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kegiatan/edit/{id}', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
     Route::patch('/kegiatan/update/{id}', [KegiatanController::class, 'update'])->name('kegiatan.update');
     Route::delete('/kegiatan/delete/{id}', [KegiatanController::class, 'destroy'])->name('kegiatan.delete');
+
+    // Kelola Sertifikat
+    Route::get('/sertifikat', [SertifikatController::class, 'index'])->name('sertifikat.index');
+    Route::get('/sertifikat/create/{id}', [SertifikatController::class, 'createPeserta'])->name('sertifikat.create.peserta');
+    Route::post('/sertifikat/store', [SertifikatController::class, 'store'])->name('sertifikat.store');
+    // Hapus dari tampilan Kegiatan Tambah Peserta
+    Route::delete('/sertifikat/peserta/delete/{id}', [SertifikatController::class, 'deletePeserta'])->name('sertifikat.peserta.delete');
+    // Hapus dari tampilan sertifikat index
+    Route::delete('/sertifikat/delete/{id}', [SertifikatController::class, 'deleteSertifikat'])->name('sertifikat.delete');
 });

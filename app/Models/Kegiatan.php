@@ -16,4 +16,14 @@ class Kegiatan extends Model
     {
         return $this->belongsTo(Kategori::class);
     }
+
+    public function peserta()
+    {
+        return $this->belongsToMany(Peserta::class, 'sertifikats');
+    }
+
+    public function sertifikat()
+    {
+        return $this->belongsToMany(Sertifikat::class, 'sertifikats');
+    }
 }
