@@ -26,7 +26,7 @@
                     <div class="card-header">
                         <h3>Buat Penandatangan Baru</h3>
                     </div>
-                    <form action="{{ route('penandatangan.store') }}" method="post">
+                    <form action="{{ route('penandatangan.store') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="card-body">
                             <div class="form-group">
@@ -57,6 +57,17 @@
                                 <label>jabatan</label>
                                 <input id="jabatan" type="type" name="jabatan" class="form-control"
                                     placeholder="jabatan">
+                                @error('jabatan')
+                                    <strong class="text-danger">{{ $message }}</strong>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Tanda Tangan & Stempel</label>
+                                <input id="tanda_tangan_stempel" type="file" class="form-control"
+                                    name="tanda_tangan_stempel" value="{{ old('tanda_tangan_stempel') }}">
+                                @error('tanda_tangan_stempel')
+                                    <strong class="text-danger">{{ $message }}</strong>
+                                @enderror
                             </div>
                         </div>
                         <div class="card-footer">

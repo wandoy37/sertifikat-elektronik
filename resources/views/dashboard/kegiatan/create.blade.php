@@ -70,6 +70,28 @@
                                             <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
                                         @enderror
                                     </div>
+                                    <div class="form-group">
+                                        <label class="fw-bold">Penandatangan Kegiatan</label>
+                                        <div class="select2-input">
+                                            <select id="basic2" name="penandatangan_id" class="form-control">
+                                                <option value="">-pilih penandatanga-</option>
+                                                @foreach ($penandatangans as $penandatangan)
+                                                    @if (old('penandatangan_id') == $penandatangan->id)
+                                                        <option value="{{ $penandatangan->id }}" selected>
+                                                            {{ $penandatangan->nama }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $penandatangan->id }}">
+                                                            {{ $penandatangan->nama }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('penandatangan_id')
+                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                        @enderror
+                                    </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -166,6 +188,10 @@
 
             // Select2
             $('#basic').select2({
+                theme: "bootstrap"
+            });
+
+            $('#basic2').select2({
                 theme: "bootstrap"
             });
 

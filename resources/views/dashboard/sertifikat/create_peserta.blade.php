@@ -79,7 +79,14 @@
             {{-- List Peserta --}}
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Daftar Peserta</div>
+                    <div class="card-header">
+                        Daftar Peserta
+                        <a href="{{ route('sertifikat.all.generate', $kegiatan->id) }}"
+                            class="btn btn-info btn-sm float-right ml-4" target="_blank">
+                            <i class="fas fa-print"></i>
+                            Cetak All Sertifikat
+                        </a>
+                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="basic-datatables" class="display table table-striped table-hover" cellspacing="0"
@@ -100,6 +107,19 @@
                                             <td class="text-center" width="25px;">{{ $counter++ }}</td>
                                             <td>{{ $sertifikat->nama_peserta }}</td>
                                             <td class="form-inline d-flex justify-content-center">
+                                                @if ($sertifikat->status == 'belum terbit')
+                                                    <a href="{{ route('sertifikat.peserta.terbitkan', $sertifikat->id) }}"
+                                                        target=”_blank” class="btn btn-outline-primary btn-sm float-right">
+                                                        <i class="fas fa-certificate"></i>
+                                                        Terbitkan
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('home.show', $sertifikat->id) }}"
+                                                        class="fw-bold text-primary mr-3 text-capitalize" target="_blank">
+                                                        <i class="fas fa-print"></i>
+                                                        {{ $sertifikat->status }}
+                                                    </a>
+                                                @endif
                                                 <form id="form-delete-{{ $sertifikat->id }}"
                                                     action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
                                                     method="post">

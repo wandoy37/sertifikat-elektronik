@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PenandatanganController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\SertifikatPdfController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +24,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::name('home.')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('index');
+    Route::get('/sertifikat/{id}', [HomeController::class, 'show'])->name('show');
 });
 
 
@@ -82,4 +89,10 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::delete('/sertifikat/peserta/delete/{id}', [SertifikatController::class, 'deletePeserta'])->name('sertifikat.peserta.delete');
     // Hapus dari tampilan sertifikat index
     Route::delete('/sertifikat/delete/{id}', [SertifikatController::class, 'deleteSertifikat'])->name('sertifikat.delete');
+
+    // Buat Sertifikat
+    Route::get('/sertifikat/peserta/{id}', [SertifikatPdfController::class, 'generateCertificate'])->name('sertifikat.peserta.generate');
+    Route::get('/sertifikat/cetak-all/{id}', [SertifikatPdfController::class, 'generateAllCertificate'])->name('sertifikat.all.generate');
+    // Terbitkan Sertifikat
+    Route::get('/terbitkan/sertifikat/peserta/{id}', [SertifikatPdfController::class, 'terbitkanCertificate'])->name('sertifikat.peserta.terbitkan');
 });

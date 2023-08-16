@@ -26,7 +26,8 @@
                     <div class="card-header">
                         <h3>Edit Penandatangan</h3>
                     </div>
-                    <form action="{{ route('penandatangan.update', $penandatangan->id) }}" method="post">
+                    <form action="{{ route('penandatangan.update', $penandatangan->id) }}" method="post"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')
                         <div class="card-body">
@@ -60,6 +61,14 @@
                                 <input id="jabatan" type="type" name="jabatan" class="form-control"
                                     placeholder="jabatan" value="{{ old('jabatan', $penandatangan->jabatan) }}">
                             </div>
+                            <div class="form-group">
+                                <label>Tanda Tangan & Stempel</label>
+                                <input id="tanda_tangan_stempel" type="file" class="form-control"
+                                    name="tanda_tangan_stempel" value="{{ old('tanda_tangan_stempel') }}">
+                                @error('tanda_tangan_stempel')
+                                    <strong class="text-danger">{{ $message }}</strong>
+                                @enderror
+                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="form-action float-right mb-3">
@@ -70,6 +79,17 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <i>Current Signature</i>
+                    </div>
+                    <div class="card-body">
+                        <img src="{{ asset('uploads/tanda_tangan_stempel/' . $penandatangan->tanda_tangan_stempel) }}"
+                            class="img-fluid" width="50%" alt="">
+                    </div>
                 </div>
             </div>
         </div>

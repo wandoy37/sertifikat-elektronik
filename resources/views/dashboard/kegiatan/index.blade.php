@@ -53,7 +53,6 @@
                                             <td class="form-inline d-flex justify-content-center">
                                                 <a href="{{ route('sertifikat.create.peserta', $kegiatan->id) }}"
                                                     class="btn btn-secondary btn-sm mr-4">
-                                                    <i class="fas fa-plus"></i>
                                                     Peserta
                                                 </a>
                                                 <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="text-primary">

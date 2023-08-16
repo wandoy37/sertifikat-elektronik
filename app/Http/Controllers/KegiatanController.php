@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use App\Models\Kegiatan;
-use Carbon\Carbon;
+use App\Models\Penandatangan;
+use App\Models\Sertifikat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class KegiatanController extends Controller
 {
@@ -31,7 +33,8 @@ class KegiatanController extends Controller
     public function create()
     {
         $kategories = Kategori::latest()->get();
-        return view('dashboard.kegiatan.create', compact('kategories'));
+        $penandatangans = Penandatangan::latest()->get();
+        return view('dashboard.kegiatan.create', compact('kategories', 'penandatangans'));
     }
 
     /**
@@ -53,6 +56,7 @@ class KegiatanController extends Controller
                 'tanggal_mulai_kegiatan' => 'required',
                 'tanggal_akhir_kegiatan' => 'required',
                 'total_jam_kegiatan' => 'required',
+                'penandatangan_id' => 'required',
             ],
             [],
         );
@@ -73,6 +77,7 @@ class KegiatanController extends Controller
                 'tanggal_mulai_kegiatan' => $request->tanggal_mulai_kegiatan,
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
+                'penandatangan_id' => $request->penandatangan_id,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Baru Berhasil Di Tambahkan');
         } catch (\Throwable $th) {
@@ -104,7 +109,8 @@ class KegiatanController extends Controller
     {
         $kategories = Kategori::latest()->get();
         $kegiatan = Kegiatan::find($id);
-        return view('dashboard.kegiatan.edit', compact('kegiatan', 'kategories'));
+        $penandatangans = Penandatangan::latest()->get();
+        return view('dashboard.kegiatan.edit', compact('kegiatan', 'kategories', 'penandatangans'));
     }
 
     /**
@@ -127,6 +133,7 @@ class KegiatanController extends Controller
                 'tanggal_mulai_kegiatan' => 'required',
                 'tanggal_akhir_kegiatan' => 'required',
                 'total_jam_kegiatan' => 'required',
+                'penandatangan_id' => 'required',
             ],
             [],
         );
@@ -149,6 +156,7 @@ class KegiatanController extends Controller
                 'tanggal_mulai_kegiatan' => $request->tanggal_mulai_kegiatan,
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
+                'penandatangan_id' => $request->penandatangan_id,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Updae');
         } catch (\Throwable $th) {
@@ -170,6 +178,35 @@ class KegiatanController extends Controller
         DB::beginTransaction();
         try {
             $kegiatan = Kegiatan::find($id);
+
+            $sertifikats = Sertifikat::where('kegiatan_id', $kegiatan->id)->get();
+
+
+            foreach ($sertifikats as $sertifikat) {
+                // Hapus Sertifikat & QRCODE Peserta Pada Kegiatan 
+
+                // Hapus sertifikat
+                $path = public_path('sertifikat/');
+                $docSertifikat = 'doc-sertifikat-' . $sertifikat->id . '.' . 'pdf';
+                if (file_exists($path . $docSertifikat)) {
+                    unlink($path . $docSertifikat);
+                }
+
+                // Hapus QR Code
+                $pathQr = public_path('qrcode/');
+                $fileQr = 'qr_sertifikat_' . $sertifikat->id . '.' . 'png';
+                if (file_exists($pathQr . $fileQr)) {
+                    unlink($pathQr . $fileQr);
+                }
+
+                // Hapus data sertifikat dari database
+                $sertifikat->delete();
+            }
+
+            // Hapus Sertifikat pada Kegiatan
+            $pathSertifikatKegiatan = public_path('sertifikat/kegiatan/');
+            $docSertifikatKegiatan = 'doc-sertifikat-kegiatan_' . Str::slug($kegiatan->judul_kegiatan, '-') . '.' . 'pdf';
+            File::delete($pathSertifikatKegiatan . $docSertifikatKegiatan);
 
             $kegiatan->delete($kegiatan);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $kegiatan->judul_kegiatan . ' Berhasil Di Hapus');

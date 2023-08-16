@@ -6,7 +6,7 @@ use App\Models\Penandatangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class PenandatanganController extends Controller
 {
@@ -47,12 +47,14 @@ class PenandatanganController extends Controller
                 'nip' => 'required',
                 'pangkat_golongan' => 'required',
                 'jabatan' => 'required',
+                'tanda_tangan_stempel' => 'required',
             ],
             [
                 'nama.required' => 'nama wajib diisi.',
                 'nip.required' => 'nip wajib diisi.',
                 'pangkat_golongan.required' => 'pangkat/golongan wajib diisi.',
                 'jabatan.required' => 'jabatan wajib diisi.',
+                'tanda_tangan_stempel.required' => 'tanda tangan dan stempel wajib diisi.',
             ],
         );
 
@@ -64,11 +66,19 @@ class PenandatanganController extends Controller
         // If validator success
         DB::beginTransaction();
         try {
+            // Upload File
+            if ($request['tanda_tangan_stempel']) {
+                // file upload
+                $fileName = time() . '.' . $request->file('tanda_tangan_stempel')->extension();
+                $request->file('tanda_tangan_stempel')->move(public_path('uploads/tanda_tangan_stempel'), $fileName);
+            }
+
             Penandatangan::create([
                 'nama' => $request->nama,
                 'nip' => $request->nip,
                 'pangkat_golongan' => $request->pangkat_golongan,
                 'jabatan' => $request->jabatan,
+                'tanda_tangan_stempel' => $fileName,
             ]);
             return redirect()->route('penandatangan.index')->with('success', $request->nama . ' telah di tambahkan.');
         } catch (\Throwable $th) {
@@ -137,11 +147,23 @@ class PenandatanganController extends Controller
         DB::beginTransaction();
         try {
             $penandatangan = Penandatangan::find($id);
+
+            // Upload File
+            if ($request['tanda_tangan_stempel']) {
+                // delete old tanda_tangan_stempel
+                $path = public_path() . 'uploads/tanda_tangan_stempel/';
+                File::delete($path . $penandatangan->tanda_tangan_stempel);
+                // file upload
+                $fileName = time() . '.' . $request->file('tanda_tangan_stempel')->extension();
+                $request->file('tanda_tangan_stempel')->move(public_path('uploads/tanda_tangan_stempel'), $fileName);
+            }
+
             $penandatangan->update([
                 'nama' => $request->nama,
                 'nip' => $request->nip,
                 'pangkat_golongan' => $request->pangkat_golongan,
                 'jabatan' => $request->jabatan,
+                'tanda_tangan_stempel' => $fileName ?? $penandatangan->tanda_tangan_stempel,
             ]);
             return redirect()->route('penandatangan.index')->with('success', $request->nama . ' telah di update.');
         } catch (\Throwable $th) {
@@ -164,6 +186,8 @@ class PenandatanganController extends Controller
         DB::beginTransaction();
         try {
             $penandatangan = Penandatangan::find($id);
+            $path = public_path() . 'uploads/tanda_tangan_stempel/';
+            File::delete($path . $penandatangan->tanda_tangan_stempel);
             $penandatangan->delete($penandatangan);
             return redirect()->route('penandatangan.index')->with('success', $penandatangan->nama . ' telah di hapus.');
         } catch (\Throwable $th) {

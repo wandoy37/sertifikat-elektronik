@@ -27,7 +27,7 @@
                             <table id="basic-datatables" class="display table table-striped table-hover" cellspacing="0"
                                 width="100%">
                                 <thead>
-                                    <tr>
+                                    <tr class="text-center">
                                         <th>No</th>
                                         <th>Kegiatan</th>
                                         <th>Peserta</th>
@@ -44,16 +44,38 @@
                                             <td>{{ $sertifikat->judul_kegiatan }}</td>
                                             <td>{{ $sertifikat->nama_peserta }}</td>
                                             <td class="form-inline d-flex justify-content-center">
-                                                <form id="form-delete-{{ $sertifikat->id }}"
-                                                    action="{{ route('sertifikat.delete', $sertifikat->id) }}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                <button type="button" class="btn btn-link text-danger"
-                                                    onclick="btnDelete( {{ $sertifikat->id }} )">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
+                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                    @if ($sertifikat->status == 'belum terbit')
+                                                        <a href="{{ route('sertifikat.peserta.terbitkan', $sertifikat->id) }}"
+                                                            target="_blank"
+                                                            class="btn btn-outline-primary btn-sm float-right">
+                                                            <i class="fas fa-certificate"></i>
+                                                            Terbitkan
+                                                        </a>
+                                                    @else
+                                                        <a href="{{ route('home.show', $sertifikat->id) }}"
+                                                            class="fw-bold text-primary mr-3 text-capitalize"
+                                                            target="_blank">
+                                                            <i class="fas fa-print"></i>
+                                                            {{ $sertifikat->status }}
+                                                        </a>
+                                                    @endif
+                                                    <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
+                                                        class="btn btn-info btn-sm" target="_blank">
+                                                        <i class="fas fa-certificate"></i>
+                                                        Cetak
+                                                    </a>
+                                                    <form id="form-delete-{{ $sertifikat->id }}"
+                                                        action="{{ route('sertifikat.delete', $sertifikat->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach

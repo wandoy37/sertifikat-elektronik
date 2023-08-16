@@ -8,6 +8,7 @@ use App\Models\Sertifikat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class SertifikatController extends Controller
 {
@@ -19,6 +20,7 @@ class SertifikatController extends Controller
             ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
             ->select(
                 'sertifikats.id',
+                'sertifikats.status',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
                 'pesertas.nama AS nama_peserta',
             )
@@ -36,6 +38,7 @@ class SertifikatController extends Controller
             ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
             ->select(
                 'sertifikats.id',
+                'sertifikats.status',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
                 'pesertas.nama AS nama_peserta',
             )
@@ -96,6 +99,17 @@ class SertifikatController extends Controller
         DB::beginTransaction();
         try {
             $sertifikat = Sertifikat::find($id);
+
+            // Hapus Sertifikat
+            $path = public_path() . '/sertifikat/';
+            $fileName = 'doc-sertifikat-' . $sertifikat->id . '.' . 'pdf';
+            File::delete($path . $fileName);
+
+            // Hapus QR Code
+            $pathQr = public_path() . '/qrcode/';
+            $fileQr = 'qr_sertifikat_' . $sertifikat->id . '.' . 'png';
+            File::delete($pathQr . $fileQr);
+
             $sertifikat->delete($sertifikat);
             return redirect()->route('sertifikat.index')->with('success', 'Sertifikat Peserta Berhasil Di Hapus');
         } catch (\Throwable $th) {
