@@ -47,9 +47,11 @@ class PesertaController extends Controller
             $request->all(),
             [
                 'nama' => 'required',
+                'nomor_identitas' => 'required',
             ],
             [
                 'nama.required' => 'Nama wajib diisi.',
+                'nomor_identitas.required' => 'Nomor Identitas wajib diisi.',
             ],
         );
 
@@ -121,9 +123,11 @@ class PesertaController extends Controller
             $request->all(),
             [
                 'nama' => 'required',
+                'nomor_identitas' => 'required',
             ],
             [
                 'nama.required' => 'Nama wajib diisi.',
+                'nomor_identitas.required' => 'Nomor identitas wajib diisi.',
             ],
         );
 

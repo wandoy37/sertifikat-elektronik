@@ -36,13 +36,19 @@
                                         <input type="text" class="form-control" name="nama"
                                             placeholder="Nama Lengkap..." required>
                                     </div>
+                                    @error('nama')
+                                        <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                    @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default">
-                                        <label>Nomor Identitas</label>
+                                        <label><b class="text-danger">*</b>Nomor Identitas</label>
                                         <input type="text" class="form-control" name="nomor_identitas"
                                             placeholder="Nomor Identitas..."
-                                            value="{{ old('nomor_identitas', Auth::user()->username) }}">
+                                            value="{{ old('nomor_identitas', Auth::user()->username) }}" required>
+                                        @error('nomor_identitas')
+                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-4">

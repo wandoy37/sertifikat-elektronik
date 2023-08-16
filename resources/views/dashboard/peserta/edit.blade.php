@@ -28,13 +28,19 @@
                                         <input type="text" class="form-control" name="nama"
                                             placeholder="Nama Lengkap..." value="{{ old('nama', $peserta->nama) }}"
                                             required>
+                                        @error('nama')
+                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Nomor Identitas</label>
+                                        <label><b class="text-danger">*</b>Nomor Identitas</label>
                                         <input type="text" class="form-control" name="nomor_identitas"
                                             placeholder="Nomor Identitas..." value="{{ $peserta->nomor_identitas }}">
+                                        @error('nomor_identitas')
+                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-4">

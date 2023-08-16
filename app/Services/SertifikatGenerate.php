@@ -513,7 +513,8 @@ class SertifikatGenerate
         // Update Status Sertifikat
         $sertifikatStatus = Sertifikat::find($sertifikat->id);
         $sertifikatStatus->update([
-            'status' => 'terbit'
+            'status' => 'terbit',
+            'tanggal_terbit' => date('d-m-Y'),
         ]);
 
         // Output PDF

@@ -32,37 +32,41 @@
                                 <div class="form-group form-group-default">
                                     <label><b class="text-danger">*</b>Nama</label>
                                     <input type="text" class="form-control" name="nama" placeholder="Nama Lengkap..."
-                                        value="{{ $peserta->nama }}" required>
+                                        value="{{ $peserta->nama }}" required disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group form-group-default">
                                     <label>Nomor Identitas</label>
                                     <input type="text" class="form-control" name="nomor_identitas"
-                                        placeholder="Nomor Identitas..." value="{{ $peserta->nomor_identitas }}">
+                                        placeholder="Nomor Identitas..." value="{{ $peserta->nomor_identitas }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group form-group-default">
                                     <label>Tempat Lahir</label>
                                     <input type="text" class="form-control" name="tempat_lahir"
-                                        placeholder="Tempat Lahir..." value="{{ $peserta->tempat_lahir }}">
+                                        placeholder="Tempat Lahir..." value="{{ $peserta->tempat_lahir }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group form-group-default">
                                     <label>Tanggal Lahir</label>
                                     <input type="text" class="form-control" id="datepicker" name="tanggal_lahir"
-                                        placeholder="Tanggal Lahir" value="{{ $peserta->tanggal_lahir }}">
+                                        placeholder="Tanggal Lahir" value="{{ $peserta->tanggal_lahir }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group form-group-default">
                                     <label>Jenis Kelamin</label>
-                                    <select class="form-control" id="gender" name="jenis_kelamin">
+                                    <select class="form-control" id="gender" name="jenis_kelamin" disabled>
                                         <option>-pilih jenis kelamin-</option>
-                                        <option value="pria">Pria</option>
-                                        <option value="wanita">Wanita</option>
+                                        <option
+                                            {{ old('jenis_kelamin', $peserta->jenis_kelamin) == 'pria' ? 'selected' : '' }}
+                                            value="pria">Pria</option>
+                                        <option
+                                            {{ old('jenis_kelamin', $peserta->jenis_kelamin) == 'wanita' ? 'selected' : '' }}
+                                            value="wanita">Wanita</option>
                                     </select>
                                 </div>
                             </div>
@@ -72,7 +76,7 @@
                                 <div class="form-group form-group-default">
                                     <label>Instansi</label>
                                     <input type="text" class="form-control" name="instansi" placeholder="Instansi"
-                                        value="{{ $peserta->instansi }}">
+                                        value="{{ $peserta->instansi }}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -81,14 +85,14 @@
                                 <div class="form-group form-group-default">
                                     <label>Pangkat/Golongan</label>
                                     <input type="text" class="form-control" name="pangkat_golongan"
-                                        placeholder="Pangkat/Golongan" value="{{ $peserta->pangkat_golongan }}">
+                                        placeholder="Pangkat/Golongan" value="{{ $peserta->pangkat_golongan }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group form-group-default">
                                     <label>Jabatan</label>
                                     <input type="text" class="form-control" name="jabatan" placeholder="Jabatan"
-                                        value="{{ $peserta->jabatan }}">
+                                        value="{{ $peserta->jabatan }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-12">

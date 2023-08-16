@@ -38,6 +38,7 @@
                                         <th>Judul</th>
                                         <th>Kategori</th>
                                         <th>Tahun</th>
+                                        <th>Status</th>
                                         <th>Peserta</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -49,6 +50,13 @@
                                             <td>{{ $kegiatan->judul_kegiatan }}</td>
                                             <td class="text-center">{{ $kegiatan->kategori->title }}</td>
                                             <td class="text-center">{{ $kegiatan->tahun_kegiatan }}</td>
+                                            <td class="text-center">
+                                                @if ($kegiatan->status == 'open')
+                                                    <span class="text-success">{{ $kegiatan->status }}</span>
+                                                @else
+                                                    <span class="text-danger">{{ $kegiatan->status }}</span>
+                                                @endif
+                                            </td>
                                             <td class="text-center">{{ $kegiatan->peserta->count() }}</td>
                                             <td class="form-inline d-flex justify-content-center">
                                                 <a href="{{ route('sertifikat.create.peserta', $kegiatan->id) }}"

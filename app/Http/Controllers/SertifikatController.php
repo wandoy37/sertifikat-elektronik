@@ -6,6 +6,7 @@ use App\Models\Kegiatan;
 use App\Models\Peserta;
 use App\Models\Sertifikat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -15,17 +16,36 @@ class SertifikatController extends Controller
     //
     public function index()
     {
-        $sertifikats = DB::table('sertifikats')
-            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
-            ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
-            ->select(
-                'sertifikats.id',
-                'sertifikats.status',
-                'kegiatans.judul_kegiatan AS judul_kegiatan',
-                'pesertas.nama AS nama_peserta',
-            )
-            ->get();
-        return view('dashboard.sertifikat.index', compact('sertifikats'));
+        if (Auth::user()->role == 'peserta') {
+            $sertifikats = DB::table('sertifikats')
+                ->select(
+                    'sertifikats.id',
+                    'sertifikats.status',
+                    'sertifikats.tanggal_terbit',
+                    'kegiatans.judul_kegiatan AS judul_kegiatan',
+                    'pesertas.nama AS nama_peserta',
+                    'kategoris.title AS kategori_kegiatan',
+                )
+                ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+                ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
+                ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+                ->where('sertifikats.peserta_id', Auth::user()->peserta->id)
+                ->where('sertifikats.status', 'terbit')
+                ->get();
+            return view('dashboard.sertifikat.index', compact('sertifikats'));
+        } else {
+            $sertifikats = DB::table('sertifikats')
+                ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+                ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
+                ->select(
+                    'sertifikats.id',
+                    'sertifikats.status',
+                    'kegiatans.judul_kegiatan AS judul_kegiatan',
+                    'pesertas.nama AS nama_peserta',
+                )
+                ->get();
+            return view('dashboard.sertifikat.index', compact('sertifikats'));
+        }
     }
 
     public function createPeserta($id)
@@ -68,12 +88,21 @@ class SertifikatController extends Controller
             Sertifikat::create([
                 'kegiatan_id' => $request->kegiatan_id,
                 'peserta_id' => $request->peserta_id,
-                'tanggal_terbit' => date('d-m-Y'),
+                'tanggal_terbit' => '-',
             ]);
-            return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
+            if (Auth::user()->role == 'admin') {
+                return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
+            } else {
+                return redirect()->route('dashboard.index')->with('success', 'Anda berhasil mendaftar kegiatan');
+            }
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Gagal Di Tambahkan');
+            if (Auth::user()->role == 'admin') {
+                return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('fails', 'Peserta Baru Gagal Di Tambahkan');
+            } else {
+                return redirect()->route('dashboard.index')->with('fails', 'Gagal mendaftar kegiatan');
+            }
+            // return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('fails', 'Peserta Baru Gagal Di Tambahkan');
         } finally {
             DB::commit();
         }
@@ -118,5 +147,11 @@ class SertifikatController extends Controller
         } finally {
             DB::commit();
         }
+    }
+
+    public function download($id)
+    {
+        $filePath = public_path("sertifikat/" . 'doc-sertifikat-' . $id . '.' . 'pdf');
+        return response()->download($filePath);
     }
 }

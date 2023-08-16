@@ -95,4 +95,7 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('/sertifikat/cetak-all/{id}', [SertifikatPdfController::class, 'generateAllCertificate'])->name('sertifikat.all.generate');
     // Terbitkan Sertifikat
     Route::get('/terbitkan/sertifikat/peserta/{id}', [SertifikatPdfController::class, 'terbitkanCertificate'])->name('sertifikat.peserta.terbitkan');
+
+    // Cetak Sertifikat
+    Route::get('/sertifikat/download/{id}', [SertifikatController::class, 'download'])->name('sertifikat.download');
 });
