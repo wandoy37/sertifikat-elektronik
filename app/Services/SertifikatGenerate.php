@@ -6,6 +6,7 @@ use App\Models\Sertifikat;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Carbon\Carbon;
 
 class SertifikatGenerate
 {
@@ -71,7 +72,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 91.5);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ' ' . $sertifikat->tanggal_lahir_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ', ' . Carbon::parse($sertifikat->tanggal_lahir_peserta)->isoFormat('D MMMM Y'), 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
@@ -122,7 +123,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 138);
         $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'mulai tanggal ' . $sertifikat->tanggal_mulai_kegiatan . ' s.d. ' . $sertifikat->tanggal_akhir_kegiatan . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
+        $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
         $pdf->SetX(12.6);
 
         // Buat QR Code
@@ -237,7 +238,7 @@ class SertifikatGenerate
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 91.5);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ' ' . $sertifikat->tanggal_lahir_peserta, 0, 0, 'L');
+                $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ', ' . Carbon::parse($sertifikat->tanggal_lahir_peserta)->isoFormat('D MMMM Y'), 0, 0, 'L');
                 $pdf->SetX(12.6);
 
                 $pdf->SetFont("helvetica", "", 12);
@@ -288,7 +289,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 138);
             $pdf->SetX(10.5);
-            $pdf->Cell(0, 10, 'mulai tanggal ' . $sertifikat->tanggal_mulai_kegiatan . ' s.d. ' . $sertifikat->tanggal_akhir_kegiatan . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
+            $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
             $pdf->SetX(12.6);
 
             // Buat QR Code
@@ -407,7 +408,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 91.5);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ' ' . $sertifikat->tanggal_lahir_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ', ' . Carbon::parse($sertifikat->tanggal_lahir_peserta)->isoFormat('D MMMM Y'), 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
@@ -430,6 +431,12 @@ class SertifikatGenerate
             $pdf->SetX(150);
             $pdf->Cell(0, 10, $sertifikat->instansi_peserta, 0, 0, 'L');
             $pdf->SetX(12.6);
+
+            // Foto Peserta
+            if (!$sertifikat->foto_peserta == null) {
+                $fotoPath = public_path('/foto_peserta/' . $sertifikat->foto_peserta);
+                $pdf->Image($fotoPath, 67, 79, 30, 40); // Sesuaikan ukuran dan posisi gambar
+            }
         } else {
             $pdf->SetFont("helvetica", "", 28);
             $pdf->SetTextColor(0, 0, 0);
@@ -458,7 +465,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 138);
         $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'mulai tanggal ' . $sertifikat->tanggal_mulai_kegiatan . ' s.d. ' . $sertifikat->tanggal_akhir_kegiatan . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
+        $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
         $pdf->SetX(12.6);
 
         // Buat QR Code

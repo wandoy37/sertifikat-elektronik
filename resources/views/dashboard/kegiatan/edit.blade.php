@@ -163,6 +163,19 @@
                                             <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
                                         @enderror
                                     </div>
+                                    <div class="form-group">
+                                        <label class="fw-bold">Status Kegiatan</label>
+                                        <select name="status" class="form-control">
+                                            <option value="">-pilih kategori-</option>
+                                            <option value="open" @if ($kegiatan->status == 'open') selected @endif>Open
+                                            </option>
+                                            <option value="close" @if ($kegiatan->status == 'close') selected @endif>Close
+                                            </option>
+                                        </select>
+                                        @error('kategori_id')
+                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -33,7 +33,14 @@
                         <div class="card-header" style="background-image: url('../assets/img/blogpost.jpg')">
                             <div class="profile-picture">
                                 <div class="avatar avatar-xl">
-                                    <img src="../assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+                                    @if (Auth::user()->peserta && Auth::user()->peserta->foto !== null)
+                                        <div class="avatar"><img
+                                                src="{{ asset('foto_peserta/' . Auth::user()->peserta->foto) }}"
+                                                alt="image profile" class="avatar-img rounded-circle"></div>
+                                    @else
+                                        <div class="avatar"><img src="{{ asset('assets/img/profile.jpg') }}"
+                                                alt="image profile" class="avatar-img rounded-circle"></div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

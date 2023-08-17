@@ -6,8 +6,10 @@ use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image as ResizeImage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class PesertaController extends Controller
 {
@@ -48,6 +50,7 @@ class PesertaController extends Controller
             [
                 'nama' => 'required',
                 'nomor_identitas' => 'required',
+                'thumbnail' => 'image|mimes:jpeg,png,jpg|max:2048',
             ],
             [
                 'nama.required' => 'Nama wajib diisi.',
@@ -63,12 +66,24 @@ class PesertaController extends Controller
         // If validator success
         DB::beginTransaction();
         try {
+            if ($request['foto']) {
+                $path = public_path('foto_peserta/');
+                !is_dir($path) &&
+                    mkdir($path, 0777, true);
+
+                // Process Uploads
+                $name = time() . '.' . $request->foto->extension();
+                ResizeImage::make($request->file('foto'))
+                    ->resize(354, 472)
+                    ->save($path . $name);
+            }
             Peserta::create([
                 'nama' => $request->nama,
                 'nomor_identitas' => $request->nomor_identitas,
                 'tempat_lahir' => $request->tempat_lahir,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
+                'foto' => $name ?? null,
                 'pangkat_golongan' => $request->pangkat_golongan,
                 'jabatan' => $request->jabatan,
                 'instansi' => $request->instansi,
@@ -124,6 +139,7 @@ class PesertaController extends Controller
             [
                 'nama' => 'required',
                 'nomor_identitas' => 'required',
+                'thumbnail' => 'image|mimes:jpeg,png,jpg|max:2048',
             ],
             [
                 'nama.required' => 'Nama wajib diisi.',
@@ -141,12 +157,30 @@ class PesertaController extends Controller
         try {
             $user = User::where('username', $username)->first();
             $peserta = Peserta::where('user_id', $user->id)->first();
+
+            if ($request['foto']) {
+                $path = public_path('foto_peserta/');
+                !is_dir($path) &&
+                    mkdir($path, 0777, true);
+
+                // Process delete old thumbnail
+                $oldFoto = $peserta->foto;
+                File::delete($path . $oldFoto);
+
+                // Process Uploads
+                $name = time() . '.' . $request->foto->extension();
+                ResizeImage::make($request->file('foto'))
+                    ->resize(354, 472)
+                    ->save($path . $name);
+            }
+
             $peserta->update([
                 'nama' => $request->nama,
                 'nomor_identitas' => $request->nomor_identitas,
                 'tempat_lahir' => $request->tempat_lahir,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
+                'foto' => $name ?? $peserta->foto,
                 'pangkat_golongan' => $request->pangkat_golongan,
                 'jabatan' => $request->jabatan,
                 'instansi' => $request->instansi,

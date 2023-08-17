@@ -8,10 +8,12 @@
         "php": "^8.0.2",
         "endroid/qr-code": "^4.8",
         "guzzlehttp/guzzle": "^7.2",
+        "intervention/image": "^2.7",
         "laravel/fortify": "^1.17",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "nesbot/carbon": "^2.69",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.4",
         "simplesoftwareio/simple-qrcode": "^4.2"

@@ -27,7 +27,8 @@
                         <h3 class="fw-bold">Lengkapi Profil Peserta</h3>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('peserta.store', $user->username) }}" method="post">
+                        <form action="{{ route('peserta.store', $user->username) }}" method="post"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row mt-3">
                                 <div class="col-md-6">
@@ -96,6 +97,12 @@
                                     <div class="form-group form-group-default">
                                         <label>Jabatan</label>
                                         <input type="text" class="form-control" name="jabatan" placeholder="Jabatan">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-default">
+                                        <label>Foto</label>
+                                        <input type="file" class="form-control" name="foto">
                                     </div>
                                 </div>
                             </div>

@@ -18,7 +18,8 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('peserta.update', $peserta->user->username) }}" method="POST">
+                        <form action="{{ route('peserta.update', $peserta->user->username) }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
                             <div class="row mt-3">
@@ -94,6 +95,15 @@
                                         <label>Jabatan</label>
                                         <input type="text" class="form-control" name="jabatan" placeholder="Jabatan"
                                             value="{{ $peserta->jabatan }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-default">
+                                        <label>Foto</label>
+                                        <input type="file" class="form-control" name="foto">
+                                        <label class="fw-bold mt-4">Foto saat ini</label>
+                                        <img src="{{ asset('foto_peserta/' . $peserta->foto) }}" class="img-thumbnail"
+                                            width="100%" alt="">
                                     </div>
                                 </div>
                                 <div class="col-md-12">

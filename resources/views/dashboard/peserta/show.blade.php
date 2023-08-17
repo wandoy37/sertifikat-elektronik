@@ -95,6 +95,13 @@
                                         value="{{ $peserta->jabatan }}" disabled>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-group-default">
+                                    <label class="fw-bold mt-4">Foto saat ini</label>
+                                    <img src="{{ asset('foto_peserta/' . $peserta->foto) }}" class="img-thumbnail"
+                                        width="100%" alt="">
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 <div class="float-right">
                                     <a href="{{ route('dashboard.index') }}" class="btn btn-danger">Kembali</a>

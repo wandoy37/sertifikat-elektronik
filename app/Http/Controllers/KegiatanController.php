@@ -78,6 +78,7 @@ class KegiatanController extends Controller
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
+                'status' => 'open'
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Baru Berhasil Di Tambahkan');
         } catch (\Throwable $th) {
@@ -157,6 +158,7 @@ class KegiatanController extends Controller
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
+                'status' => $request->status,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Updae');
         } catch (\Throwable $th) {
