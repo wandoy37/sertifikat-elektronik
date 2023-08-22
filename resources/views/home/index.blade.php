@@ -1,36 +1,46 @@
-<html>
+@extends('home.app')
+@section('title', 'Beranda')
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="author" content="colorlib.com">
-    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
-    <link href="{{ asset('assets2/css/main.css') }}" rel="stylesheet" />
-</head>
+@section('content')
+    <main id="main">
 
-<body>
-    <div class="s130">
-        <form>
-            <div class="inner-form">
-                <div class="input-field first-wrap">
-                    <div class="svg-wrapper">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path
-                                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
-                            </path>
-                        </svg>
+        <!-- Hero Section - Home Page -->
+        <section id="hero" class="hero">
+
+            <img src="{{ asset('assets2') }}/img/hero-bg.jpg" alt="" data-aos="fade-in">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <h2 data-aos="fade-up" data-aos-delay="100">SETKON</h2>
+                        <p data-aos="fade-up" data-aos-delay="200">
+                            Sistem Informasi Sertifikat Elektronik
+                        </p>
                     </div>
-                    <input id="search" type="text" placeholder="Cari Sertifikat" />
-                </div>
-                <div class="input-field second-wrap">
-                    <button class="btn-search" type="button">SEARCH</button>
+                    <div class="col-lg-5">
+                        <form action="{{ route('home.sertifikat.find') }}" class="sign-up-form d-flex" data-aos="fade-up"
+                            data-aos-delay="100">
+                            @csrf
+                            <input type="text" class="form-control" name="id" placeholder="Cari kode sertifikat">
+                            <input type="submit" class="btn btn-primary" value="Search">
+                        </form>
+                    </div>
+                    <div class="col-lg-12 fixed-bottom text-center mb-4">
+                        <p style="font-size: 14px;">&copy; <i>Copyright</i> <strong class="px-1">UPTD BPPSDMP
+                                {{ date('Y') }}</strong>
+                            <i>All Rights
+                                Reserved</i>
+                        </p>
+                        <div class="credits" style="font-size: 14px;">
+                            <i>Made With</i><a href="https://github.com/wandoy37/sertifikat-elektronik"> Muhammad
+                                Riswandi</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            {{-- <span class="info">ex. Game, Music, Video, Photography</span> --}}
-        </form>
-    </div>
-    <script src="{{ asset('assets2/js/extention/choices.js') }}"></script>
-</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
-</html>
+        </section>
+        <!-- End Hero Section -->
+
+    </main>
+@endsection

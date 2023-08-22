@@ -22,12 +22,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::name('home.')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('index');
+
+    Route::get('/sertifikat/find', [HomeController::class, 'find'])->name('sertifikat.find');
+
     Route::get('/sertifikat/{id}', [HomeController::class, 'show'])->name('show');
 });
 
