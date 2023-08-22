@@ -58,15 +58,15 @@
                             <i class="icon-eye"></i>
                         </div>
                     </div>
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <a href="#" class="link float-right">Lupa Password ?</a>
-                    </div>
+                    </div> --}}
                     <div class="form-action mb-3">
                         <button type="submit" class="btn btn-primary btn-rounded btn-login">Masuk</button>
                     </div>
-                    <div class="login-account">
+                    {{-- <div class="login-account">
                         <a href="#daftar" id="show-signup" class="link">Belum punya akun ?</a>
-                    </div>
+                    </div> --}}
                 </div>
             </form>
         </div>

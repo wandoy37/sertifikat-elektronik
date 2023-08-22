@@ -15,12 +15,14 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-12">
-                <a href="{{ route('user.index') }}" class="btn btn-outline-primary mb-4">
-                    <i class="fas fa-undo"></i>
-                    Kembali
-                </a>
-            </div>
+            @if (Auth::user()->role == 'admin')
+                <div class="col-lg-12">
+                    <a href="{{ route('user.index') }}" class="btn btn-outline-primary mb-4">
+                        <i class="fas fa-undo"></i>
+                        Kembali
+                    </a>
+                </div>
+            @endif
             <div class="col-md-6">
                 <div class="card">
                     <form action="{{ route('user.update', $user->username) }}" method="post">

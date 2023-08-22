@@ -32,6 +32,10 @@ Route::name('home.')->group(function () {
     Route::get('/sertifikat/find', [HomeController::class, 'find'])->name('sertifikat.find');
 
     Route::get('/sertifikat/{id}', [HomeController::class, 'show'])->name('show');
+    // Cetak
+    Route::get('/sertifikat/{id}/download', [HomeController::class, 'download'])->name('sertifikat.download');
+    // Preview
+    Route::get('/sertifikat/{id}/preview', [HomeController::class, 'preview'])->name('sertifikat.preview');
 });
 
 

@@ -28,8 +28,9 @@
                                 @endif
                                 <div class="u-text">
                                     <h4 class="text-capitalize">{{ Auth::user()->name }}</h4>
-                                    <p class="text-muted">{{ Auth::user()->email }}</p><a href="profile.html"
-                                        class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                    <p class="text-muted">{{ Auth::user()->email }}</p><a
+                                        href="{{ route('user.edit', Auth::user()->username) }}"
+                                        class="btn btn-xs btn-secondary btn-sm">Edit Pengguna</a>
                                 </div>
                             </div>
                         </li>

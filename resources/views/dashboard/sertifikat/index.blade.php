@@ -102,12 +102,12 @@
                                         </h1>
                                         <h5 class="op-1">{{ $sertifikat->judul_kegiatan }}</h5>
                                         <div class="mt-4">
-                                            <a href="{{ route('sertifikat.download', $sertifikat->id) }}"
+                                            <a href="{{ route('home.sertifikat.download', $sertifikat->id) }}"
                                                 class="btn btn-light btn-rounded">
                                                 <i class="fas fa-print"></i>
                                                 Cetak
                                             </a>
-                                            <a href="{{ route('home.show', $sertifikat->id) }}"
+                                            <a href="{{ route('home.sertifikat.preview', $sertifikat->id) }}"
                                                 class="text-link text-white ml-4" target="_blank">
                                                 <i class="fas fa-solid fa-eye"></i>
                                                 Preview

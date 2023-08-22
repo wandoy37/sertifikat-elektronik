@@ -63,4 +63,16 @@ class HomeController extends Controller
         // return response()->file($pathToFile);
         return view('home.show', compact('sertifikat'));
     }
+
+    public function download($id)
+    {
+        $filePath = public_path("sertifikat/" . 'doc-sertifikat-' . $id . '.' . 'pdf');
+        return response()->download($filePath);
+    }
+
+    public function preview($id)
+    {
+        $filePath = public_path("sertifikat/" . 'doc-sertifikat-' . $id . '.' . 'pdf');
+        return response()->file($filePath);
+    }
 }
