@@ -86,8 +86,12 @@
 
                 <i class="mobile-nav-toggle d-xl-none bi bi-list" hidden></i>
             </nav><!-- End Nav Menu -->
+            @guest
+                <a class="btn-getstarted" href="{{ route('login') }}">Login</a>
+            @else
+                <a href="{{ route('dashboard.index') }}" class="btn-getstarted">My Dashboard</a>
+            @endguest
 
-            <a class="btn-getstarted" href="{{ route('login') }}">Login</a>
 
         </div>
     </header><!-- End Header -->
