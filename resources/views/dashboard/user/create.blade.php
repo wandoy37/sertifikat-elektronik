@@ -38,7 +38,7 @@
                                     <strong class="text-danger">{{ $message }}</strong>
                                 @enderror
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label>email</label>
                                 <input id="email" type="text" class="form-control" name="email" placeholder="email"
                                     value="{{ old('email') }}">
@@ -58,7 +58,7 @@
                                 <label>password Confirmation</label>
                                 <input id="password_confirmation" type="password" name="password_confirmation"
                                     class="form-control" placeholder="Password Confirmation">
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="card-footer">
                             <div class="form-action float-right mb-3">

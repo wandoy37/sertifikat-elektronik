@@ -46,16 +46,14 @@ class UserController extends Controller
             $request->all(),
             [
                 'username' => 'required|unique:users',
-                'email' => 'required|unique:users',
-                'password' => 'required|confirmed|min:6',
+                // 'password' => 'required|confirmed|min:6',
             ],
             [
                 'username.required' => 'Username wajib diisi',
                 'username.unique' => 'Username ' . $request->username . ' sudah dimiliki.',
-                'email.unique' => 'Email ' . $request->email . ' sudah dimiliki.',
-                'password.required' => 'Password wajib diisi',
-                'password.confirmed' => 'Konfirmasi password tidak cocok',
-                'password.min' => 'Password minimal 6 huruf',
+                // 'password.required' => 'Password wajib diisi',
+                // 'password.confirmed' => 'Konfirmasi password tidak cocok',
+                // 'password.min' => 'Password minimal 6 huruf',
             ],
         );
 
@@ -68,8 +66,7 @@ class UserController extends Controller
         try {
             User::create([
                 'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make($request->username),
                 'role' => 'peserta',
             ]);
             return redirect()->route('user.index')->with('success', $request->username . ' berhasil ditambahkan');
@@ -119,13 +116,10 @@ class UserController extends Controller
             $request->all(),
             [
                 'username' => 'required|unique:users,username,' . $user->id,
-                'email' => 'required|unique:users,email,' . $user->id,
             ],
             [
                 'username.required' => 'Username wajib diisi',
                 'username.unique' => 'Username ' . $request->username . ' sudah dimiliki.',
-                'email.required' => 'Email wajib diisi',
-                'email.unique' => 'Email ' . $request->email . ' sudah dimiliki.',
             ],
         );
 
@@ -158,10 +152,9 @@ class UserController extends Controller
 
             $user->update([
                 'username' => $request->username,
-                'email' => $request->email,
                 'password' => $newPassword ?? $user->password,
             ]);
-            return redirect()->route('user.index')->with('success', $request->username . ' berhasil ditambahkan');
+            return redirect()->route('dashboard.index')->with('success', $request->username . ' berhasil diupdate');
         } catch (\Throwable $th) {
             return redirect()->route('user.index')->with('fails', $request->username . ' gagal ditambahkan');
         } finally {

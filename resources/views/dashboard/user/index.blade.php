@@ -40,16 +40,20 @@
                                 width="100%">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Nama</th>
                                         <th>Username</th>
-                                        <th>Email</th>
                                         <th>Role</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $count = 1;
+                                    @endphp
                                     @foreach ($users as $user)
                                         <tr>
+                                            <td>{{ $count++ }}</td>
                                             <td>
                                                 @if ($user->peserta == null)
                                                     @if ($user->role == 'peserta')
@@ -65,7 +69,6 @@
                                                 @endif
                                             </td>
                                             <td>{{ $user->username }}</td>
-                                            <td>{{ $user->email }}</td>
                                             <td>{{ $user->role }}</td>
                                             <td class="form-inline">
                                                 @if (Auth::user()->role == 'admin')
