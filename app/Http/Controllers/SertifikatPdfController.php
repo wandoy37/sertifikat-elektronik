@@ -95,6 +95,7 @@ class SertifikatPdfController extends Controller
             ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
             ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
             ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+            ->join('users', 'pesertas.user_id', '=', 'users.id')
             ->join('penandatangans', 'kegiatans.penandatangan_id', '=', 'penandatangans.id')
             ->where('sertifikats.id', $id)
             ->select(
@@ -123,6 +124,7 @@ class SertifikatPdfController extends Controller
                 'penandatangans.pangkat_golongan AS pangkat_golongan_penandatangan',
                 'penandatangans.jabatan AS jabatan_penandatangan',
                 'penandatangans.tanda_tangan_stempel AS tanda_tangan_stempel',
+                'users.email AS email',
             )
             ->first();
 

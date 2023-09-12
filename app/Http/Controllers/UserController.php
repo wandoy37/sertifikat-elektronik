@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifyRegister;
+use App\Mail\NotifySertifikat;
 use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -46,11 +49,14 @@ class UserController extends Controller
             $request->all(),
             [
                 'username' => 'required|unique:users',
+                'email' => 'required|unique:users'
                 // 'password' => 'required|confirmed|min:6',
             ],
             [
                 'username.required' => 'Username wajib diisi',
                 'username.unique' => 'Username ' . $request->username . ' sudah dimiliki.',
+                'email.required' => 'Email wajib diisi',
+                'email.unique' => 'Email ' . $request->email . ' sudah dimiliki.',
                 // 'password.required' => 'Password wajib diisi',
                 // 'password.confirmed' => 'Konfirmasi password tidak cocok',
                 // 'password.min' => 'Password minimal 6 huruf',
@@ -62,13 +68,25 @@ class UserController extends Controller
             return redirect()->back()->withInput($request->all())->withErrors($validator);
         }
 
+        // Message Notify Email
+        $data_notify = [
+            'subject' => 'Email ada telah terdaftar pada aplikasi Sertifikat Elektronik (UPTD BPPSDMP)',
+            'username' => $request->username,
+            'password' => $request->username,
+            'link' => url('/login'),
+        ];
+
+        Mail::to($request->email)->send(new NotifyRegister($data_notify));
+
         DB::beginTransaction();
         try {
             User::create([
                 'username' => $request->username,
+                'email' => $request->email,
                 'password' => Hash::make($request->username),
                 'role' => 'peserta',
             ]);
+
             return redirect()->route('user.index')->with('success', $request->username . ' berhasil ditambahkan');
         } catch (\Throwable $th) {
             return redirect()->route('user.index')->with('fails', $request->username . ' gagal ditambahkan');
@@ -116,10 +134,13 @@ class UserController extends Controller
             $request->all(),
             [
                 'username' => 'required|unique:users,username,' . $user->id,
+                'email' => 'required|unique:users,email,' . $user->id,
             ],
             [
                 'username.required' => 'Username wajib diisi',
                 'username.unique' => 'Username ' . $request->username . ' sudah dimiliki.',
+                'email.required' => 'Email wajib diisi',
+                'email.unique' => 'Email ' . $request->email . ' sudah dimiliki.',
             ],
         );
 
@@ -152,6 +173,7 @@ class UserController extends Controller
 
             $user->update([
                 'username' => $request->username,
+                'email' => $request->email,
                 'password' => $newPassword ?? $user->password,
             ]);
             return redirect()->route('dashboard.index')->with('success', $request->username . ' berhasil diupdate');

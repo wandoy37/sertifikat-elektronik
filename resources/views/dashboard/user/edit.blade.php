@@ -38,14 +38,14 @@
                                     <strong class="text-danger">{{ $message }}</strong>
                                 @enderror
                             </div>
-                            {{-- <div class="form-group">
+                            <div class="form-group">
                                 <label>email</label>
                                 <input id="email" type="email" class="form-control" name="email" placeholder="email"
                                     value="{{ old('email', $user->email) }}">
                                 @error('email')
                                     <strong class="text-danger">{{ $message }}</strong>
                                 @enderror
-                            </div> --}}
+                            </div>
                             <div class="form-group">
                                 <label>Password</label>
                                 <input id="password" type="password" class="form-control" name="password"

@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Mail\NotifySertifikat;
 use App\Models\Sertifikat;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class SertifikatGenerate
 {
@@ -523,6 +525,16 @@ class SertifikatGenerate
             'status' => 'terbit',
             'tanggal_terbit' => date('d-m-Y'),
         ]);
+
+        // Message Notify Email
+        $data_notify = [
+            'subject' => 'Selamat atas penghargaan pada kegiatan ' . $sertifikat->judul_kegiatan . ' !',
+            'nama' => $sertifikat->nama_peserta,
+            'kegiatan' => $sertifikat->judul_kegiatan,
+            'sertifikat' => route('home.sertifikat.preview', $sertifikat->id),
+        ];
+
+        Mail::to($sertifikat->email)->send(new NotifySertifikat($data_notify));
 
         // Output PDF
         $outputFilePath = public_path("sertifikat/" . 'doc-sertifikat-' . $sertifikat->id . '.' . 'pdf');

@@ -9,6 +9,7 @@ use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\SertifikatPdfController;
 use App\Http\Controllers\UserController;
+use App\Mail\NotifySertifikat;
 use Illuminate\Support\Facades\Route;
 
 /*
