@@ -49,12 +49,14 @@
                                 <div class="select2-input">
                                     <select id="basic" name="peserta_id" class="form-control">
                                         <option value="">-pilih peserta-</option>
-                                        @foreach ($pesertas as $peserta)
-                                            @if (old('peserta_id') == $peserta->id)
-                                                <option value="{{ $peserta->id }}" selected>{{ $peserta->nama }}
+                                        @foreach ($dataPeserta as $peserta)
+                                            @if (old('peserta_id') == $peserta['peserta_id'])
+                                                <option value="{{ $peserta['peserta_id'] }}" selected>
+                                                    {{ $peserta['peserta_nama'] }}
                                                 </option>
                                             @else
-                                                <option value="{{ $peserta->id }}">{{ $peserta->nama }}</option>
+                                                <option value="{{ $peserta['peserta_id'] }}">{{ $peserta['peserta_nama'] }}
+                                                </option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -94,6 +96,7 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th>No</th>
+                                        <th>Nomor Sertifikat</th>
                                         <th>Nama</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -103,9 +106,18 @@
                                         $counter = 1;
                                     @endphp
                                     @foreach ($sertifikats as $sertifikat)
-                                        <tr>
+                                        <tr class="text-center">
                                             <td class="text-center" width="25px;">{{ $counter++ }}</td>
-                                            <td>{{ $sertifikat->nama_peserta }}</td>
+                                            <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                            <td>
+                                                @php
+                                                    $peserta_id = $sertifikat->peserta_id;
+                                                    $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+                                                    $response = file_get_contents($url);
+                                                    $data = json_decode($response, true);
+                                                @endphp
+                                                {{ $data[0]['peserta_nama'] }}
+                                            </td>
                                             <td class="form-inline d-flex justify-content-center">
                                                 @if ($sertifikat->status == 'belum terbit')
                                                     <a href="{{ route('sertifikat.peserta.terbitkan', $sertifikat->id) }}"

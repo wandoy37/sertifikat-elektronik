@@ -43,7 +43,15 @@
                                             <tr>
                                                 <td>{{ $counter++ }}</td>
                                                 <td>{{ $sertifikat->judul_kegiatan }}</td>
-                                                <td>{{ $sertifikat->nama_peserta }}</td>
+                                                <td>
+                                                    @php
+                                                        $peserta_id = $sertifikat->peserta_id;
+                                                        $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+                                                        $response = file_get_contents($url);
+                                                        $data = json_decode($response, true);
+                                                    @endphp
+                                                    {{ $data[0]['peserta_nama'] }}
+                                                </td>
                                                 <td class="form-inline d-flex justify-content-center">
                                                     <div class="btn-group" role="group"
                                                         aria-label="Basic outlined example">

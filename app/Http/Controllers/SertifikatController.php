@@ -10,61 +10,53 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+use Illuminate\Support\Str;
 
 class SertifikatController extends Controller
 {
     //
     public function index()
     {
-        if (Auth::user()->role == 'peserta') {
-            $sertifikats = DB::table('sertifikats')
-                ->select(
-                    'sertifikats.id',
-                    'sertifikats.status',
-                    'sertifikats.tanggal_terbit',
-                    'kegiatans.judul_kegiatan AS judul_kegiatan',
-                    'pesertas.nama AS nama_peserta',
-                    'kategoris.title AS kategori_kegiatan',
-                )
-                ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
-                ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
-                ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
-                ->where('sertifikats.peserta_id', Auth::user()->peserta->id)
-                ->where('sertifikats.status', 'terbit')
-                ->get();
-            return view('dashboard.sertifikat.index', compact('sertifikats'));
-        } else {
-            $sertifikats = DB::table('sertifikats')
-                ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
-                ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
-                ->select(
-                    'sertifikats.id',
-                    'sertifikats.status',
-                    'kegiatans.judul_kegiatan AS judul_kegiatan',
-                    'pesertas.nama AS nama_peserta',
-                )
-                ->get();
-            return view('dashboard.sertifikat.index', compact('sertifikats'));
-        }
+        $sertifikats = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->select(
+                'sertifikats.id',
+                'sertifikats.peserta_id',
+                'sertifikats.status',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+            )
+            ->get();
+        return view('dashboard.sertifikat.index', compact('sertifikats'));
     }
 
     public function createPeserta($id)
     {
         $kegiatan = Kegiatan::find($id);
-        $pesertas = Peserta::all();
 
-        $sertifikats = DB::table('sertifikats')->where('kegiatan_id', $id)
+        // Inisialisasi Guzzle Client
+        $client = new Client();
+        $response = $client->get('http://simpeltan.test/api/data-peserta');
+
+        // Decode respons JSON dari API
+        $dataPeserta = json_decode($response->getBody(), true);
+
+        $sertifikats = DB::table('sertifikats')
             ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
-            ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
             ->select(
                 'sertifikats.id',
-                'sertifikats.status',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
-                'pesertas.nama AS nama_peserta',
+                'sertifikats.tanggal_terbit',
+                'sertifikats.status',
+                'sertifikats.peserta_id',
             )
+            ->where('sertifikats.kegiatan_id', '=', $kegiatan->id)
             ->get();
 
-        return view('dashboard.sertifikat.create_peserta', compact('kegiatan', 'pesertas', 'sertifikats'));
+        return view('dashboard.sertifikat.create_peserta', compact('kegiatan', 'sertifikats', 'dataPeserta'));
     }
 
     public function store(Request $request)
@@ -85,10 +77,27 @@ class SertifikatController extends Controller
 
         DB::beginTransaction();
         try {
+            $kegiatan = Kegiatan::find($request->kegiatan_id);
+            // Last data
+            $currentYear = $kegiatan->tahun_kegiatan;
+            $lastSertifikat = Sertifikat::max('tahun');
+
+            if ($lastSertifikat !== $currentYear) {
+                // Jika tahun berubah, atur $lastSertifikat ke 1
+                $lastSertifikat = 1;
+            } else {
+                // Jika tahun sama, ambil nomor sertifikat terakhir dan tambahkan 1
+                $lastSertifikat = Sertifikat::where('tahun', $currentYear)->max('nomor_sertifikat');
+                $lastSertifikat++;
+            }
+
             Sertifikat::create([
+                'verified_code' => Str::random(20),
+                'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
                 'kegiatan_id' => $request->kegiatan_id,
                 'peserta_id' => $request->peserta_id,
                 'tanggal_terbit' => '-',
+                'tahun' => $kegiatan->tahun_kegiatan,
             ]);
             if (Auth::user()->role == 'admin') {
                 return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');

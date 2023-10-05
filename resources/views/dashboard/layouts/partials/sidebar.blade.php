@@ -3,13 +3,15 @@
         <div class="sidebar-content">
             <div class="user">
                 <div class="avatar-sm float-left mr-2">
-                    @if (Auth::user()->peserta && Auth::user()->peserta->foto !== null)
+                    <div class="avatar"><img src="{{ asset('assets/img/profile.jpg') }}" alt="image profile"
+                            class="avatar-img rounded-circle"></div>
+                    {{-- @if (Auth::user()->peserta && Auth::user()->peserta->foto !== null)
                         <div class="avatar"><img src="{{ asset('foto_peserta/' . Auth::user()->peserta->foto) }}"
                                 alt="image profile" class="avatar-img rounded-circle"></div>
                     @else
                         <div class="avatar"><img src="{{ asset('assets/img/profile.jpg') }}" alt="image profile"
                                 class="avatar-img rounded-circle"></div>
-                    @endif
+                    @endif --}}
                 </div>
                 <div class="info">
                     <a href="{{ route('dashboard.index') }}">

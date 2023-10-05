@@ -10,6 +10,7 @@ use Intervention\Image\Facades\Image as ResizeImage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 
 class PesertaController extends Controller
 {
@@ -20,8 +21,11 @@ class PesertaController extends Controller
      */
     public function index()
     {
-        $pesertas = Peserta::latest()->get();
+        $pesertas = Http::get('http://simpeltan.test/api/data-peserta')->json();
         return view('dashboard.peserta.index', compact('pesertas'));
+
+        // $pesertas = Peserta::latest()->get();
+        // return view('dashboard.peserta.index', compact('pesertas'));
     }
 
     /**

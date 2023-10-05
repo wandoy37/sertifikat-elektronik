@@ -1,5 +1,14 @@
+@php
+    // ============= Get Detail Peserta by API
+    $peserta_id = $sertifikat->peserta_id;
+    $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+    $response = file_get_contents($url);
+    $peserta = json_decode($response, true);
+    // ============= END Get Detail Peserta by API
+@endphp
+
 @extends('home.app')
-@section('title', $sertifikat->nama_peserta)
+@section('title', $peserta[0]['peserta_nama'])
 
 @section('content')
     <main id="main">
@@ -17,7 +26,8 @@
                                 <table class="table table-sm">
                                     <tbody class="text-center">
                                         <tr>
-                                            <th scope="row" style="font-size: 32px;">{{ $sertifikat->nama_peserta }}</th>
+                                            <th scope="row" style="font-size: 32px;">{{ $peserta[0]['peserta_nama'] }}
+                                            </th>
                                         </tr>
                                         <tr>
                                             <td colspan="2" style="font-size: 12px;">Telah mengikuti pelatihan

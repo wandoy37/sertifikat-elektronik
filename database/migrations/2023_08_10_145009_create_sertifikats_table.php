@@ -15,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('sertifikats', function (Blueprint $table) {
             $table->id();
+            $table->string('verified_code');
+            $table->string('nomor_sertifikat');
             $table->unsignedBigInteger('kegiatan_id');
-            $table->unsignedBigInteger('peserta_id');
+            $table->string('peserta_id');
             $table->string('tanggal_terbit');
             $table->timestamps();
 
             $table->foreign('kegiatan_id')->references('id')->on('kegiatans')->onDelete('cascade');
-            $table->foreign('peserta_id')->references('id')->on('pesertas')->onDelete('cascade');
         });
     }
 

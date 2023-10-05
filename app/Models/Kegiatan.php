@@ -22,8 +22,8 @@ class Kegiatan extends Model
         return $this->belongsToMany(Peserta::class, 'sertifikats');
     }
 
-    public function sertifikat()
+    public function sertifikats()
     {
-        return $this->belongsToMany(Sertifikat::class, 'sertifikats');
+        return $this->hasMany(Sertifikat::class);
     }
 }

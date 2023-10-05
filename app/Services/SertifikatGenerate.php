@@ -14,6 +14,13 @@ class SertifikatGenerate
 {
     public function prosesSingleGenerate($sertifikat)
     {
+        // ============= Get Detail Peserta by API
+        $peserta_id = $sertifikat->peserta_id;
+        $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+        $response = file_get_contents($url);
+        $peserta = json_decode($response, true);
+        // ============= END Get Detail Peserta by API
+
         $templatePath = public_path('uploads/template/' . $sertifikat->template_sertifikat);
         $templateSize = getimagesize($templatePath); // Mendapatkan dimensi template PDF
 
@@ -36,7 +43,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 10);
         $pdf->SetX(10.5);
-        $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->id . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
+        $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
         $pdf->SetX(12.6);
 
         // Pemprov Desc
@@ -55,54 +62,54 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Informasi Peserta
-        if ($sertifikat->kategori_kegiatan == 'Pelatihan') {
+        if ($sertifikat->kategori_kegiatan == 'pelatihan') {
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 80);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->nama_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_nama'], 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 85.5);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->nomor_identitas_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_nip'], 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 91.5);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ', ' . Carbon::parse($sertifikat->tanggal_lahir_peserta)->isoFormat('D MMMM Y'), 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_tempat_lahir'] . ', ' . Carbon::parse($peserta[0]['peserta_tanggal_lahir'])->isoFormat('D MMMM Y'), 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 97.2);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->pangkat_golongan_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_pangkat_golongan'], 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 103.1);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->jabatan_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_jabatan'], 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 109);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->instansi_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
             $pdf->SetX(12.6);
         } else {
             $pdf->SetFont("helvetica", "", 28);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 93);
             $pdf->SetX(10.5);
-            $pdf->Cell(0, 10, $sertifikat->nama_peserta, 0, 0, 'C');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_nama'], 0, 0, 'C');
             $pdf->SetX(12.6);
         }
 
@@ -174,7 +181,7 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Output PDF
-        $pdf->Output('sertifikat' . Str::slug($sertifikat->nama_peserta), 'I');
+        $pdf->Output('sertifikat' . Str::slug($peserta[0]['peserta_nama']), 'I');
 
         exit;
     }
@@ -185,6 +192,13 @@ class SertifikatGenerate
 
         // Loop untuk membuat sertifikat dalam jumlah banyak
         foreach ($sertifikats as $key => $sertifikat) {
+            // ============= Get Detail Peserta by API
+            $peserta_id = $sertifikat->peserta_id;
+            $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+            $response = file_get_contents($url);
+            $peserta = json_decode($response, true);
+            // ============= END Get Detail Peserta by API
+
             // Tambahkan halaman baru dari template sertifikat
             $pdf->AddPage('L', 'A4');
             $pdf->setSourceFile(public_path('uploads/template/' . $sertifikat->template_sertifikat));
@@ -202,7 +216,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 10);
             $pdf->SetX(10.5);
-            $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->id . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
+            $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
             $pdf->SetX(12.6);
 
             // Pemprov Desc
@@ -221,54 +235,54 @@ class SertifikatGenerate
             $pdf->SetX(12.6);
 
             // Informasi Peserta
-            if ($sertifikat->kategori_kegiatan == 'Pelatihan') {
+            if ($sertifikat->kategori_kegiatan == 'pelatihan') {
                 $pdf->SetFont("helvetica", "", 12);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 80);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $sertifikat->nama_peserta, 0, 0, 'L');
+                $pdf->Cell(0, 10, $peserta[0]['peserta_nama'], 0, 0, 'L');
                 $pdf->SetX(12.6);
 
                 $pdf->SetFont("helvetica", "", 12);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 85.5);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $sertifikat->nomor_identitas_peserta, 0, 0, 'L');
+                $pdf->Cell(0, 10, $peserta[0]['peserta_nip'], 0, 0, 'L');
                 $pdf->SetX(12.6);
 
                 $pdf->SetFont("helvetica", "", 12);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 91.5);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ', ' . Carbon::parse($sertifikat->tanggal_lahir_peserta)->isoFormat('D MMMM Y'), 0, 0, 'L');
+                $pdf->Cell(0, 10, $peserta[0]['peserta_tempat_lahir'] . ', ' . Carbon::parse($peserta[0]['peserta_tanggal_lahir'])->isoFormat('D MMMM Y'), 0, 0, 'L');
                 $pdf->SetX(12.6);
 
                 $pdf->SetFont("helvetica", "", 12);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 97.2);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $sertifikat->pangkat_golongan_peserta, 0, 0, 'L');
+                $pdf->Cell(0, 10, $peserta[0]['peserta_pangkat_golongan'], 0, 0, 'L');
                 $pdf->SetX(12.6);
 
                 $pdf->SetFont("helvetica", "", 12);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 103.1);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $sertifikat->jabatan_peserta, 0, 0, 'L');
+                $pdf->Cell(0, 10, $peserta[0]['peserta_jabatan'], 0, 0, 'L');
                 $pdf->SetX(12.6);
 
                 $pdf->SetFont("helvetica", "", 12);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 109);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $sertifikat->instansi_peserta, 0, 0, 'L');
+                $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
                 $pdf->SetX(12.6);
             } else {
                 $pdf->SetFont("helvetica", "", 28);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 93);
                 $pdf->SetX(10.5);
-                $pdf->Cell(0, 10, $sertifikat->nama_peserta, 0, 0, 'C');
+                $pdf->Cell(0, 10, $peserta[0]['peserta_nama'], 0, 0, 'C');
                 $pdf->SetX(12.6);
             }
 
@@ -293,8 +307,6 @@ class SertifikatGenerate
             $pdf->SetX(10.5);
             $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
             $pdf->SetX(12.6);
-
-            // Buat QR Code
             // Buat QR Code
             QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png');
             $pdf->SetFont("helvetica", "", 12);
@@ -304,12 +316,20 @@ class SertifikatGenerate
             $pdf->Image(public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png', 47, 155, 20, 0, 'PNG');
             $pdf->SetX(12.6);
 
+            // Verified Sertifikat
+            $pdf->SetFont("helvetica", "i", 10);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(0, 173);
+            $pdf->SetX(45);
+            $pdf->Cell(0, 10, 'Verified Certificate : ' . $sertifikat->verified_code, 0, 0, 'L');
+            $pdf->SetX(12.6);
+
             // Penandatangan
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 145.5);
             $pdf->SetX(170);
-            $pdf->Cell(0, 10, 'Samarinda, ' . date('d, F Y'), 0, 0, 'C');
+            $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
@@ -350,6 +370,13 @@ class SertifikatGenerate
 
     public function prosesSingleTerbit($sertifikat)
     {
+        // ============= Get Detail Peserta by API
+        $peserta_id = $sertifikat->peserta_id;
+        $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+        $response = file_get_contents($url);
+        $peserta = json_decode($response, true);
+        // ============= END Get Detail Peserta by API
+
         $templatePath = public_path('uploads/template/' . $sertifikat->template_sertifikat);
         $templateSize = getimagesize($templatePath); // Mendapatkan dimensi template PDF
 
@@ -372,7 +399,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 10);
         $pdf->SetX(10.5);
-        $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->id . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
+        $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
         $pdf->SetX(12.6);
 
         // Pemprov Desc
@@ -391,60 +418,54 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Informasi Peserta
-        if ($sertifikat->kategori_kegiatan == 'Pelatihan') {
+        if ($sertifikat->kategori_kegiatan == 'pelatihan') {
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 80);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->nama_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_nama'], 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 85.5);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->nomor_identitas_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_nip'], 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 91.5);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->tempat_lahir_peserta . ', ' . Carbon::parse($sertifikat->tanggal_lahir_peserta)->isoFormat('D MMMM Y'), 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_tempat_lahir'] . ', ' . Carbon::parse($peserta[0]['peserta_tanggal_lahir'])->isoFormat('D MMMM Y'), 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 97.2);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->pangkat_golongan_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_pangkat_golongan'], 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 103.1);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->jabatan_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_jabatan'], 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 109);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $sertifikat->instansi_peserta, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
             $pdf->SetX(12.6);
-
-            // Foto Peserta
-            if (!$sertifikat->foto_peserta == null) {
-                $fotoPath = public_path('/foto_peserta/' . $sertifikat->foto_peserta);
-                $pdf->Image($fotoPath, 67, 79, 30, 40); // Sesuaikan ukuran dan posisi gambar
-            }
         } else {
             $pdf->SetFont("helvetica", "", 28);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 93);
             $pdf->SetX(10.5);
-            $pdf->Cell(0, 10, $sertifikat->nama_peserta, 0, 0, 'C');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_nama'], 0, 0, 'C');
             $pdf->SetX(12.6);
         }
 
@@ -484,7 +505,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 145.5);
         $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'Samarinda, ' . date('d, F Y'), 0, 0, 'C');
+        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -527,14 +548,14 @@ class SertifikatGenerate
         ]);
 
         // Message Notify Email
-        $data_notify = [
-            'subject' => 'Selamat atas penghargaan pada kegiatan ' . $sertifikat->judul_kegiatan . ' !',
-            'nama' => $sertifikat->nama_peserta,
-            'kegiatan' => $sertifikat->judul_kegiatan,
-            'sertifikat' => route('home.sertifikat.preview', $sertifikat->id),
-        ];
+        // $data_notify = [
+        //     'subject' => 'Selamat atas penghargaan pada kegiatan ' . $sertifikat->judul_kegiatan . ' !',
+        //     'nama' => $sertifikat->nama_peserta,
+        //     'kegiatan' => $sertifikat->judul_kegiatan,
+        //     'sertifikat' => route('home.sertifikat.preview', $sertifikat->id),
+        // ];
 
-        Mail::to($sertifikat->email)->send(new NotifySertifikat($data_notify));
+        // Mail::to($sertifikat->email)->send(new NotifySertifikat($data_notify));
 
         // Output PDF
         $outputFilePath = public_path("sertifikat/" . 'doc-sertifikat-' . $sertifikat->id . '.' . 'pdf');

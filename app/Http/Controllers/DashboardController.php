@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
-use App\Models\Peserta;
 use App\Models\Sertifikat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $pesertas = Peserta::all();
+        $pesertas = Http::get('http://simpeltan.test/api/data-peserta')->json();
         $kegiatans = Kegiatan::all();
         $sertifikats = Sertifikat::all();
         return view('dashboard.index', compact('pesertas', 'kegiatans', 'sertifikats'));
