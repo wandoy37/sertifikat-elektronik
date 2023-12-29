@@ -6,6 +6,7 @@ use App\Models\Kategori;
 use App\Models\Kegiatan;
 use App\Models\Penandatangan;
 use App\Models\Sertifikat;
+use App\Services\KegiatanGenerate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,13 @@ class KegiatanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $kegiatanGenerate;
+
+    public function __construct(KegiatanGenerate $kegiatanGenerate)
+    {
+        $this->kegiatanGenerate = $kegiatanGenerate;
+    }
+
     public function index()
     {
         $kegiatans = Kegiatan::latest()->get();
@@ -218,5 +226,11 @@ class KegiatanController extends Controller
         } finally {
             DB::commit();
         }
+    }
+
+    public function print($id)
+    {
+        $kegiatan = Kegiatan::find($id);
+        $this->kegiatanGenerate->prosesKegiatanGenerate($kegiatan);
     }
 }

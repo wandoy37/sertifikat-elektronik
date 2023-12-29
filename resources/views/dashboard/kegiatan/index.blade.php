@@ -59,6 +59,10 @@
                                             </td>
                                             <td class="text-center">{{ $kegiatan->sertifikats->count() }}</td>
                                             <td class="form-inline d-flex justify-content-center">
+                                                <a href="{{ route('kegiatan.print', $kegiatan->id) }}"
+                                                    class="btn btn-warning btn-sm mr-1">
+                                                    <i class="fas fa-file-signature"></i>
+                                                </a>
                                                 <a href="{{ route('sertifikat.create.peserta', $kegiatan->id) }}"
                                                     class="btn btn-secondary btn-sm mr-4">
                                                     Peserta

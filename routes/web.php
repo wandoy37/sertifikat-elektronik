@@ -88,6 +88,8 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('/kegiatan/edit/{id}', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
     Route::patch('/kegiatan/update/{id}', [KegiatanController::class, 'update'])->name('kegiatan.update');
     Route::delete('/kegiatan/delete/{id}', [KegiatanController::class, 'destroy'])->name('kegiatan.delete');
+    // Cetak Kegiatan Tanpa Identitas Peserta
+    Route::get('/kegiatan/print/{id}', [KegiatanController::class, 'print'])->name('kegiatan.print');
 
     // Kelola Sertifikat
     Route::get('/sertifikat', [SertifikatController::class, 'index'])->name('sertifikat.index');
