@@ -35,12 +35,8 @@ class KegiatanGenerate
         // Set font dan ukuran
         $pdf->SetFont('Arial', 'B', 16);
 
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 10);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 103, 'Nomor : ' . $kegiatan->kode_kegiatan . ' / ' . '    ' . ' / BPPSDMP / ' . $kegiatan->tahun_kegiatan, 0, 0, 'C');
-        $pdf->SetX(12.6);
+        // Nomor Sertifikat
+        // ===Skip===
 
         // Pemprov Desc
         $pdf->SetFont("helvetica", "", 12);
@@ -90,7 +86,7 @@ class KegiatanGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 145.5);
         $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'Samarinda, ' . date('d, F Y'), 0, 0, 'C');
+        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($kegiatan->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
