@@ -136,12 +136,12 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Buat QR Code
-        QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png');
+        QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
         $pdf->SetFont("helvetica", "", 12);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 160);
         $pdf->SetX(45);
-        $pdf->Image(public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png', 47, 155, 20, 0, 'PNG');
+        $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 47, 155, 20, 0, 'PNG');
         $pdf->SetX(12.6);
 
         // Penandatangan
@@ -309,12 +309,12 @@ class SertifikatGenerate
             $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
             $pdf->SetX(12.6);
             // Buat QR Code
-            QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png');
+            QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 160);
             $pdf->SetX(45);
-            $pdf->Image(public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png', 47, 155, 20, 0, 'PNG');
+            $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 47, 155, 20, 0, 'PNG');
             $pdf->SetX(12.6);
 
             // Penandatangan
@@ -486,12 +486,12 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Buat QR Code
-        QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png');
+        QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
         $pdf->SetFont("helvetica", "", 12);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 160);
         $pdf->SetX(45);
-        $pdf->Image(public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png', 47, 155, 20, 0, 'PNG');
+        $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 47, 155, 20, 0, 'PNG');
         $pdf->SetX(12.6);
 
         // Penandatangan
@@ -647,12 +647,12 @@ class SertifikatGenerate
             }
 
             // Buat QR Code
-            QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png');
+            QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 160);
             $pdf->SetX(45);
-            $pdf->Image(public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png', 47, 155, 20, 0, 'PNG');
+            $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 47, 155, 20, 0, 'PNG');
             $pdf->SetX(12.6);
         }
 
