@@ -278,7 +278,8 @@ class SertifikatGenerate
                 $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
                 $pdf->SetX(12.6);
             } else {
-                $pdf->SetFont("helvetica", "", 28);
+                $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
+                $pdf->SetFont("Lobster-Regular", "", 28);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 93);
                 $pdf->SetX(10.5);
@@ -314,14 +315,6 @@ class SertifikatGenerate
             $pdf->SetXY(0, 160);
             $pdf->SetX(45);
             $pdf->Image(public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png', 47, 155, 20, 0, 'PNG');
-            $pdf->SetX(12.6);
-
-            // Verified Sertifikat
-            $pdf->SetFont("helvetica", "i", 10);
-            $pdf->SetTextColor(0, 0, 0);
-            $pdf->SetXY(0, 173);
-            $pdf->SetX(45);
-            $pdf->Cell(0, 10, 'Verified Certificate : ' . $sertifikat->verified_code, 0, 0, 'L');
             $pdf->SetX(12.6);
 
             // Penandatangan
@@ -461,7 +454,8 @@ class SertifikatGenerate
             $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
             $pdf->SetX(12.6);
         } else {
-            $pdf->SetFont("helvetica", "", 28);
+            $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
+            $pdf->SetFont("Lobster-Regular", "", 28);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 93);
             $pdf->SetX(10.5);
@@ -564,5 +558,106 @@ class SertifikatGenerate
 
         $pdf->Output($outputFilePath, 'I');
         exit;
+    }
+
+    public function prosesAllPartsGenerate($sertifikats)
+    {
+        $pdf = new Fpdi();
+
+        // Loop untuk membuat sertifikat dalam jumlah banyak
+        foreach ($sertifikats as $key => $sertifikat) {
+            // ============= Get Detail Peserta by API
+            $peserta_id = $sertifikat->peserta_id;
+            $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+            $response = file_get_contents($url);
+            $peserta = json_decode($response, true);
+            // ============= END Get Detail Peserta by API
+
+            // Tambahkan halaman baru dari template sertifikat
+            $pdf->AddPage('L', 'A4');
+            $pdf->setSourceFile(public_path('uploads/template/template_blank.pdf'));
+            $tplIdx = $pdf->importPage(1);
+            $pdf->useTemplate($tplIdx);
+
+            // Mengatur margin dalam satuan milimeter (mm)
+            $pdf->SetMargins(20, 20, 20); // Kiri, atas, kanan
+            $pdf->SetAutoPageBreak(true, 20); // Mengatur auto page break dengan margin bawah 20 mm
+
+            // Set font dan ukuran
+            $pdf->SetFont('Arial', 'B', 16);
+
+            $pdf->SetFont("helvetica", "", 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(0, 10);
+            $pdf->SetX(10.5);
+            $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
+            $pdf->SetX(12.6);
+
+            // Informasi Peserta
+            if ($sertifikat->kategori_kegiatan == 'pelatihan') {
+                $pdf->SetFont("helvetica", "", 12);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 80);
+                $pdf->SetX(150);
+                $pdf->Cell(0, 10, $peserta[0]['peserta_nama'], 0, 0, 'L');
+                $pdf->SetX(12.6);
+
+                $pdf->SetFont("helvetica", "", 12);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 85.5);
+                $pdf->SetX(150);
+                $pdf->Cell(0, 10, $peserta[0]['peserta_nip'], 0, 0, 'L');
+                $pdf->SetX(12.6);
+
+                $pdf->SetFont("helvetica", "", 12);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 91.5);
+                $pdf->SetX(150);
+                $pdf->Cell(0, 10, $peserta[0]['peserta_tempat_lahir'] . ', ' . Carbon::parse($peserta[0]['peserta_tanggal_lahir'])->isoFormat('D MMMM Y'), 0, 0, 'L');
+                $pdf->SetX(12.6);
+
+                $pdf->SetFont("helvetica", "", 12);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 97.2);
+                $pdf->SetX(150);
+                $pdf->Cell(0, 10, $peserta[0]['peserta_pangkat_golongan'], 0, 0, 'L');
+                $pdf->SetX(12.6);
+
+                $pdf->SetFont("helvetica", "", 12);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 103.1);
+                $pdf->SetX(150);
+                $pdf->Cell(0, 10, $peserta[0]['peserta_jabatan'], 0, 0, 'L');
+                $pdf->SetX(12.6);
+
+                $pdf->SetFont("helvetica", "", 12);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 109);
+                $pdf->SetX(150);
+                $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
+                $pdf->SetX(12.6);
+            } else {
+                $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
+                $pdf->SetFont("Lobster-Regular", "", 28);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 93);
+                $pdf->SetX(10.5);
+                $pdf->Cell(0, 10, $peserta[0]['peserta_nama'], 0, 0, 'C');
+                $pdf->SetX(12.6);
+            }
+
+            // Buat QR Code
+            QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png');
+            $pdf->SetFont("helvetica", "", 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(0, 160);
+            $pdf->SetX(45);
+            $pdf->Image(public_path() . '/qrcode/' . 'qr_sertifikat_' . $sertifikat->id . '.' . 'png', 47, 155, 20, 0, 'PNG');
+            $pdf->SetX(12.6);
+        }
+
+        // Simpan
+
+        $pdf->Output('sertifikat_pada_kegiatan_' . Str::slug($sertifikat->judul_kegiatan, '-') . '.' . 'pdf', 'I');
     }
 }

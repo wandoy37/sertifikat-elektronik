@@ -81,13 +81,25 @@
             {{-- List Peserta --}}
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        Daftar Peserta
-                        <a href="{{ route('sertifikat.all.generate', $kegiatan->id) }}"
-                            class="btn btn-info btn-sm float-right ml-4" target="_blank">
-                            <i class="fas fa-print"></i>
-                            Cetak All Sertifikat
-                        </a>
+                    <div class="card-header d-flex align-items-center bd-highlight mb-3">
+                        <div class="mr-auto p-2 bd-highlight">
+                            <h4>Daftar Peserta</h4>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <a href="{{ route('sertifikat.all.parts.generate', $kegiatan->id) }}"
+                                class="btn btn-warning btn-sm ml-2" target="_blank">
+                                <i class="fas fa-print"></i>
+                                Cetak Sertifikat (parts)
+                            </a>
+                        </div>
+                        <div class="p-2 bd-highlight"><a href="{{ route('sertifikat.all.generate', $kegiatan->id) }}"
+                                class="btn btn-info btn-sm ml-2" target="_blank">
+                                <i class="fas fa-print"></i>
+                                Cetak All Sertifikat
+                            </a></div>
+
+
+
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

@@ -10,13 +10,6 @@ class KegiatanGenerate
 {
     public function prosesKegiatanGenerate($kegiatan)
     {
-        // ============= Get Detail Kegiatan by Parameter Kegiatan ID
-        // $peserta_id = $sertifikat->peserta_id;
-        // $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
-        // $response = file_get_contents($url);
-        // $peserta = json_decode($response, true);
-        // ============= END Get Detail Peserta by API
-
         $templatePath = public_path('uploads/template/' . $kegiatan->kategori->template);
         $templateSize = getimagesize($templatePath); // Mendapatkan dimensi template PDF
 
