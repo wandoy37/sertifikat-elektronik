@@ -540,23 +540,8 @@ class SertifikatGenerate
             'status' => 'terbit',
             'tanggal_terbit' => date('d-m-Y'),
         ]);
-
-        // Message Notify Email
-        // $data_notify = [
-        //     'subject' => 'Selamat atas penghargaan pada kegiatan ' . $sertifikat->judul_kegiatan . ' !',
-        //     'nama' => $sertifikat->nama_peserta,
-        //     'kegiatan' => $sertifikat->judul_kegiatan,
-        //     'sertifikat' => route('home.sertifikat.preview', $sertifikat->id),
-        // ];
-
-        // Mail::to($sertifikat->email)->send(new NotifySertifikat($data_notify));
-
         // Output PDF
-        $outputFilePath = public_path("sertifikat/" . 'doc-sertifikat-' . $sertifikat->id . '.' . 'pdf');
-        $pdf->Output($outputFilePath, 'F');
-        $pdf->Output($outputFilePath, 'I');
-
-        $pdf->Output($outputFilePath, 'I');
+        $pdf->Output('sertifikat' . Str::slug($peserta[0]['peserta_nama']), 'I');
         exit;
     }
 

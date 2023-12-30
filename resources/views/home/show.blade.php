@@ -1,7 +1,6 @@
 @php
     // ============= Get Detail Peserta by API
-    $peserta_id = $sertifikat->peserta_id;
-    $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+    $url = "http://simpeltan.test/api/data-peserta/{$kegiatan->peserta_id}";
     $response = file_get_contents($url);
     $peserta = json_decode($response, true);
     // ============= END Get Detail Peserta by API
@@ -20,18 +19,25 @@
 
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
                                 <table class="table table-sm">
                                     <tbody class="text-center">
                                         <tr>
-                                            <th scope="row" style="font-size: 32px;">{{ $peserta[0]['peserta_nama'] }}
+                                            <th scope="row" style="font-size: 26px;">{{ $peserta[0]['peserta_nama'] }}
                                             </th>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" style="font-size: 12px;">Telah mengikuti pelatihan
-                                                <b>"</b><b>{{ $sertifikat->judul_kegiatan }}</b><b>"</b>
+                                            <td colspan="2" style="font-size: 16px;">Telah mengikuti pelatihan
+                                                <b>"</b><b>{{ $kegiatan->judul_kegiatan }}</b><b>"</b> yang diselenggarakan
+                                                oleh Unit Pelaksana Teknis Dinas (UPTD) Balai Penyuluhan dan Pengembangan
+                                                Sumber Daya Manusia Pertanian (BPPSDMP) Provinsi Kalimantan Timur mulai
+                                                tanggal
+                                                {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->isoFormat('D MMMM Y') }}
+                                                s.d.
+                                                {{ \Carbon\Carbon::parse($kegiatan->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') }}
+                                                dengan jumlah {{ $kegiatan->total_jam_kegiatan }} jam berlatih.
                                             </td>
                                         </tr>
                                         <tr>
@@ -39,12 +45,6 @@
                                                 <a href="{{ route('home.sertifikat.download', $sertifikat->id) }}"
                                                     class="btn btn-danger" style="border-radius: 15px;">Download
                                                     E-Sertifikat</a>
-                                                <br class="my-4">
-                                                <a href="{{ route('home.sertifikat.preview', $sertifikat->id) }}"
-                                                    class="text-decoration-none" target="_blank">
-                                                    <i class="fas fa-eye"></i>
-                                                    Preview
-                                                </a>
                                             </td>
                                         </tr>
                                     </tbody>

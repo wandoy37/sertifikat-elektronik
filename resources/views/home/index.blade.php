@@ -21,7 +21,7 @@
                         <form action="{{ route('home.sertifikat.find') }}" class="sign-up-form d-flex" data-aos="fade-up"
                             data-aos-delay="100">
                             @csrf
-                            <input type="text" class="form-control" name="id" placeholder="Cari kode sertifikat">
+                            <input type="text" class="form-control" name="code" placeholder="Cari kode sertifikat">
                             <input type="submit" class="btn btn-primary" value="Search">
                         </form>
                     </div>
