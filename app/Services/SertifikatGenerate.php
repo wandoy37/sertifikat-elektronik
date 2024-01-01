@@ -135,7 +135,7 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Buat QR Code
-        QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+        QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .3, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
         $pdf->SetFont("helvetica", "", 12);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 160);
@@ -307,7 +307,7 @@ class SertifikatGenerate
             $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
             $pdf->SetX(12.6);
             // Buat QR Code
-            QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+            QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .3, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 160);
@@ -483,7 +483,7 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Buat QR Code
-        QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+        QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .3, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
         $pdf->SetFont("helvetica", "", 12);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 160);
@@ -628,7 +628,7 @@ class SertifikatGenerate
             }
 
             // Buat QR Code
-            QrCode::Format('png')->generate(route('home.show', $sertifikat->id), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+            QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .3, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
             $pdf->SetFont("helvetica", "", 12);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 160);
