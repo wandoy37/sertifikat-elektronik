@@ -1,6 +1,6 @@
 @php
     // ============= Get Detail Peserta by API
-    $url = "http://simpeltan.test/api/data-peserta/{$kegiatan->peserta_id}";
+    $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$kegiatan->peserta_id}";
     $response = file_get_contents($url);
     $peserta = json_decode($response, true);
     // ============= END Get Detail Peserta by API

@@ -21,7 +21,7 @@ class PesertaController extends Controller
      */
     public function index()
     {
-        $pesertas = Http::get('http://simpeltan.test/api/data-peserta')->json();
+        $pesertas = Http::get(env('SIMPELTAN_API_DATA_PESERTA'))->json();
         return view('dashboard.peserta.index', compact('pesertas'));
 
         // $pesertas = Peserta::latest()->get();

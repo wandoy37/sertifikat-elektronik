@@ -15,8 +15,7 @@ class SertifikatGenerate
     public function prosesSingleGenerate($sertifikat)
     {
         // ============= Get Detail Peserta by API
-        $peserta_id = $sertifikat->peserta_id;
-        $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+        $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
         $response = file_get_contents($url);
         $peserta = json_decode($response, true);
         // ============= END Get Detail Peserta by API
@@ -193,8 +192,7 @@ class SertifikatGenerate
         // Loop untuk membuat sertifikat dalam jumlah banyak
         foreach ($sertifikats as $key => $sertifikat) {
             // ============= Get Detail Peserta by API
-            $peserta_id = $sertifikat->peserta_id;
-            $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+            $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
             $response = file_get_contents($url);
             $peserta = json_decode($response, true);
             // ============= END Get Detail Peserta by API
@@ -364,8 +362,7 @@ class SertifikatGenerate
     public function prosesSingleTerbit($sertifikat)
     {
         // ============= Get Detail Peserta by API
-        $peserta_id = $sertifikat->peserta_id;
-        $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+        $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
         $response = file_get_contents($url);
         $peserta = json_decode($response, true);
         // ============= END Get Detail Peserta by API
@@ -552,8 +549,7 @@ class SertifikatGenerate
         // Loop untuk membuat sertifikat dalam jumlah banyak
         foreach ($sertifikats as $key => $sertifikat) {
             // ============= Get Detail Peserta by API
-            $peserta_id = $sertifikat->peserta_id;
-            $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+            $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
             $response = file_get_contents($url);
             $peserta = json_decode($response, true);
             // ============= END Get Detail Peserta by API

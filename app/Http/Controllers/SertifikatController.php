@@ -37,7 +37,7 @@ class SertifikatController extends Controller
 
         // Inisialisasi Guzzle Client
         $client = new Client();
-        $response = $client->get('http://simpeltan.test/api/data-peserta');
+        $response = $client->get(env('SIMPELTAN_API_DATA_PESERTA'));
 
         // Decode respons JSON dari API
         $dataPeserta = json_decode($response->getBody(), true);
@@ -111,7 +111,6 @@ class SertifikatController extends Controller
             } else {
                 return redirect()->route('dashboard.index')->with('fails', 'Gagal mendaftar kegiatan');
             }
-            // return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('fails', 'Peserta Baru Gagal Di Tambahkan');
         } finally {
             DB::commit();
         }
