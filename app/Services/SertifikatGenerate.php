@@ -87,7 +87,37 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 97.2);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $peserta[0]['peserta_pangkat_golongan'], 0, 0, 'L');
+
+            // Mengambil nilai pangkat_golongan dari array $peserta
+            $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
+
+            // Menambahkan kondisi
+            if ($pesertaPangkatGolongan == 'ii.a') {
+                $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'ii.b') {
+                $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'ii.c') {
+                $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'ii.d') {
+                $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iii.a') {
+                $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iii.b') {
+                $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iii.c') {
+                $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iii.d') {
+                $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iv.a') {
+                $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iv.b') {
+                $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iv.c') {
+                $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'non-asn') {
+                $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+            }
+
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
@@ -101,7 +131,17 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 109);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
+            // Mengambil nilai instansi dari array $peserta
+            $pesertaInstansi = $peserta[0]['peserta_instansi'];
+            // Pecah string menjadi array kata
+            $words = explode(' ', $pesertaInstansi);
+            // Ambil kata pertama dan ubah menjadi uppercase
+            $firstWord = strtoupper($words[0]);
+            // Ambil kata-kata selanjutnya dan ubah menjadi kapital
+            $nextWords = array_map('ucfirst', array_slice($words, 1));
+            // Gabungkan kembali kata-kata menjadi string
+            $instansiFormatted = $firstWord . ' ' . implode(' ', $nextWords);
+            $pdf->Cell(0, 10, $instansiFormatted, 0, 0, 'L');
             $pdf->SetX(12.6);
         } else {
             $pdf->SetFont("helvetica", "", 28);
@@ -259,7 +299,37 @@ class SertifikatGenerate
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 97.2);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $peserta[0]['peserta_pangkat_golongan'], 0, 0, 'L');
+
+                // Mengambil nilai pangkat_golongan dari array $peserta
+                $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
+
+                // Menambahkan kondisi
+                if ($pesertaPangkatGolongan == 'ii.a') {
+                    $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'ii.b') {
+                    $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'ii.c') {
+                    $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'ii.d') {
+                    $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iii.a') {
+                    $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iii.b') {
+                    $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iii.c') {
+                    $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iii.d') {
+                    $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iv.a') {
+                    $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iv.b') {
+                    $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iv.c') {
+                    $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'non-asn') {
+                    $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+                }
+
                 $pdf->SetX(12.6);
 
                 $pdf->SetFont("helvetica", "", 12);
@@ -273,7 +343,17 @@ class SertifikatGenerate
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 109);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
+                // Mengambil nilai instansi dari array $peserta
+                $pesertaInstansi = $peserta[0]['peserta_instansi'];
+                // Pecah string menjadi array kata
+                $words = explode(' ', $pesertaInstansi);
+                // Ambil kata pertama dan ubah menjadi uppercase
+                $firstWord = strtoupper($words[0]);
+                // Ambil kata-kata selanjutnya dan ubah menjadi kapital
+                $nextWords = array_map('ucfirst', array_slice($words, 1));
+                // Gabungkan kembali kata-kata menjadi string
+                $instansiFormatted = $firstWord . ' ' . implode(' ', $nextWords);
+                $pdf->Cell(0, 10, $instansiFormatted, 0, 0, 'L');
                 $pdf->SetX(12.6);
             } else {
                 $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
@@ -434,7 +514,37 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 97.2);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $peserta[0]['peserta_pangkat_golongan'], 0, 0, 'L');
+
+            // Mengambil nilai pangkat_golongan dari array $peserta
+            $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
+
+            // Menambahkan kondisi
+            if ($pesertaPangkatGolongan == 'ii.a') {
+                $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'ii.b') {
+                $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'ii.c') {
+                $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'ii.d') {
+                $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iii.a') {
+                $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iii.b') {
+                $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iii.c') {
+                $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iii.d') {
+                $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iv.a') {
+                $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iv.b') {
+                $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iv.c') {
+                $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'non-asn') {
+                $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+            }
+
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
@@ -448,7 +558,17 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 109);
             $pdf->SetX(150);
-            $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
+            // Mengambil nilai instansi dari array $peserta
+            $pesertaInstansi = $peserta[0]['peserta_instansi'];
+            // Pecah string menjadi array kata
+            $words = explode(' ', $pesertaInstansi);
+            // Ambil kata pertama dan ubah menjadi uppercase
+            $firstWord = strtoupper($words[0]);
+            // Ambil kata-kata selanjutnya dan ubah menjadi kapital
+            $nextWords = array_map('ucfirst', array_slice($words, 1));
+            // Gabungkan kembali kata-kata menjadi string
+            $instansiFormatted = $firstWord . ' ' . implode(' ', $nextWords);
+            $pdf->Cell(0, 10, $instansiFormatted, 0, 0, 'L');
             $pdf->SetX(12.6);
         } else {
             $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
@@ -601,7 +721,37 @@ class SertifikatGenerate
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 97.2);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $peserta[0]['peserta_pangkat_golongan'], 0, 0, 'L');
+
+                // Mengambil nilai pangkat_golongan dari array $peserta
+                $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
+
+                // Menambahkan kondisi
+                if ($pesertaPangkatGolongan == 'ii.a') {
+                    $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'ii.b') {
+                    $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'ii.c') {
+                    $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'ii.d') {
+                    $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iii.a') {
+                    $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iii.b') {
+                    $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iii.c') {
+                    $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iii.d') {
+                    $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iv.a') {
+                    $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iv.b') {
+                    $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'iv.c') {
+                    $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'non-asn') {
+                    $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+                }
+
                 $pdf->SetX(12.6);
 
                 $pdf->SetFont("helvetica", "", 12);
@@ -615,7 +765,17 @@ class SertifikatGenerate
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 109);
                 $pdf->SetX(150);
-                $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
+                // Mengambil nilai instansi dari array $peserta
+                $pesertaInstansi = $peserta[0]['peserta_instansi'];
+                // Pecah string menjadi array kata
+                $words = explode(' ', $pesertaInstansi);
+                // Ambil kata pertama dan ubah menjadi uppercase
+                $firstWord = strtoupper($words[0]);
+                // Ambil kata-kata selanjutnya dan ubah menjadi kapital
+                $nextWords = array_map('ucfirst', array_slice($words, 1));
+                // Gabungkan kembali kata-kata menjadi string
+                $instansiFormatted = $firstWord . ' ' . implode(' ', $nextWords);
+                $pdf->Cell(0, 10, $instansiFormatted, 0, 0, 'L');
                 $pdf->SetX(12.6);
             } else {
                 $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
