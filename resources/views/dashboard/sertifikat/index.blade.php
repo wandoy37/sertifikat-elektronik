@@ -62,7 +62,7 @@
                                                                 Terbitkan
                                                             </a>
                                                         @else
-                                                            <a href="{{ route('home.show', $sertifikat->id) }}"
+                                                            <a href="{{ route('home.show', $sertifikat->verified_code) }}"
                                                                 class="fw-bold text-primary mr-3 text-capitalize"
                                                                 target="_blank">
                                                                 <i class="fas fa-print"></i>

@@ -23,6 +23,7 @@ class SertifikatController extends Controller
             ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
             ->select(
                 'sertifikats.id',
+                'sertifikats.verified_code',
                 'sertifikats.peserta_id',
                 'sertifikats.status',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
