@@ -91,29 +91,38 @@ class SertifikatGenerate
             // Mengambil nilai pangkat_golongan dari array $peserta
             $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
 
+            // Pemisahan string sebelum dan setelah tanda titik
+            list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
+
+            // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
+            $beforeDotCapitalized = strtoupper($beforeDot);
+
+            // Gabungkan kembali string
+            $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . strtolower($afterDot);
+
             // Menambahkan kondisi
             if ($pesertaPangkatGolongan == 'ii.a') {
-                $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'ii.b') {
-                $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'ii.c') {
-                $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'ii.d') {
-                $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iii.a') {
-                $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iii.b') {
-                $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iii.c') {
-                $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iii.d') {
-                $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iv.a') {
-                $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iv.b') {
-                $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iv.c') {
-                $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'non-asn') {
                 $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
             }
@@ -304,29 +313,38 @@ class SertifikatGenerate
                 // Mengambil nilai pangkat_golongan dari array $peserta
                 $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
 
+                // Pemisahan string sebelum dan setelah tanda titik
+                list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
+
+                // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
+                $beforeDotCapitalized = strtoupper($beforeDot);
+
+                // Gabungkan kembali string
+                $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . strtolower($afterDot);
+
                 // Menambahkan kondisi
                 if ($pesertaPangkatGolongan == 'ii.a') {
-                    $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'ii.b') {
-                    $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'ii.c') {
-                    $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'ii.d') {
-                    $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iii.a') {
-                    $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iii.b') {
-                    $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iii.c') {
-                    $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iii.d') {
-                    $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iv.a') {
-                    $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iv.b') {
-                    $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iv.c') {
-                    $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'non-asn') {
                     $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
                 }
@@ -519,29 +537,38 @@ class SertifikatGenerate
             // Mengambil nilai pangkat_golongan dari array $peserta
             $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
 
+            // Pemisahan string sebelum dan setelah tanda titik
+            list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
+
+            // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
+            $beforeDotCapitalized = strtoupper($beforeDot);
+
+            // Gabungkan kembali string
+            $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . strtolower($afterDot);
+
             // Menambahkan kondisi
             if ($pesertaPangkatGolongan == 'ii.a') {
-                $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'ii.b') {
-                $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'ii.c') {
-                $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'ii.d') {
-                $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iii.a') {
-                $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iii.b') {
-                $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iii.c') {
-                $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iii.d') {
-                $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iv.a') {
-                $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iv.b') {
-                $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iv.c') {
-                $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'non-asn') {
                 $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
             }
@@ -726,29 +753,38 @@ class SertifikatGenerate
                 // Mengambil nilai pangkat_golongan dari array $peserta
                 $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
 
+                // Pemisahan string sebelum dan setelah tanda titik
+                list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
+
+                // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
+                $beforeDotCapitalized = strtoupper($beforeDot);
+
+                // Gabungkan kembali string
+                $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . strtolower($afterDot);
+
                 // Menambahkan kondisi
                 if ($pesertaPangkatGolongan == 'ii.a') {
-                    $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pengatur Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'ii.b') {
-                    $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pengatur Muda Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'ii.c') {
-                    $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pengatur / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'ii.d') {
-                    $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pengatur Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iii.a') {
-                    $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Penata Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iii.b') {
-                    $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Penata Muda Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iii.c') {
-                    $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Penata / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iii.d') {
-                    $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Penata Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iv.a') {
-                    $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pembina / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iv.b') {
-                    $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'iv.c') {
-                    $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolongan, 0, 0, 'L');
+                    $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'non-asn') {
                     $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
                 }
