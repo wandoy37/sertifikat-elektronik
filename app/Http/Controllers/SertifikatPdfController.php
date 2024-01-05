@@ -29,6 +29,7 @@ class SertifikatPdfController extends Controller
                 'sertifikats.verified_code',
                 'sertifikats.nomor_sertifikat',
                 'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
                 'kegiatans.kode_kegiatan AS kode_kegiatan',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
                 'kategoris.title AS kategori_kegiatan',
@@ -44,7 +45,11 @@ class SertifikatPdfController extends Controller
             )
             ->first();
 
-        $this->sertifikatGenerate->prosesSingleGenerate($sertifikat);
+        if ($sertifikat->kategori_kegiatan == 'pkl') {
+            $this->sertifikatGenerate->prosesSingleGenerateSiswa($sertifikat);
+        } else {
+            $this->sertifikatGenerate->prosesSingleGenerate($sertifikat);
+        }
     }
 
     public function generateAllCertificate($id)
@@ -58,6 +63,7 @@ class SertifikatPdfController extends Controller
                 'sertifikats.verified_code',
                 'sertifikats.nomor_sertifikat',
                 'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
                 'kegiatans.kode_kegiatan AS kode_kegiatan',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
                 'kategoris.title AS kategori_kegiatan',
@@ -73,7 +79,11 @@ class SertifikatPdfController extends Controller
             )
             ->get();
 
-        $this->sertifikatGenerate->prosesAllGenerate($sertifikats);
+        if ($sertifikats[0]->kategori_kegiatan == 'pkl') {
+            $this->sertifikatGenerate->prosesAllGenerateSiswa($sertifikats);
+        } else {
+            $this->sertifikatGenerate->prosesAllGenerate($sertifikats);
+        }
     }
 
     public function terbitkanCertificate($id)
@@ -89,6 +99,7 @@ class SertifikatPdfController extends Controller
                 'sertifikats.verified_code',
                 'sertifikats.nomor_sertifikat',
                 'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
                 'kegiatans.id AS id_kegiatan',
                 'kegiatans.kode_kegiatan AS kode_kegiatan',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
@@ -106,7 +117,12 @@ class SertifikatPdfController extends Controller
             )
             ->first();
 
-        $this->sertifikatGenerate->prosesSingleTerbit($sertifikat);
+
+        if ($sertifikat->kategori_kegiatan == 'pkl') {
+            $this->sertifikatGenerate->prosesSingleTerbitSiswa($sertifikat);
+        } else {
+            $this->sertifikatGenerate->prosesSingleTerbit($sertifikat);
+        }
     }
 
     public function generateAllPartsCertificate($id)

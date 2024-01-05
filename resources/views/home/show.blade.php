@@ -1,13 +1,22 @@
-@php
-    // ============= Get Detail Peserta by API
-    $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$kegiatan->peserta_id}";
-    $response = file_get_contents($url);
-    $peserta = json_decode($response, true);
-    // ============= END Get Detail Peserta by API
-@endphp
+@if ($kegiatan->kategori_kegiatan !== 'pkl')
+    @php
+        // ============= Get Detail Peserta by API
+        $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$kegiatan->peserta_id}";
+        $response = file_get_contents($url);
+        $peserta = json_decode($response, true);
+        // ============= END Get Detail Peserta by API
+    @endphp
+@else
+    @php
+        $siswa = DB::table('siswas')
+            ->where('id', '=', $sertifikat->siswa_id)
+            ->first();
+    @endphp
+@endif
+
 
 @extends('home.app')
-@section('title', $peserta[0]['peserta_nama'])
+@section('title', $peserta[0]['peserta_nama'] ?? $siswa->nama)
 
 @section('content')
     <main id="main">
@@ -25,7 +34,8 @@
                                 <table class="table table-sm">
                                     <tbody class="text-center">
                                         <tr>
-                                            <th scope="row" style="font-size: 26px;">{{ $peserta[0]['peserta_nama'] }}
+                                            <th scope="row" style="font-size: 26px;">
+                                                {{ $peserta[0]['peserta_nama'] ?? $siswa->nama }}
                                             </th>
                                         </tr>
                                         <tr>

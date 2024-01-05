@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kegiatan;
 use App\Models\Peserta;
 use App\Models\Sertifikat;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -21,12 +22,15 @@ class SertifikatController extends Controller
     {
         $sertifikats = DB::table('sertifikats')
             ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
             ->select(
                 'sertifikats.id',
                 'sertifikats.verified_code',
                 'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
                 'sertifikats.status',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'kategoris.title AS kategori_kegiatan',
             )
             ->get();
         return view('dashboard.sertifikat.index', compact('sertifikats'));
@@ -36,12 +40,16 @@ class SertifikatController extends Controller
     {
         $kegiatan = Kegiatan::find($id);
 
-        // Inisialisasi Guzzle Client
-        $client = new Client();
-        $response = $client->get(env('SIMPELTAN_API_DATA_PESERTA'));
+        if ($kegiatan->kategori->title == 'pkl') {
+            $dataPeserta = Siswa::all();
+        } else {
+            // Inisialisasi Guzzle Client
+            $client = new Client();
+            $response = $client->get(env('SIMPELTAN_API_DATA_PESERTA'));
 
-        // Decode respons JSON dari API
-        $dataPeserta = json_decode($response->getBody(), true);
+            // Decode respons JSON dari API
+            $dataPeserta = json_decode($response->getBody(), true);
+        }
 
         $sertifikats = DB::table('sertifikats')
             ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
@@ -53,24 +61,39 @@ class SertifikatController extends Controller
                 'sertifikats.tanggal_terbit',
                 'sertifikats.status',
                 'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
             )
             ->where('sertifikats.kegiatan_id', '=', $kegiatan->id)
             ->get();
+
+
+        // return response()->json($dataPeserta);
 
         return view('dashboard.sertifikat.create_peserta', compact('kegiatan', 'sertifikats', 'dataPeserta'));
     }
 
     public function store(Request $request)
     {
-        // Validator
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'peserta_id' => 'required',
-            ],
-            [],
-        );
-
+        $kegiatan = Kegiatan::find($request->kegiatan_id);
+        if ($kegiatan->kategori->title == 'pkl') {
+            // Validator
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'siswa_id' => 'required',
+                ],
+                [],
+            );
+        } else {
+            // Validator
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'peserta_id' => 'required',
+                ],
+                [],
+            );
+        }
         // If validator fails.
         if ($validator->fails()) {
             return redirect()->back()->withInput($request->all())->withErrors($validator);
@@ -78,7 +101,6 @@ class SertifikatController extends Controller
 
         DB::beginTransaction();
         try {
-            $kegiatan = Kegiatan::find($request->kegiatan_id);
             // Last data
             $currentYear = $kegiatan->tahun_kegiatan;
             $lastSertifikat = Sertifikat::max('tahun');
@@ -92,19 +114,35 @@ class SertifikatController extends Controller
                 $lastSertifikat++;
             }
 
-            Sertifikat::create([
-                'verified_code' => Str::random(20),
-                'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
-                'kegiatan_id' => $request->kegiatan_id,
-                'peserta_id' => $request->peserta_id,
-                'tanggal_terbit' => '-',
-                'tahun' => $kegiatan->tahun_kegiatan,
-            ]);
-            if (Auth::user()->role == 'admin') {
-                return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
+            if ($kegiatan->kategori->title == 'pkl') {
+                Sertifikat::create([
+                    'verified_code' => Str::random(20),
+                    'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                    'kegiatan_id' => $request->kegiatan_id,
+                    'peserta_id' => '-',
+                    'tanggal_terbit' => '-',
+                    'tahun' => $kegiatan->tahun_kegiatan,
+                    'siswa_id' => $request->siswa_id,
+                ]);
             } else {
-                return redirect()->route('dashboard.index')->with('success', 'Anda berhasil mendaftar kegiatan');
+                Sertifikat::create([
+                    'verified_code' => Str::random(20),
+                    'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                    'kegiatan_id' => $request->kegiatan_id,
+                    'peserta_id' => $request->peserta_id,
+                    'tanggal_terbit' => '-',
+                    'tahun' => $kegiatan->tahun_kegiatan,
+                    'siswa_id' => '-',
+                ]);
             }
+
+            // if (Auth::user()->role == 'admin') {
+            //     return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
+            // } else {
+            //     return redirect()->route('dashboard.index')->with('success', 'Anda berhasil mendaftar kegiatan');
+            // }
+
+            return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollBack();
             if (Auth::user()->role == 'admin') {

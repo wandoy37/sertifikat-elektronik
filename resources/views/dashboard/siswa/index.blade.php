@@ -1,29 +1,24 @@
 @extends('dashboard.layouts.app')
-@section('title', 'Kegiatan')
+@section('title', 'Peserta')
 
 @section('content')
     <div class="page-inner">
         <div class="page-header">
-            <h4 class="page-title">Kegiatan</h4>
+            <h4 class="page-title">Siswa</h4>
             <ul class="breadcrumbs">
                 <li class="nav-home">
                     <a href="#">
-                        <i class="fas fa-podcast"></i>
+                        <i class="fas fa-graduation-cap"></i>
                     </a>
                 </li>
             </ul>
         </div>
 
-        {{-- Notify --}}
-        <div id="success" data-flash="{{ session('success') }}"></div>
-        <div id="fails" data-flash="{{ session('fails') }}"></div>
-        {{-- ====== --}}
-
         <div class="row">
             <div class="col-lg-12">
-                <a href="{{ route('kegiatan.create') }}" class="btn btn-primary mb-4">
+                <a href="{{ route('siswa.create') }}" class="btn btn-primary mb-4">
                     <i class="fas fa-plus"></i>
-                    Kegiatan
+                    Siswa
                 </a>
             </div>
             <div class="col-lg-12">
@@ -33,52 +28,34 @@
                             <table id="basic-datatables" class="display table table-striped table-hover" cellspacing="0"
                                 width="100%">
                                 <thead>
-                                    <tr class="text-center">
-                                        <th>Kode</th>
-                                        <th>Judul</th>
-                                        <th>Kategori</th>
-                                        <th>Tahun</th>
-                                        <th>Status</th>
-                                        <th>Peserta</th>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Nomor Induk Siswa</th>
+                                        <th>Tempat/Tgl Lahir</th>
+                                        <th>Jurusan</th>
+                                        <th>Sekolah</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($kegiatans as $kegiatan)
+                                    @foreach ($siswas as $siswa)
                                         <tr>
-                                            <td class="text-center">{{ $kegiatan->kode_kegiatan }}</td>
-                                            <td>{{ $kegiatan->judul_kegiatan }}</td>
-                                            <td class="text-center">{{ $kegiatan->kategori->title }}</td>
-                                            <td class="text-center">{{ $kegiatan->tahun_kegiatan }}</td>
-                                            <td class="text-center">
-                                                @if ($kegiatan->status == 'open')
-                                                    <span class="text-success">{{ $kegiatan->status }}</span>
-                                                @else
-                                                    <span class="text-danger">{{ $kegiatan->status }}</span>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">{{ $kegiatan->sertifikats->count() }}</td>
-                                            <td class="form-inline d-flex justify-content-center">
-                                                @if ($kegiatan->kategori->title !== 'pkl')
-                                                    <a href="{{ route('kegiatan.print', $kegiatan->id) }}"
-                                                        class="btn btn-warning btn-sm mr-1">
-                                                        <i class="fas fa-file-signature"></i>
-                                                    </a>
-                                                @endif
-                                                <a href="{{ route('sertifikat.create.peserta', $kegiatan->id) }}"
-                                                    class="btn btn-secondary btn-sm mr-4">
-                                                    Peserta
-                                                </a>
-                                                <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="text-primary">
+                                            <td>{{ $siswa->nama }}</td>
+                                            <td>{{ $siswa->nomor_induk_siswa }}</td>
+                                            <td>{{ $siswa->tempat_lahir . ', ' . $siswa->tanggal_lahir }}</td>
+                                            <td>{{ $siswa->jurusan }}</td>
+                                            <td>{{ $siswa->sekolah }}</td>
+                                            <td class="form-inline">
+                                                <a href="{{ route('siswa.edit', $siswa->id) }}" class="text-primary">
                                                     <i class="fas fa-pen"></i>
                                                 </a>
-                                                <form id="form-delete-{{ $kegiatan->id }}"
-                                                    action="{{ route('kegiatan.delete', $kegiatan->id) }}" method="post">
+                                                <form id="form-delete-{{ $siswa->id }}"
+                                                    action="{{ route('siswa.delete', $siswa->id) }}" method="post">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
                                                 <button type="button" class="btn btn-link text-danger"
-                                                    onclick="btnDelete( {{ $kegiatan->id }} )">
+                                                    onclick="btnDelete( {{ $siswa->id }} )">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -91,7 +68,6 @@
                 </div>
             </div>
         </div>
-
 
     </div>
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\PenandatanganController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\SertifikatPdfController;
+use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\UserController;
 use App\Mail\NotifySertifikat;
 use Illuminate\Support\Facades\Route;
@@ -80,6 +81,14 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
     Route::patch('/kategori/{id}/update', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{id}/delete', [KategoriController::class, 'destroy'])->name('kategori.delete');
+
+    // Kelola Siswa
+    Route::get('siswa', [SiswaController::class, 'index'])->name('siswa.index');
+    Route::get('siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
+    Route::post('siswa/store', [SiswaController::class, 'store'])->name('siswa.store');
+    Route::get('siswa/edit/{id}', [SiswaController::class, 'edit'])->name('siswa.edit');
+    Route::patch('siswa/update/{id}', [SiswaController::class, 'update'])->name('siswa.update');
+    Route::delete('siswa/delete/{id}', [SiswaController::class, 'destroy'])->name('siswa.delete');
 
     // Kelola Kegiatan
     Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');

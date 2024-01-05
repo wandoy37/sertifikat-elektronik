@@ -44,12 +44,21 @@
                                                 <td>{{ $counter++ }}</td>
                                                 <td>{{ $sertifikat->judul_kegiatan }}</td>
                                                 <td>
-                                                    @php
-                                                        $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
-                                                        $response = file_get_contents($url);
-                                                        $data = json_decode($response, true);
-                                                    @endphp
-                                                    {{ $data[0]['peserta_nama'] }}
+                                                    @if ($sertifikat->kategori_kegiatan == 'pkl')
+                                                        @php
+                                                            $siswa = DB::table('siswas')
+                                                                ->where('id', '=', $sertifikat->siswa_id)
+                                                                ->first();
+                                                        @endphp
+                                                        {{ $siswa->nama }}
+                                                    @else
+                                                        @php
+                                                            $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
+                                                            $response = file_get_contents($url);
+                                                            $data = json_decode($response, true);
+                                                        @endphp
+                                                        {{ $data[0]['peserta_nama'] }}
+                                                    @endif
                                                 </td>
                                                 <td class="form-inline d-flex justify-content-center">
                                                     <div class="btn-group" role="group"
@@ -72,7 +81,7 @@
                                                         <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
                                                             class="btn btn-info btn-sm" target="_blank">
                                                             <i class="fas fa-certificate"></i>
-                                                            Cetak
+                                                            Cetak {{ $sertifikat->id }}
                                                         </a>
                                                         <form id="form-delete-{{ $sertifikat->id }}"
                                                             action="{{ route('sertifikat.delete', $sertifikat->id) }}"

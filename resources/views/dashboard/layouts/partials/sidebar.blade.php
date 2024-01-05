@@ -57,6 +57,12 @@
                             <p>Peserta</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ request()->segment(2) == 'siswa' ? 'active' : '' }}">
+                        <a href="{{ route('siswa.index') }}">
+                            <i class="fas fa-graduation-cap"></i>
+                            <p>Siswa</p>
+                        </a>
+                    </li>
                     <li class="nav-item {{ request()->segment(2) == 'penandatangan' ? 'active' : '' }}">
                         <a href="{{ route('penandatangan.index') }}">
                             <i class="fas fa-file-signature"></i>

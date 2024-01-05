@@ -35,15 +35,16 @@ class HomeController extends Controller
                     'sertifikats.id',
                     'sertifikats.verified_code',
                     'sertifikats.peserta_id',
+                    'sertifikats.siswa_id',
                     'kegiatans.judul_kegiatan',
                     'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
                     'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
                     'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
                     'kegiatans.tahun_kegiatan AS tahun_kegiatan',
+                    'kategoris.title AS kategori_kegiatan'
                 )
                 ->first();
         }
-        // return response()->json($kegiatan);
         return view('home.show', compact('sertifikat', 'kegiatan'));
     }
 
