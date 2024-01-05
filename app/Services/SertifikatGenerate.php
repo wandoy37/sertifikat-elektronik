@@ -172,7 +172,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 138);
         $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
+        $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
         $pdf->SetX(12.6);
 
         // Buat QR Code
@@ -189,7 +189,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 145.5);
         $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'Samarinda, ' . date('d, F Y'), 0, 0, 'C');
+        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_penandatanganan)->isoFormat('D MMMM Y'), 0, 0, 'C');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -385,7 +385,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 138);
             $pdf->SetX(10.5);
-            $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
+            $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
             $pdf->SetX(12.6);
             // Buat QR Code
             QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .3, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
@@ -401,7 +401,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 145.5);
             $pdf->SetX(170);
-            $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+            $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_penandatanganan)->isoFormat('D MMMM Y'), 0, 0, 'C');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
@@ -600,7 +600,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 138);
         $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
+        $pdf->Cell(0, 10, 'mulai tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' dengan jumlah ' . $sertifikat->total_jam_kegiatan . ' jam berlatih.', 0, 0, 'C');
         $pdf->SetX(12.6);
 
         // Buat QR Code
@@ -617,7 +617,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 145.5);
         $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_penandatanganan)->isoFormat('D MMMM Y'), 0, 0, 'C');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -850,7 +850,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 110.5);
         $pdf->SetX(148);
-        $pdf->Cell(0, 3, $siswa->tempat_lahir . ', ' . Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMM Y'), 0, 0, 'L');
+        $pdf->Cell(0, 3, $siswa->tempat_lahir . ', ' . Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMMM Y'), 0, 0, 'L');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -906,7 +906,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 155);
         $pdf->SetX(170);
-        $pdf->Cell(0, 0, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+        $pdf->Cell(0, 0, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_penandatanganan)->isoFormat('D MMMM Y'), 0, 0, 'C');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -991,7 +991,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 110.5);
         $pdf->SetX(148);
-        $pdf->Cell(0, 3, $siswa->tempat_lahir . ', ' . Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMM Y'), 0, 0, 'L');
+        $pdf->Cell(0, 3, $siswa->tempat_lahir . ', ' . Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMMM Y'), 0, 0, 'L');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -1047,7 +1047,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 155);
         $pdf->SetX(170);
-        $pdf->Cell(0, 0, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+        $pdf->Cell(0, 0, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_penandatanganan)->isoFormat('D MMMM Y'), 0, 0, 'C');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -1139,7 +1139,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 110.5);
             $pdf->SetX(148);
-            $pdf->Cell(0, 3, $siswa->tempat_lahir . ', ' . Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMM Y'), 0, 0, 'L');
+            $pdf->Cell(0, 3, $siswa->tempat_lahir . ', ' . Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMMM Y'), 0, 0, 'L');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
@@ -1194,7 +1194,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 155);
             $pdf->SetX(170);
-            $pdf->Cell(0, 0, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+            $pdf->Cell(0, 0, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_penandatanganan,)->isoFormat('D MMMM Y'), 0, 0, 'C');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);

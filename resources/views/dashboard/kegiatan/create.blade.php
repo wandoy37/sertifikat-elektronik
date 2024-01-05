@@ -162,6 +162,22 @@
                                             <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
                                         @enderror
                                     </div>
+                                    <div class="form-group">
+                                        <label>Tanggal Penandatangan</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="tanggal_penandatanganan"
+                                                name="tanggal_penandatanganan"
+                                                value="{{ old('tanggal_penandatanganan') }}">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        @error('tanggal_penandatanganan')
+                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -201,6 +217,10 @@
             });
 
             $('#tanggal_akhir_kegiatan').datetimepicker({
+                format: 'DD-MM-YYYY',
+            });
+
+            $('#tanggal_penandatanganan').datetimepicker({
                 format: 'DD-MM-YYYY',
             });
         </script>

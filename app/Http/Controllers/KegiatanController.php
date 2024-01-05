@@ -65,6 +65,7 @@ class KegiatanController extends Controller
                 'tanggal_akhir_kegiatan' => 'required',
                 'total_jam_kegiatan' => 'required',
                 'penandatangan_id' => 'required',
+                'tanggal_penandatanganan' => 'required',
             ],
             [],
         );
@@ -86,6 +87,7 @@ class KegiatanController extends Controller
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
+                'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
                 'status' => 'open'
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Baru Berhasil Di Tambahkan');
@@ -143,6 +145,7 @@ class KegiatanController extends Controller
                 'tanggal_akhir_kegiatan' => 'required',
                 'total_jam_kegiatan' => 'required',
                 'penandatangan_id' => 'required',
+                'tanggal_penandatanganan' => 'required',
             ],
             [],
         );
@@ -166,6 +169,7 @@ class KegiatanController extends Controller
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
+                'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
                 'status' => $request->status,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Updae');
