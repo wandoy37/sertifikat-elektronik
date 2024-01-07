@@ -63,6 +63,12 @@
                             <p>Siswa</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ request()->segment(2) == 'narasumber' ? 'active' : '' }}">
+                        <a href="{{ route('narasumber.index') }}">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <p>Narasumber</p>
+                        </a>
+                    </li>
                     <li class="nav-item {{ request()->segment(2) == 'penandatangan' ? 'active' : '' }}">
                         <a href="{{ route('penandatangan.index') }}">
                             <i class="fas fa-file-signature"></i>

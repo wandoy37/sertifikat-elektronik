@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\NarasumberController;
 use App\Http\Controllers\PenandatanganController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\SertifikatController;
@@ -89,6 +90,14 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('siswa/edit/{id}', [SiswaController::class, 'edit'])->name('siswa.edit');
     Route::patch('siswa/update/{id}', [SiswaController::class, 'update'])->name('siswa.update');
     Route::delete('siswa/delete/{id}', [SiswaController::class, 'destroy'])->name('siswa.delete');
+
+    // Kelola Narasumber
+    Route::get('narasumber', [NarasumberController::class, 'index'])->name('narasumber.index');
+    Route::get('narasumber/create', [NarasumberController::class, 'create'])->name('narasumber.create');
+    Route::post('narasumber/store', [NarasumberController::class, 'store'])->name('narasumber.store');
+    Route::get('narasumber/edit/{id}', [NarasumberController::class, 'edit'])->name('narasumber.edit');
+    Route::patch('narasumber/update/{id}', [NarasumberController::class, 'update'])->name('narasumber.update');
+    Route::delete('narasumber/delete/{id}', [NarasumberController::class, 'destroy'])->name('narasumber.delete');
 
     // Kelola Kegiatan
     Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
