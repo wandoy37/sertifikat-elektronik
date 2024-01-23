@@ -157,4 +157,66 @@ class SertifikatPdfController extends Controller
 
         $this->sertifikatGenerate->prosesAllPartsGenerate($sertifikats);
     }
+
+    public function generateCertificateNarasumber($id)
+    {
+        $sertifikat = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+            ->join('narasumbers', 'sertifikats.narasumber_id', '=', 'narasumbers.id')
+            ->where('sertifikats.id', $id)
+            ->select(
+                'sertifikats.id',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
+                'kegiatans.kode_kegiatan AS kode_kegiatan',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'kategoris.title AS kategori_kegiatan',
+                'kegiatans.tahun_kegiatan AS tahun_kegiatan',
+                'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
+                'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
+                'narasumbers.nama AS nama',
+                'narasumbers.nip AS nip',
+                'narasumbers.tempat_lahir AS tempat_lahir',
+                'narasumbers.tempat_lahir AS tempat_lahir',
+                'narasumbers.tanggal_lahir AS tanggal_lahir',
+                'narasumbers.pangkat_golongan AS pangkat_golongan',
+                'narasumbers.jabatan AS jabatan',
+                'narasumbers.instansi AS instansi',
+            )
+            ->first();
+
+        $this->sertifikatGenerate->generateSertifikatNarasumber($sertifikat);
+    }
+
+    public function generateCertificateNarasumberDownload($id)
+    {
+        $sertifikat = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+            ->join('narasumbers', 'sertifikats.narasumber_id', '=', 'narasumbers.id')
+            ->where('sertifikats.id', $id)
+            ->select(
+                'sertifikats.id',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
+                'kegiatans.kode_kegiatan AS kode_kegiatan',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'kategoris.title AS kategori_kegiatan',
+                'kegiatans.tahun_kegiatan AS tahun_kegiatan',
+                'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
+                'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
+                'narasumbers.nama AS nama',
+                'narasumbers.nip AS nip',
+                'narasumbers.tempat_lahir AS tempat_lahir',
+                'narasumbers.tempat_lahir AS tempat_lahir',
+                'narasumbers.tanggal_lahir AS tanggal_lahir',
+                'narasumbers.pangkat_golongan AS pangkat_golongan',
+                'narasumbers.jabatan AS jabatan',
+                'narasumbers.instansi AS instansi',
+            )
+            ->first();
+
+        $this->sertifikatGenerate->generateSertifikatNarasumberDownload($sertifikat);
+    }
 }

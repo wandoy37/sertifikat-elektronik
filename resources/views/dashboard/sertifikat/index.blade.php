@@ -52,37 +52,46 @@
                                                         @endphp
                                                         {{ $siswa->nama }}
                                                     @else
-                                                        @php
-                                                            $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
-                                                            $response = file_get_contents($url);
-                                                            $data = json_decode($response, true);
-                                                        @endphp
-                                                        {{ $data[0]['peserta_nama'] }}
+                                                        @if ($sertifikat->peserta_id !== '-')
+                                                            @php
+                                                                $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
+                                                                $response = file_get_contents($url);
+                                                                $data = json_decode($response, true);
+                                                            @endphp
+                                                            {{ $data[0]['peserta_nama'] }}
+                                                        @else
+                                                            @php
+                                                                $narasumber = DB::table('narasumbers')
+                                                                    ->where('id', '=', $sertifikat->narasumber_id)
+                                                                    ->first();
+                                                            @endphp
+                                                            {{ $narasumber->nama }}
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td class="form-inline d-flex justify-content-center">
                                                     <div class="btn-group" role="group"
                                                         aria-label="Basic outlined example">
-                                                        @if ($sertifikat->status == 'belum terbit')
-                                                            <a href="{{ route('sertifikat.peserta.terbitkan', $sertifikat->id) }}"
-                                                                target="_blank"
-                                                                class="btn btn-outline-primary btn-sm float-right">
+                                                        <a href="{{ route('home.show', $sertifikat->verified_code) }}"
+                                                            class="fw-bold text-primary mr-3 text-capitalize"
+                                                            target="_blank">
+                                                            <i class="fas fa-download"></i>
+                                                            Download
+                                                        </a>
+                                                        @if ($sertifikat->narasumber_id !== '-')
+                                                            <a href="{{ route('sertifikat.narasumber.generate', $sertifikat->id) }}"
+                                                                class="btn btn-info btn-sm" target="_blank">
                                                                 <i class="fas fa-certificate"></i>
-                                                                Terbitkan
+                                                                Cetak {{ $sertifikat->id }}
                                                             </a>
                                                         @else
-                                                            <a href="{{ route('home.show', $sertifikat->verified_code) }}"
-                                                                class="fw-bold text-primary mr-3 text-capitalize"
-                                                                target="_blank">
-                                                                <i class="fas fa-print"></i>
-                                                                {{ $sertifikat->status }}
+                                                            <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
+                                                                class="btn btn-info btn-sm" target="_blank">
+                                                                <i class="fas fa-certificate"></i>
+                                                                Cetak {{ $sertifikat->id }}
                                                             </a>
                                                         @endif
-                                                        <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
-                                                            class="btn btn-info btn-sm" target="_blank">
-                                                            <i class="fas fa-certificate"></i>
-                                                            Cetak {{ $sertifikat->id }}
-                                                        </a>
+
                                                         <form id="form-delete-{{ $sertifikat->id }}"
                                                             action="{{ route('sertifikat.delete', $sertifikat->id) }}"
                                                             method="post">

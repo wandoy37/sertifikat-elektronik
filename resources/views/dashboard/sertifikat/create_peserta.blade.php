@@ -26,6 +26,8 @@
                     Kembali
                 </a>
             </div>
+
+            {{-- Section Tambah Peserta --}}
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
@@ -95,6 +97,85 @@
                     </form>
                 </div>
             </div>
+            {{-- End Section Tambah Peserta --}}
+
+            {{-- Section Narasumber --}}
+            @if ($kegiatan->kategori->title !== 'pkl')
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center bd-highlight">
+                            <h4>Narasumber</h4>
+                        </div>
+                        <div class="card-body">
+                            {{-- Form Select2 Narasumber --}}
+                            <form action="{{ route('sertifikat.narasumber.store') }}" method="post">
+                                @csrf
+                                <div class="form-group">
+                                    <input type="text" name="kegiatan_id" value="{{ $kegiatan->id }}" hidden>
+                                    <div class="select2-input">
+                                        <select id="selectNarasumber" name="narasumber_id" class="form-control">
+                                            <option value="">--Pilih Narasumber--</option>
+                                            @foreach ($narasumbers as $narasumber)
+                                                <option value="{{ $narasumber->id }}">{{ $narasumber->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-round float-right">
+                                        <i class="fas fa=plus"></i>
+                                        Narasumber
+                                    </button>
+                                </div>
+                            </form>
+                            {{-- End Form Select2 Narasumber --}}
+                            <div class="table-responsive">
+                                <table class="table" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Nomor Sertifikat</th>
+                                            <th>Nama</th>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($sertifikats as $sertifikat)
+                                            @if ($sertifikat->narasumber_id !== '-')
+                                                <tr class="text-center">
+                                                    <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                                    <td>
+                                                        @php
+                                                            $narasumber = DB::table('narasumbers')
+                                                                ->where('id', '=', $sertifikat->narasumber_id)
+                                                                ->first();
+                                                        @endphp
+                                                        {{ $narasumber->nama }}
+                                                    </td>
+                                                    <td class="form-inline d-flex justify-content-center">
+                                                        <a href="{{ route('sertifikat.narasumber.generate', $sertifikat->id) }}"
+                                                            class="fw-bold text-primary mr-3 text-capitalize">
+                                                            <i class="fas fa-print"></i>
+                                                        </a>
+                                                        <form id="form-delete-{{ $sertifikat->id }}"
+                                                            action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button type="button" class="btn btn-link text-danger"
+                                                            onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            {{-- End Section Narasumber --}}
 
             {{-- List Peserta --}}
             <div class="col-md-12">
@@ -119,9 +200,6 @@
                                 Cetak All Sertifikat
                             </a>
                         </div>
-
-
-
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -140,53 +218,89 @@
                                         $counter = 1;
                                     @endphp
                                     @foreach ($sertifikats as $sertifikat)
-                                        <tr class="text-center">
-                                            <td class="text-center" width="25px;">{{ $counter++ }}</td>
-                                            <td>{{ $sertifikat->nomor_sertifikat }}</td>
-                                            <td>
-                                                @if ($kegiatan->kategori->title == 'pkl')
+                                        @if ($kegiatan->kategori->title == 'pkl')
+                                            <tr class="text-center">
+                                                <td class="text-center" width="25px;">{{ $counter++ }}</td>
+                                                <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                                <td>
                                                     @php
                                                         $siswa = DB::table('siswas')
                                                             ->where('id', '=', $sertifikat->siswa_id)
                                                             ->first();
                                                     @endphp
                                                     {{ $siswa->nama }}
-                                                @else
-                                                    @php
-                                                        $peserta_id = $sertifikat->peserta_id;
-                                                        $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
-                                                        $response = file_get_contents($url);
-                                                        $data = json_decode($response, true);
-                                                    @endphp
-                                                    {{ $data[0]['peserta_nama'] }}
-                                                @endif
-                                            </td>
-                                            <td class="form-inline d-flex justify-content-center">
-                                                @if ($sertifikat->status == 'belum terbit')
-                                                    <a href="{{ route('sertifikat.peserta.terbitkan', $sertifikat->id) }}"
-                                                        target=”_blank” class="btn btn-outline-primary btn-sm float-right">
-                                                        <i class="fas fa-certificate"></i>
-                                                        Terbitkan
-                                                    </a>
-                                                @else
+                                                </td>
+                                                <td class="form-inline d-flex justify-content-center">
                                                     <a href="{{ route('home.show', $sertifikat->verified_code) }}"
                                                         class="fw-bold text-primary mr-3 text-capitalize" target="_blank">
-                                                        <i class="fas fa-print"></i>
-                                                        {{ $sertifikat->status }}
+                                                        <i class="fas fa-download"></i>
+                                                        Download
                                                     </a>
-                                                @endif
-                                                <form id="form-delete-{{ $sertifikat->id }}"
-                                                    action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                <button type="button" class="btn btn-link text-danger"
-                                                    onclick="btnDelete( {{ $sertifikat->id }} )">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                                    <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
+                                                        class="btn btn-info btn-sm" target="_blank">
+                                                        <i class="fas fa-certificate"></i>
+                                                        Cetak {{ $sertifikat->id }}
+                                                    </a>
+                                                    <form id="form-delete-{{ $sertifikat->id }}"
+                                                        action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                    <button type="button" class="btn btn-link text-danger"
+                                                        onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @else
+                                            @if ($sertifikat->peserta_id !== '-')
+                                                <tr class="text-center">
+                                                    <td class="text-center" width="25px;">{{ $counter++ }}</td>
+                                                    <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                                    <td>
+                                                        @php
+                                                            $peserta_id = $sertifikat->peserta_id;
+                                                            $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+                                                            $response = file_get_contents($url);
+                                                            $data = json_decode($response, true);
+                                                        @endphp
+                                                        {{ $data[0]['peserta_nama'] }}
+                                                    </td>
+                                                    <td class="form-inline d-flex justify-content-center">
+                                                        <a href="{{ route('home.show', $sertifikat->verified_code) }}"
+                                                            class="fw-bold text-primary mr-3 text-capitalize"
+                                                            target="_blank">
+                                                            <i class="fas fa-download"></i>
+                                                            Download
+                                                        </a>
+                                                        @if ($sertifikat->narasumber_id !== '-')
+                                                            <a href="{{ route('sertifikat.narasumber.generate', $sertifikat->id) }}"
+                                                                class="btn btn-info btn-sm" target="_blank">
+                                                                <i class="fas fa-certificate"></i>
+                                                                Cetak {{ $sertifikat->id }}
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
+                                                                class="btn btn-info btn-sm" target="_blank">
+                                                                <i class="fas fa-certificate"></i>
+                                                                Cetak {{ $sertifikat->id }}
+                                                            </a>
+                                                        @endif
+                                                        <form id="form-delete-{{ $sertifikat->id }}"
+                                                            action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button type="button" class="btn btn-link text-danger"
+                                                            onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -195,7 +309,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     @push('scripts')
@@ -206,6 +319,10 @@
             });
 
             $('#basic').select2({
+                theme: "bootstrap"
+            });
+
+            $('#selectNarasumber').select2({
                 theme: "bootstrap"
             });
 

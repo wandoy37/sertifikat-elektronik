@@ -57,7 +57,8 @@
                                                     <span class="text-danger">{{ $kegiatan->status }}</span>
                                                 @endif
                                             </td>
-                                            <td class="text-center">{{ $kegiatan->sertifikats->count() }}</td>
+                                            <td class="text-center">
+                                                {{ $kegiatan->sertifikats->where('peserta_id', '!=', '-')->count() }}</td>
                                             <td class="form-inline d-flex justify-content-center">
                                                 @if ($kegiatan->kategori->title !== 'pkl')
                                                     <a href="{{ route('kegiatan.print', $kegiatan->id) }}"

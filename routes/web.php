@@ -113,6 +113,8 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('/sertifikat', [SertifikatController::class, 'index'])->name('sertifikat.index');
     Route::get('/sertifikat/create/{id}', [SertifikatController::class, 'createPeserta'])->name('sertifikat.create.peserta');
     Route::post('/sertifikat/store', [SertifikatController::class, 'store'])->name('sertifikat.store');
+    // Tambah Narasumber pada tabel sertifikatas
+    Route::post('/sertifikat/narasumber/store', [SertifikatController::class, 'storeNarasumber'])->name('sertifikat.narasumber.store');
     // Hapus dari tampilan Kegiatan Tambah Peserta
     Route::delete('/sertifikat/peserta/delete/{id}', [SertifikatController::class, 'deletePeserta'])->name('sertifikat.peserta.delete');
     // Hapus dari tampilan sertifikat index
@@ -124,6 +126,9 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('/sertifikat/cetak-all/parts/{id}', [SertifikatPdfController::class, 'generateAllPartsCertificate'])->name('sertifikat.all.parts.generate');
     // Terbitkan Sertifikat
     Route::get('/terbitkan/sertifikat/peserta/{id}', [SertifikatPdfController::class, 'terbitkanCertificate'])->name('sertifikat.peserta.terbitkan');
+    // Cetak Sertifikat Narasumber
+    Route::get('/sertifikat/narasumber/{id}', [SertifikatPdfController::class, 'generateCertificateNarasumber'])->name('sertifikat.narasumber.generate');
+    Route::get('/sertifikat/narasumber/{id}/download', [SertifikatPdfController::class, 'generateCertificateNarasumberDownload'])->name('sertifikat.narasumber.download');
 
     // Cetak Sertifikat
     Route::get('/sertifikat/download/{id}', [SertifikatController::class, 'download'])->name('sertifikat.download');

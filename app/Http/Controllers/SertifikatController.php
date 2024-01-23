@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\Narasumber;
 use App\Models\Peserta;
 use App\Models\Sertifikat;
 use App\Models\Siswa;
@@ -28,6 +29,7 @@ class SertifikatController extends Controller
                 'sertifikats.verified_code',
                 'sertifikats.peserta_id',
                 'sertifikats.siswa_id',
+                'sertifikats.narasumber_id',
                 'sertifikats.status',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
                 'kategoris.title AS kategori_kegiatan',
@@ -62,19 +64,23 @@ class SertifikatController extends Controller
                 'sertifikats.status',
                 'sertifikats.peserta_id',
                 'sertifikats.siswa_id',
+                'sertifikats.narasumber_id',
             )
             ->where('sertifikats.kegiatan_id', '=', $kegiatan->id)
             ->get();
 
+        $narasumbers = Narasumber::all();
+
 
         // return response()->json($dataPeserta);
 
-        return view('dashboard.sertifikat.create_peserta', compact('kegiatan', 'sertifikats', 'dataPeserta'));
+        return view('dashboard.sertifikat.create_peserta', compact('kegiatan', 'sertifikats', 'dataPeserta', 'narasumbers'));
     }
 
     public function store(Request $request)
     {
         $kegiatan = Kegiatan::find($request->kegiatan_id);
+
         if ($kegiatan->kategori->title == 'pkl') {
             // Validator
             $validator = Validator::make(
@@ -101,6 +107,7 @@ class SertifikatController extends Controller
 
         DB::beginTransaction();
         try {
+            // ======================================1St Metode==========================================
             // Last data
             $currentYear = $kegiatan->tahun_kegiatan;
             $lastSertifikat = Sertifikat::max('tahun');
@@ -113,6 +120,7 @@ class SertifikatController extends Controller
                 $lastSertifikat = Sertifikat::where('tahun', $currentYear)->max('nomor_sertifikat');
                 $lastSertifikat++;
             }
+            // ======================================End 1St Metode======================================
 
             if ($kegiatan->kategori->title == 'pkl') {
                 Sertifikat::create([
@@ -135,12 +143,6 @@ class SertifikatController extends Controller
                     'siswa_id' => '-',
                 ]);
             }
-
-            // if (Auth::user()->role == 'admin') {
-            //     return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
-            // } else {
-            //     return redirect()->route('dashboard.index')->with('success', 'Anda berhasil mendaftar kegiatan');
-            // }
 
             return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
         } catch (\Throwable $th) {
@@ -200,5 +202,64 @@ class SertifikatController extends Controller
     {
         $filePath = public_path("sertifikat/" . 'doc-sertifikat-' . $id . '.' . 'pdf');
         return response()->download($filePath);
+    }
+
+    // Narasumber Store
+    public function storeNarasumber(Request $request)
+    {
+        $kegiatan = Kegiatan::find($request->kegiatan_id);
+
+        // Validator
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'narasumber_id' => 'required',
+            ],
+            [],
+        );
+        // If validator fails.
+        if ($validator->fails()) {
+            return redirect()->back()->withInput($request->all())->withErrors($validator);
+        }
+
+        DB::beginTransaction();
+        try {
+            // ======================================1St Metode==========================================
+            // Last data
+            $currentYear = $kegiatan->tahun_kegiatan;
+            $lastSertifikat = Sertifikat::max('tahun');
+
+            if ($lastSertifikat !== $currentYear) {
+                // Jika tahun berubah, atur $lastSertifikat ke 1
+                $lastSertifikat = 1;
+            } else {
+                // Jika tahun sama, ambil nomor sertifikat terakhir dan tambahkan 1
+                $lastSertifikat = Sertifikat::where('tahun', $currentYear)->max('nomor_sertifikat');
+                $lastSertifikat++;
+            }
+            // ======================================End 1St Metode======================================
+
+            Sertifikat::create([
+                'verified_code' => Str::random(20),
+                'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                'kegiatan_id' => $request->kegiatan_id,
+                'peserta_id' => '-',
+                'tanggal_terbit' => '-',
+                'tahun' => $kegiatan->tahun_kegiatan,
+                'siswa_id' => '-',
+                'narasumber_id' => $request->narasumber_id,
+            ]);
+
+            return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Narasumber Baru Berhasil Di Tambahkan');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            if (Auth::user()->role == 'admin') {
+                return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('fails', 'Narasumber Baru Gagal Di Tambahkan');
+            } else {
+                return redirect()->route('dashboard.index')->with('fails', 'Gagal mendaftar kegiatan');
+            }
+        } finally {
+            DB::commit();
+        }
     }
 }
