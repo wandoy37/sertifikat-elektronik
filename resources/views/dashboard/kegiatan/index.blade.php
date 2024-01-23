@@ -34,31 +34,31 @@
                                 width="100%">
                                 <thead>
                                     <tr class="text-center">
+                                        <th>No</th>
+                                        <th>Created At</th>
                                         <th>Kode</th>
                                         <th>Judul</th>
                                         <th>Kategori</th>
                                         <th>Tahun</th>
-                                        <th>Status</th>
-                                        <th>Peserta</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
                                     @foreach ($kegiatans as $kegiatan)
                                         <tr>
+                                            <td class="text-center">
+                                                {{ $no++ }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ \Carbon\Carbon::parse($kegiatan->created_at)->isoFormat('D MMMM Y') }}
+                                            </td>
                                             <td class="text-center">{{ $kegiatan->kode_kegiatan }}</td>
                                             <td>{{ $kegiatan->judul_kegiatan }}</td>
                                             <td class="text-center">{{ $kegiatan->kategori->title }}</td>
                                             <td class="text-center">{{ $kegiatan->tahun_kegiatan }}</td>
-                                            <td class="text-center">
-                                                @if ($kegiatan->status == 'open')
-                                                    <span class="text-success">{{ $kegiatan->status }}</span>
-                                                @else
-                                                    <span class="text-danger">{{ $kegiatan->status }}</span>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                {{ $kegiatan->sertifikats->where('peserta_id', '!=', '-')->count() }}</td>
                                             <td class="form-inline d-flex justify-content-center">
                                                 @if ($kegiatan->kategori->title !== 'pkl')
                                                     <a href="{{ route('kegiatan.print', $kegiatan->id) }}"
@@ -68,7 +68,11 @@
                                                 @endif
                                                 <a href="{{ route('sertifikat.create.peserta', $kegiatan->id) }}"
                                                     class="btn btn-secondary btn-sm mr-4">
-                                                    Peserta
+                                                    @if ($kegiatan->kategori->title == 'pkl')
+                                                        Siswa
+                                                    @else
+                                                        Peserta
+                                                    @endif
                                                 </a>
                                                 <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="text-primary">
                                                     <i class="fas fa-pen"></i>

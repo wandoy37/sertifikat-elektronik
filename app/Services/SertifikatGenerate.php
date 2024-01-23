@@ -878,8 +878,7 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Informasi Peserta
-        $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
-        $pdf->SetFont("Lobster-Regular", "", 28);
+        $pdf->SetFont("helvetica", "IB", 28);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 102.5);
         $pdf->SetX(20.5);
@@ -1019,8 +1018,7 @@ class SertifikatGenerate
         $pdf->SetX(12.6);
 
         // Informasi Peserta
-        $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
-        $pdf->SetFont("Lobster-Regular", "", 28);
+        $pdf->SetFont("helvetica", "IB", 28);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 102.5);
         $pdf->SetX(20.5);
@@ -1167,8 +1165,7 @@ class SertifikatGenerate
             $pdf->SetX(12.6);
 
             // Informasi Peserta
-            $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
-            $pdf->SetFont("Lobster-Regular", "", 28);
+            $pdf->SetFont("helvetica", "IB", 28);
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 102.5);
             $pdf->SetX(20.5);

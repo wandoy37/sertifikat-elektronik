@@ -42,7 +42,8 @@
                                         <tr>
                                             <td>{{ $siswa->nama }}</td>
                                             <td>{{ $siswa->nomor_induk_siswa }}</td>
-                                            <td>{{ $siswa->tempat_lahir . ', ' . $siswa->tanggal_lahir }}</td>
+                                            <td>{{ $siswa->tempat_lahir . ', ' . \Carbon\Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMMM Y') }}
+                                            </td>
                                             <td>{{ $siswa->jurusan }}</td>
                                             <td>{{ $siswa->sekolah }}</td>
                                             <td class="form-inline">
