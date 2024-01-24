@@ -35,7 +35,7 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th>No</th>
-                                        <th>Created At</th>
+                                        <th>Tanggal Kegiatan</th>
                                         <th>Kode</th>
                                         <th>Judul</th>
                                         <th>Kategori</th>
@@ -53,7 +53,7 @@
                                                 {{ $no++ }}
                                             </td>
                                             <td class="text-center">
-                                                {{ \Carbon\Carbon::parse($kegiatan->created_at)->isoFormat('D MMMM Y') }}
+                                                {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->isoFormat('D MMM') . ' s.d. ' . \Carbon\Carbon::parse($kegiatan->tanggal_akhir_kegiatan)->isoFormat('D MMM Y') }}
                                             </td>
                                             <td class="text-center">{{ $kegiatan->kode_kegiatan }}</td>
                                             <td>{{ $kegiatan->judul_kegiatan }}</td>

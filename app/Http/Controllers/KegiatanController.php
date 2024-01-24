@@ -30,30 +30,6 @@ class KegiatanController extends Controller
     public function index()
     {
         $kegiatans = Kegiatan::latest()->get();
-        // $kegiatans = DB::table('kegiatans')
-        //     ->join('sertifikatas', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
-        //     ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
-        //     ->select(
-        //         'sertifikats.id',
-        //         'sertifikats.verified_code',
-        //         'sertifikats.nomor_sertifikat',
-        //         'sertifikats.peserta_id',
-        //         'sertifikats.siswa_id',
-        //         'kegiatans.kode_kegiatan AS kode_kegiatan',
-        //         'kegiatans.judul_kegiatan AS judul_kegiatan',
-        //         'kategoris.title AS kategori_kegiatan',
-        //         'kategoris.template AS template_sertifikat',
-        //         'kegiatans.tahun_kegiatan AS tahun_kegiatan',
-        //         'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
-        //         'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
-        //         'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
-        //         'kegiatans.tanggal_penandatanganan AS tanggal_penandatanganan',
-        //         'penandatangans.nama AS nama_penandatangan',
-        //         'penandatangans.nip AS nip_penandatangan',
-        //         'penandatangans.pangkat_golongan AS pangkat_golongan_penandatangan',
-        //         'penandatangans.jabatan AS jabatan_penandatangan',
-        //     )
-        //     ->get();
         return view('dashboard.kegiatan.index', compact('kegiatans'));
     }
 
@@ -194,7 +170,7 @@ class KegiatanController extends Controller
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
-                'status' => $request->status,
+                'status' => 'open',
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Updae');
         } catch (\Throwable $th) {

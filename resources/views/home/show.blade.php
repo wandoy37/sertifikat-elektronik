@@ -100,7 +100,7 @@
                                         <tr>
                                             <td colspan="2">
                                                 @if ($sertifikat->narasumber_id !== '-')
-                                                    <a href="{{ route('sertifikat.narasumber.download', $sertifikat->id) }}"
+                                                    <a href="{{ route('home.narasumber.download', $sertifikat->id) }}"
                                                         class="btn btn-danger" style="border-radius: 15px;">Download
                                                         E-Sertifikat</a>
                                                 @else

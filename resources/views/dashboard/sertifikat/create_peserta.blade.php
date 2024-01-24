@@ -261,7 +261,7 @@
                                                     <td>
                                                         @php
                                                             $peserta_id = $sertifikat->peserta_id;
-                                                            $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
+                                                            $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
                                                             $response = file_get_contents($url);
                                                             $data = json_decode($response, true);
                                                         @endphp
