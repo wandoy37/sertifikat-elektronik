@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\NarasumberController;
+use App\Http\Controllers\OrangController;
 use App\Http\Controllers\PenandatanganController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\SertifikatController;
@@ -99,6 +100,9 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('narasumber/edit/{id}', [NarasumberController::class, 'edit'])->name('narasumber.edit');
     Route::patch('narasumber/update/{id}', [NarasumberController::class, 'update'])->name('narasumber.update');
     Route::delete('narasumber/delete/{id}', [NarasumberController::class, 'destroy'])->name('narasumber.delete');
+
+    // Kelola Orang
+    Route::resource('orang', OrangController::class);
 
     // Kelola Kegiatan
     Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');

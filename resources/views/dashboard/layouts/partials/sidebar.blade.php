@@ -57,6 +57,12 @@
                             <p>Peserta</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ request()->segment(2) == 'orang' ? 'active' : '' }}">
+                        <a href="{{ route('orang.index') }}">
+                            <i class="fas fa-user"></i>
+                            <p>Orang</p>
+                        </a>
+                    </li>
                     <li class="nav-item {{ request()->segment(2) == 'siswa' ? 'active' : '' }}">
                         <a href="{{ route('siswa.index') }}">
                             <i class="fas fa-graduation-cap"></i>

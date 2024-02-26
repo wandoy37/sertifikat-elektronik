@@ -919,7 +919,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 137);
         $pdf->SetX(10.5);
-        $pdf->Cell(0, 0, 'Telah Melaksanakan ' . $sertifikat->judul_kegiatan . ', Terhitung Mulai Tanggal' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+        $pdf->Cell(0, 0, 'Telah Melaksanakan ' . $sertifikat->judul_kegiatan . ', Terhitung Mulai Tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -1059,7 +1059,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 137);
         $pdf->SetX(10.5);
-        $pdf->Cell(0, 0, 'Telah Melaksanakan ' . $sertifikat->judul_kegiatan . ', Terhitung Mulai Tanggal' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+        $pdf->Cell(0, 0, 'Telah Melaksanakan ' . $sertifikat->judul_kegiatan . ', Terhitung Mulai Tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
@@ -1205,7 +1205,7 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 137);
             $pdf->SetX(10.5);
-            $pdf->Cell(0, 0, 'Telah Melaksanakan ' . $sertifikat->judul_kegiatan . ', Terhitung Mulai Tanggal' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+            $pdf->Cell(0, 0, 'Telah Melaksanakan ' . $sertifikat->judul_kegiatan . ', Terhitung Mulai Tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
             $pdf->SetX(12.6);
 
             $pdf->SetFont("helvetica", "", 12);
