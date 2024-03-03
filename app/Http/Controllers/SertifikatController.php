@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use App\Models\Narasumber;
+use App\Models\Orang;
 use App\Models\Peserta;
 use App\Models\Sertifikat;
 use App\Models\Siswa;
@@ -27,8 +28,10 @@ class SertifikatController extends Controller
             ->select(
                 'sertifikats.id',
                 'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
                 'sertifikats.peserta_id',
                 'sertifikats.siswa_id',
+                'sertifikats.orang_id',
                 'sertifikats.narasumber_id',
                 'sertifikats.status',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
@@ -42,15 +45,19 @@ class SertifikatController extends Controller
     {
         $kegiatan = Kegiatan::find($id);
 
-        if ($kegiatan->kategori->title == 'pkl') {
-            $dataPeserta = Siswa::all();
-        } else {
-            // Inisialisasi Guzzle Client
+        // If Peserta Kegiatan
+        if ($kegiatan->kategori->title == 'pelatihan') {
             $client = new Client();
             $response = $client->get(env('SIMPELTAN_API_DATA_PESERTA'));
-
-            // Decode respons JSON dari API
             $dataPeserta = json_decode($response->getBody(), true);
+        }
+        // If Bimtek Kegiatan
+        if ($kegiatan->kategori->title == 'bimtek') {
+            $dataPeserta = Orang::all();
+        }
+        // If PKL Kegiatan
+        if ($kegiatan->kategori->title == 'pkl') {
+            $dataPeserta = Siswa::all();
         }
 
         $sertifikats = DB::table('sertifikats')
@@ -65,14 +72,12 @@ class SertifikatController extends Controller
                 'sertifikats.peserta_id',
                 'sertifikats.siswa_id',
                 'sertifikats.narasumber_id',
+                'sertifikats.orang_id',
             )
             ->where('sertifikats.kegiatan_id', '=', $kegiatan->id)
             ->get();
 
         $narasumbers = Narasumber::all();
-
-
-        // return response()->json($dataPeserta);
 
         return view('dashboard.sertifikat.create_peserta', compact('kegiatan', 'sertifikats', 'dataPeserta', 'narasumbers'));
     }
@@ -81,17 +86,8 @@ class SertifikatController extends Controller
     {
         $kegiatan = Kegiatan::find($request->kegiatan_id);
 
-        if ($kegiatan->kategori->title == 'pkl') {
-            // Validator
-            $validator = Validator::make(
-                $request->all(),
-                [
-                    'siswa_id' => 'required',
-                ],
-                [],
-            );
-        } else {
-            // Validator
+        // If Peserta Kegiatan
+        if ($kegiatan->kategori->title == 'pelatihan') {
             $validator = Validator::make(
                 $request->all(),
                 [
@@ -100,7 +96,27 @@ class SertifikatController extends Controller
                 [],
             );
         }
-        // If validator fails.
+        // If Bimtek Kegiatan
+        if ($kegiatan->kategori->title == 'bimtek') {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'orang_id' => 'required',
+                ],
+                [],
+            );
+        }
+        // If PKL Kegiatan
+        if ($kegiatan->kategori->title == 'pkl') {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'siswa_id' => 'required',
+                ],
+                [],
+            );
+        }
+
         if ($validator->fails()) {
             return redirect()->back()->withInput($request->all())->withErrors($validator);
         }
@@ -121,7 +137,30 @@ class SertifikatController extends Controller
                 $lastSertifikat++;
             }
             // ======================================End 1St Metode======================================
-
+            if ($kegiatan->kategori->title == 'pelatihan') {
+                Sertifikat::create([
+                    'verified_code' => Str::random(20),
+                    'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                    'kegiatan_id' => $request->kegiatan_id,
+                    'peserta_id' => $request->peserta_id,
+                    'tanggal_terbit' => '-',
+                    'tahun' => $kegiatan->tahun_kegiatan,
+                    'siswa_id' => '-',
+                    'orang_id' => '-',
+                ]);
+            }
+            if ($kegiatan->kategori->title == 'bimtek') {
+                Sertifikat::create([
+                    'verified_code' => Str::random(20),
+                    'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                    'kegiatan_id' => $request->kegiatan_id,
+                    'peserta_id' => '-',
+                    'tanggal_terbit' => '-',
+                    'tahun' => $kegiatan->tahun_kegiatan,
+                    'siswa_id' => '-',
+                    'orang_id' => $request->orang_id,
+                ]);
+            }
             if ($kegiatan->kategori->title == 'pkl') {
                 Sertifikat::create([
                     'verified_code' => Str::random(20),
@@ -131,16 +170,7 @@ class SertifikatController extends Controller
                     'tanggal_terbit' => '-',
                     'tahun' => $kegiatan->tahun_kegiatan,
                     'siswa_id' => $request->siswa_id,
-                ]);
-            } else {
-                Sertifikat::create([
-                    'verified_code' => Str::random(20),
-                    'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
-                    'kegiatan_id' => $request->kegiatan_id,
-                    'peserta_id' => $request->peserta_id,
-                    'tanggal_terbit' => '-',
-                    'tahun' => $kegiatan->tahun_kegiatan,
-                    'siswa_id' => '-',
+                    'orang_id' => '-',
                 ]);
             }
 

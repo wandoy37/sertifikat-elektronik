@@ -36,6 +36,8 @@ class HomeController extends Controller
                     'sertifikats.verified_code',
                     'sertifikats.peserta_id',
                     'sertifikats.siswa_id',
+                    'sertifikats.narasumber_id',
+                    'sertifikats.orang_id',
                     'kegiatans.judul_kegiatan',
                     'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
                     'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',

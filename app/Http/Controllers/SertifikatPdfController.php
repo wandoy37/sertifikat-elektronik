@@ -30,6 +30,7 @@ class SertifikatPdfController extends Controller
                 'sertifikats.nomor_sertifikat',
                 'sertifikats.peserta_id',
                 'sertifikats.siswa_id',
+                'sertifikats.orang_id',
                 'kegiatans.kode_kegiatan AS kode_kegiatan',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
                 'kategoris.title AS kategori_kegiatan',
@@ -46,10 +47,14 @@ class SertifikatPdfController extends Controller
             )
             ->first();
 
+        if ($sertifikat->kategori_kegiatan == 'pelatihan') {
+            $this->sertifikatGenerate->prosesSingleGenerate($sertifikat);
+        }
+        if ($sertifikat->kategori_kegiatan == 'bimtek') {
+            $this->sertifikatGenerate->prosesSingleGenerateBimtek($sertifikat);
+        }
         if ($sertifikat->kategori_kegiatan == 'pkl') {
             $this->sertifikatGenerate->prosesSingleGenerateSiswa($sertifikat);
-        } else {
-            $this->sertifikatGenerate->prosesSingleGenerate($sertifikat);
         }
     }
 
@@ -65,6 +70,7 @@ class SertifikatPdfController extends Controller
                 'sertifikats.nomor_sertifikat',
                 'sertifikats.peserta_id',
                 'sertifikats.siswa_id',
+                'sertifikats.orang_id',
                 'kegiatans.kode_kegiatan AS kode_kegiatan',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
                 'kategoris.title AS kategori_kegiatan',
@@ -81,10 +87,17 @@ class SertifikatPdfController extends Controller
             )
             ->get();
 
+        // If Kategori Kegiatan Pelatihan
+        if ($sertifikats[0]->kategori_kegiatan == 'pelatihan') {
+            $this->sertifikatGenerate->prosesAllGenerate($sertifikats);
+        }
+        // If Kategori Kegiatan Bimtek
+        if ($sertifikats[0]->kategori_kegiatan == 'bimtek') {
+            $this->sertifikatGenerate->prosesAllGenerateBimtek($sertifikats);
+        }
+        // If Kategori Kegiatan PKL
         if ($sertifikats[0]->kategori_kegiatan == 'pkl') {
             $this->sertifikatGenerate->prosesAllGenerateSiswa($sertifikats);
-        } else {
-            $this->sertifikatGenerate->prosesAllGenerate($sertifikats);
         }
     }
 
@@ -102,6 +115,7 @@ class SertifikatPdfController extends Controller
                 'sertifikats.nomor_sertifikat',
                 'sertifikats.peserta_id',
                 'sertifikats.siswa_id',
+                'sertifikats.orang_id',
                 'kegiatans.id AS id_kegiatan',
                 'kegiatans.kode_kegiatan AS kode_kegiatan',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
@@ -120,11 +134,14 @@ class SertifikatPdfController extends Controller
             )
             ->first();
 
-
+        if ($sertifikat->kategori_kegiatan == 'pelatihan') {
+            $this->sertifikatGenerate->prosesSingleTerbit($sertifikat);
+        }
+        if ($sertifikat->kategori_kegiatan == 'bimtek') {
+            $this->sertifikatGenerate->prosesSingleTerbitBimtek($sertifikat);
+        }
         if ($sertifikat->kategori_kegiatan == 'pkl') {
             $this->sertifikatGenerate->prosesSingleTerbitSiswa($sertifikat);
-        } else {
-            $this->sertifikatGenerate->prosesSingleTerbit($sertifikat);
         }
     }
 

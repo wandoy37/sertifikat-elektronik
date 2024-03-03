@@ -30,6 +30,7 @@
                                     <thead>
                                         <tr class="text-center">
                                             <th>No</th>
+                                            <th>Nomor Sertifikat</th>
                                             <th>Kegiatan</th>
                                             <th>Peserta</th>
                                             <th>Aksi</th>
@@ -42,9 +43,45 @@
                                         @foreach ($sertifikats as $sertifikat)
                                             <tr>
                                                 <td>{{ $counter++ }}</td>
+                                                <td>{{ $sertifikat->nomor_sertifikat }}</td>
                                                 <td>{{ $sertifikat->judul_kegiatan }}</td>
                                                 <td>
+                                                    @if ($sertifikat->kategori_kegiatan == 'pelatihan')
+                                                        @if ($sertifikat->peserta_id !== '-')
+                                                            @php
+                                                                $url =
+                                                                    env('SIMPELTAN_API_DATA_PESERTA') .
+                                                                    "/{$sertifikat->peserta_id}";
+                                                                $response = file_get_contents($url);
+                                                                $data = json_decode($response, true);
+                                                            @endphp
+                                                            {{ $data[0]['peserta_nama'] }}
+                                                        @else
+                                                            @php
+                                                                $narasumber = DB::table('narasumbers')
+                                                                    ->where('id', '=', $sertifikat->narasumber_id)
+                                                                    ->first();
+                                                            @endphp
+                                                            {{ $narasumber->nama }}
+                                                        @endif
+                                                    @endif
+                                                    @if ($sertifikat->kategori_kegiatan == 'bimtek')
+                                                        @php
+                                                            $orang = DB::table('orangs')
+                                                                ->where('id', '=', $sertifikat->orang_id)
+                                                                ->first();
+                                                        @endphp
+                                                        {{ $orang->nama }}
+                                                    @endif
                                                     @if ($sertifikat->kategori_kegiatan == 'pkl')
+                                                        @php
+                                                            $siswa = DB::table('siswas')
+                                                                ->where('id', '=', $sertifikat->siswa_id)
+                                                                ->first();
+                                                        @endphp
+                                                        {{ $siswa->nama }}
+                                                    @endif
+                                                    {{-- @if ($sertifikat->kategori_kegiatan == 'pkl')
                                                         @php
                                                             $siswa = DB::table('siswas')
                                                                 ->where('id', '=', $sertifikat->siswa_id)
@@ -67,7 +104,7 @@
                                                             @endphp
                                                             {{ $narasumber->nama }}
                                                         @endif
-                                                    @endif
+                                                    @endif --}}
                                                 </td>
                                                 <td class="form-inline d-flex justify-content-center">
                                                     <div class="btn-group" role="group"
