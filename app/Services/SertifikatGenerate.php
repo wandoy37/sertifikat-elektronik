@@ -91,14 +91,28 @@ class SertifikatGenerate
             // Mengambil nilai pangkat_golongan dari array $peserta
             $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
 
-            // Pemisahan string sebelum dan setelah tanda titik
-            list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
+            // Jika terdapat parameter kedua setelah tanda titik, pemisahan string dilakukan
+            if (strpos($pesertaPangkatGolongan, '.') !== false) {
+                // Pemisahan string sebelum dan setelah tanda titik
+                list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
 
-            // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
-            $beforeDotCapitalized = strtoupper($beforeDot);
+                // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
+                $beforeDotCapitalized = strtoupper($beforeDot);
 
-            // Gabungkan kembali string
-            $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . strtolower($afterDot);
+                // Jika tidak ada parameter kedua setelah tanda titik, maka ubah menjadi huruf besar
+                if (empty($afterDot)) {
+                    $afterDot = strtoupper($afterDot);
+                } else {
+                    // Jika ada parameter kedua, ubah menjadi huruf kecil
+                    $afterDot = strtolower($afterDot);
+                }
+
+                // Gabungkan kembali string
+                $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . $afterDot;
+            } else {
+                // Jika tidak terdapat tanda titik, langsung ubah menjadi huruf besar
+                $pesertaPangkatGolonganFormatted = strtoupper($pesertaPangkatGolongan);
+            }
 
             // Menambahkan kondisi
             if ($pesertaPangkatGolongan == 'ii.a') {
@@ -125,6 +139,26 @@ class SertifikatGenerate
                 $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'non-asn') {
                 $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'v') {
+                $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'vi') {
+                $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'vii') {
+                $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'viii') {
+                $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'ix') {
+                $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'x') {
+                $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'xi') {
+                $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'xii') {
+                $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'tk2d') {
+                $pdf->Cell(0, 10, 'Tenaga Kerja Kontrak Daerah', 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'THL-TBPP') {
+                $pdf->Cell(0, 10, $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             }
 
             $pdf->SetX(12.6);
@@ -433,6 +467,7 @@ class SertifikatGenerate
                 $pdf->Cell(0, 10, $peserta[0]['peserta_tempat_lahir'] . ', ' . Carbon::parse($peserta[0]['peserta_tanggal_lahir'])->isoFormat('D MMMM Y'), 0, 0, 'L');
                 $pdf->SetX(12.6);
 
+
                 $pdf->SetFont("helvetica", "", 12);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 97.2);
@@ -441,14 +476,28 @@ class SertifikatGenerate
                 // Mengambil nilai pangkat_golongan dari array $peserta
                 $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
 
-                // Pemisahan string sebelum dan setelah tanda titik
-                list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
+                // Jika terdapat parameter kedua setelah tanda titik, pemisahan string dilakukan
+                if (strpos($pesertaPangkatGolongan, '.') !== false) {
+                    // Pemisahan string sebelum dan setelah tanda titik
+                    list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
 
-                // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
-                $beforeDotCapitalized = strtoupper($beforeDot);
+                    // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
+                    $beforeDotCapitalized = strtoupper($beforeDot);
 
-                // Gabungkan kembali string
-                $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . strtolower($afterDot);
+                    // Jika tidak ada parameter kedua setelah tanda titik, maka ubah menjadi huruf besar
+                    if (empty($afterDot)) {
+                        $afterDot = strtoupper($afterDot);
+                    } else {
+                        // Jika ada parameter kedua, ubah menjadi huruf kecil
+                        $afterDot = strtolower($afterDot);
+                    }
+
+                    // Gabungkan kembali string
+                    $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . $afterDot;
+                } else {
+                    // Jika tidak terdapat tanda titik, langsung ubah menjadi huruf besar
+                    $pesertaPangkatGolonganFormatted = strtoupper($pesertaPangkatGolongan);
+                }
 
                 // Menambahkan kondisi
                 if ($pesertaPangkatGolongan == 'ii.a') {
@@ -475,6 +524,24 @@ class SertifikatGenerate
                     $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 } elseif ($pesertaPangkatGolongan == 'non-asn') {
                     $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'v') {
+                    $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'vi') {
+                    $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'vii') {
+                    $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'viii') {
+                    $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'ix') {
+                    $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'x') {
+                    $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'xi') {
+                    $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'xii') {
+                    $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                } elseif ($pesertaPangkatGolongan == 'THL-TBPP') {
+                    $pdf->Cell(0, 10, $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                 }
 
                 $pdf->SetX(12.6);
@@ -786,14 +853,28 @@ class SertifikatGenerate
         // Mengambil nilai pangkat_golongan dari array $peserta
         $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
 
-        // Pemisahan string sebelum dan setelah tanda titik
-        list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
+        // Jika terdapat parameter kedua setelah tanda titik, pemisahan string dilakukan
+        if (strpos($pesertaPangkatGolongan, '.') !== false) {
+            // Pemisahan string sebelum dan setelah tanda titik
+            list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
 
-        // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
-        $beforeDotCapitalized = strtoupper($beforeDot);
+            // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
+            $beforeDotCapitalized = strtoupper($beforeDot);
 
-        // Gabungkan kembali string
-        $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . strtolower($afterDot);
+            // Jika tidak ada parameter kedua setelah tanda titik, maka ubah menjadi huruf besar
+            if (empty($afterDot)) {
+                $afterDot = strtoupper($afterDot);
+            } else {
+                // Jika ada parameter kedua, ubah menjadi huruf kecil
+                $afterDot = strtolower($afterDot);
+            }
+
+            // Gabungkan kembali string
+            $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . $afterDot;
+        } else {
+            // Jika tidak terdapat tanda titik, langsung ubah menjadi huruf besar
+            $pesertaPangkatGolonganFormatted = strtoupper($pesertaPangkatGolongan);
+        }
 
         // Menambahkan kondisi
         if ($pesertaPangkatGolongan == 'ii.a') {
@@ -820,6 +901,26 @@ class SertifikatGenerate
             $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
         } elseif ($pesertaPangkatGolongan == 'non-asn') {
             $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'v') {
+            $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'vi') {
+            $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'vii') {
+            $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'viii') {
+            $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'ix') {
+            $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'x') {
+            $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'xi') {
+            $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'xii') {
+            $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'tk2d') {
+            $pdf->Cell(0, 10, 'Tenaga Kerja Kontrak Daerah', 0, 0, 'L');
+        } elseif ($pesertaPangkatGolongan == 'THL-TBPP') {
+            $pdf->Cell(0, 10, $pesertaPangkatGolonganFormatted, 0, 0, 'L');
         }
 
         $pdf->SetX(12.6);
@@ -1131,14 +1232,28 @@ class SertifikatGenerate
                     // Mengambil nilai pangkat_golongan dari array $peserta
                     $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
 
-                    // Pemisahan string sebelum dan setelah tanda titik
-                    list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
+                    // Jika terdapat parameter kedua setelah tanda titik, pemisahan string dilakukan
+                    if (strpos($pesertaPangkatGolongan, '.') !== false) {
+                        // Pemisahan string sebelum dan setelah tanda titik
+                        list($beforeDot, $afterDot) = explode('.', $pesertaPangkatGolongan, 2);
 
-                    // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
-                    $beforeDotCapitalized = strtoupper($beforeDot);
+                        // Mengubah huruf pertama sebelum tanda titik menjadi huruf kapital
+                        $beforeDotCapitalized = strtoupper($beforeDot);
 
-                    // Gabungkan kembali string
-                    $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . strtolower($afterDot);
+                        // Jika tidak ada parameter kedua setelah tanda titik, maka ubah menjadi huruf besar
+                        if (empty($afterDot)) {
+                            $afterDot = strtoupper($afterDot);
+                        } else {
+                            // Jika ada parameter kedua, ubah menjadi huruf kecil
+                            $afterDot = strtolower($afterDot);
+                        }
+
+                        // Gabungkan kembali string
+                        $pesertaPangkatGolonganFormatted = $beforeDotCapitalized . '.' . $afterDot;
+                    } else {
+                        // Jika tidak terdapat tanda titik, langsung ubah menjadi huruf besar
+                        $pesertaPangkatGolonganFormatted = strtoupper($pesertaPangkatGolongan);
+                    }
 
                     // Menambahkan kondisi
                     if ($pesertaPangkatGolongan == 'ii.a') {
@@ -1165,6 +1280,26 @@ class SertifikatGenerate
                         $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                     } elseif ($pesertaPangkatGolongan == 'non-asn') {
                         $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'v') {
+                        $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'vi') {
+                        $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'vii') {
+                        $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'viii') {
+                        $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'ix') {
+                        $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'x') {
+                        $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'xi') {
+                        $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'xii') {
+                        $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'tk2d') {
+                        $pdf->Cell(0, 10, 'Tenaga Kerja Kontrak Daerah', 0, 0, 'L');
+                    } elseif ($pesertaPangkatGolongan == 'THL-TBPP') {
+                        $pdf->Cell(0, 10, $pesertaPangkatGolonganFormatted, 0, 0, 'L');
                     }
 
                     $pdf->SetX(12.6);
