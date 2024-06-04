@@ -184,7 +184,7 @@ class SertifikatGenerate
             $nextWords = array_map('ucfirst', array_slice($words, 1));
             // Gabungkan kembali kata-kata menjadi string
             $instansiFormatted = $firstWord . ' ' . implode(' ', $nextWords);
-            $pdf->Cell(0, 10, $instansiFormatted, 0, 0, 'L');
+            $pdf->Cell(0, 10, $peserta[0]['peserta_instansi'], 0, 0, 'L');
             $pdf->SetX(12.6);
         } else {
             $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');

@@ -127,81 +127,81 @@
             {{-- End Section Tambah Peserta --}}
 
             {{-- Section Narasumber --}}
-            @if ($kegiatan->kategori->title == 'pelatihan')
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header d-flex align-items-center bd-highlight">
-                            <h4>Narasumber</h4>
-                        </div>
-                        <div class="card-body">
-                            {{-- Form Select2 Narasumber --}}
-                            <form action="{{ route('sertifikat.narasumber.store') }}" method="post">
-                                @csrf
-                                <div class="form-group">
-                                    <input type="text" name="kegiatan_id" value="{{ $kegiatan->id }}" hidden>
-                                    <div class="select2-input">
-                                        <select id="selectNarasumber" name="narasumber_id" class="form-control">
-                                            <option value="">--Pilih Narasumber--</option>
-                                            @foreach ($narasumbers as $narasumber)
-                                                <option value="{{ $narasumber->id }}">{{ $narasumber->nama }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-round float-right">
-                                        <i class="fas fa=plus"></i>
-                                        Narasumber
-                                    </button>
-                                </div>
-                            </form>
-                            {{-- End Form Select2 Narasumber --}}
-                            <div class="table-responsive">
-                                <table class="table" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Nomor Sertifikat</th>
-                                            <th>Nama</th>
-                                            <th class="text-center">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($sertifikats as $sertifikat)
-                                            @if ($sertifikat->narasumber_id !== '-')
-                                                <tr class="text-center">
-                                                    <td>{{ $sertifikat->nomor_sertifikat }}</td>
-                                                    <td>
-                                                        @php
-                                                            $narasumber = DB::table('narasumbers')
-                                                                ->where('id', '=', $sertifikat->narasumber_id)
-                                                                ->first();
-                                                        @endphp
-                                                        {{ $narasumber->nama }}
-                                                    </td>
-                                                    <td class="form-inline d-flex justify-content-center">
-                                                        <a href="{{ route('sertifikat.narasumber.generate', $sertifikat->id) }}"
-                                                            class="fw-bold text-primary mr-3 text-capitalize">
-                                                            <i class="fas fa-print"></i>
-                                                        </a>
-                                                        <form id="form-delete-{{ $sertifikat->id }}"
-                                                            action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                        <button type="button" class="btn btn-link text-danger"
-                                                            onclick="btnDelete( {{ $sertifikat->id }} )">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            @endif
+            {{-- @if ($kegiatan->kategori->title == 'pelatihan') --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center bd-highlight">
+                        <h4>Narasumber</h4>
+                    </div>
+                    <div class="card-body">
+                        {{-- Form Select2 Narasumber --}}
+                        <form action="{{ route('sertifikat.narasumber.store') }}" method="post">
+                            @csrf
+                            <div class="form-group">
+                                <input type="text" name="kegiatan_id" value="{{ $kegiatan->id }}" hidden>
+                                <div class="select2-input">
+                                    <select id="selectNarasumber" name="narasumber_id" class="form-control">
+                                        <option value="">--Pilih Narasumber--</option>
+                                        @foreach ($narasumbers as $narasumber)
+                                            <option value="{{ $narasumber->id }}">{{ $narasumber->nama }}</option>
                                         @endforeach
-                                    </tbody>
-                                </table>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-round float-right">
+                                    <i class="fas fa=plus"></i>
+                                    Narasumber
+                                </button>
                             </div>
+                        </form>
+                        {{-- End Form Select2 Narasumber --}}
+                        <div class="table-responsive">
+                            <table class="table" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nomor Sertifikat</th>
+                                        <th>Nama</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($sertifikats as $sertifikat)
+                                        @if ($sertifikat->narasumber_id !== '-')
+                                            <tr class="text-center">
+                                                <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                                <td>
+                                                    @php
+                                                        $narasumber = DB::table('narasumbers')
+                                                            ->where('id', '=', $sertifikat->narasumber_id)
+                                                            ->first();
+                                                    @endphp
+                                                    {{ $narasumber->nama }}
+                                                </td>
+                                                <td class="form-inline d-flex justify-content-center">
+                                                    <a href="{{ route('sertifikat.narasumber.generate', $sertifikat->id) }}"
+                                                        class="fw-bold text-primary mr-3 text-capitalize">
+                                                        <i class="fas fa-print"></i>
+                                                    </a>
+                                                    <form id="form-delete-{{ $sertifikat->id }}"
+                                                        action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                    <button type="button" class="btn btn-link text-danger"
+                                                        onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
+            {{-- @endif --}}
             {{-- End Section Narasumber --}}
 
             {{-- List Peserta --}}
