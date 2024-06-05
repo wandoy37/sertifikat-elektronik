@@ -145,6 +145,8 @@ class SertifikatPdfController extends Controller
         }
     }
 
+
+    // Cetak Sertifikat (Parts) Pelatihan
     public function generateAllPartsCertificate($id)
     {
         $sertifikats = DB::table('sertifikats')->where('kegiatan_id', $id)
@@ -156,6 +158,8 @@ class SertifikatPdfController extends Controller
                 'sertifikats.verified_code',
                 'sertifikats.nomor_sertifikat',
                 'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
+                'sertifikats.orang_id',
                 'kegiatans.kode_kegiatan AS kode_kegiatan',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
                 'kategoris.title AS kategori_kegiatan',
@@ -172,7 +176,16 @@ class SertifikatPdfController extends Controller
             )
             ->get();
 
-        $this->sertifikatGenerate->prosesAllPartsGenerate($sertifikats);
+
+        // If Kategori Kegiatan Pelatihan
+        if ($sertifikats[0]->kategori_kegiatan == 'pelatihan') {
+            $this->sertifikatGenerate->prosesAllPartsGenerate($sertifikats);
+        }
+
+        // If Kategori Kegiatan Bimtek
+        if ($sertifikats[0]->kategori_kegiatan == 'bimtek') {
+            $this->sertifikatGenerate->prosesAllPartsGenerateBimtek($sertifikats);
+        }
     }
 
     public function generateCertificateNarasumber($id)

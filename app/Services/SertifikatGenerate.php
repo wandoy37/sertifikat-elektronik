@@ -672,7 +672,7 @@ class SertifikatGenerate
                 $pdf->SetFont("helvetica", "", 12);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 10);
-                $pdf->SetX(10.5);
+                $pdf->SetX(18);
                 $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
                 $pdf->SetX(12.6);
 
@@ -696,7 +696,7 @@ class SertifikatGenerate
                 $pdf->SetFont("Lobster-Regular", "", 28);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, 93);
-                $pdf->SetX(10.5);
+                $pdf->SetX(18);
                 $pdf->Cell(0, 10, $orang->nama, 0, 0, 'C');
                 $pdf->SetX(12.6);
 
@@ -1168,6 +1168,7 @@ class SertifikatGenerate
         exit;
     }
 
+    // Parts Pelatihan
     public function prosesAllPartsGenerate($sertifikats)
     {
         $pdf = new Fpdi();
@@ -1347,6 +1348,65 @@ class SertifikatGenerate
                 $pdf->SetX(12.6);
             }
         }
+
+        // Simpan
+
+        $pdf->Output('sertifikat_pada_kegiatan_' . Str::slug($sertifikat->judul_kegiatan, '-') . '.' . 'pdf', 'I');
+    }
+
+    // Parts Bimtek
+    public function prosesAllPartsGenerateBimtek($sertifikats)
+    {
+        $pdf = new Fpdi();
+
+        // Loop untuk membuat sertifikat dalam jumlah banyak
+        foreach ($sertifikats as $key => $sertifikat) {
+            if ($sertifikat->orang_id !== '-') {
+                $orang = DB::table('orangs')
+                    ->where('id', '=', $sertifikat->orang_id)
+                    ->first();
+
+                // Tambahkan halaman baru dari template sertifikat
+                $pdf->AddPage('L', 'A4');
+                $pdf->setSourceFile(public_path('uploads/template/template_blank.pdf'));
+                $tplIdx = $pdf->importPage(1);
+                $pdf->useTemplate($tplIdx);
+
+                // Mengatur margin dalam satuan milimeter (mm)
+                $pdf->SetMargins(20, 20, 20); // Kiri, atas, kanan
+                $pdf->SetAutoPageBreak(true, 20); // Mengatur auto page break dengan margin bawah 20 mm
+
+                // Set font dan ukuran
+                $pdf->SetFont('Arial', 'B', 16);
+
+                $pdf->SetFont("helvetica", "", 12);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 10);
+                $pdf->SetX(18);
+                $pdf->Cell(0, 103, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
+                $pdf->SetX(12.6);
+
+                // Informasi Peserta
+                $pdf->AddFont('Lobster-Regular', '', 'Lobster-Regular.php');
+                $pdf->SetFont("Lobster-Regular", "", 28);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 93);
+                $pdf->SetX(18);
+                $pdf->Cell(0, 10, $orang->nama, 0, 0, 'C');
+                $pdf->SetX(12.6);
+
+                // Buat QR Code
+                QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .3, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+                $pdf->SetFont("helvetica", "", 12);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetXY(0, 160);
+                $pdf->SetX(45);
+                $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 47, 155, 20, 0, 'PNG');
+                $pdf->SetX(12.6);
+            }
+        }
+
+        $pdf->Output('sertifikat_pada_kegiatan_' . Str::slug($sertifikat->judul_kegiatan, '-') . '.' . 'pdf', 'I');
 
         // Simpan
 
