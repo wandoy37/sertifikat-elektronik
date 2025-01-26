@@ -34,34 +34,45 @@
                                 width="100%">
                                 <thead>
                                     <tr class="text-center">
+                                        <th>No</th>
+                                        <th>Tanggal Kegiatan</th>
                                         <th>Kode</th>
                                         <th>Judul</th>
                                         <th>Kategori</th>
                                         <th>Tahun</th>
-                                        <th>Status</th>
-                                        <th>Peserta</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
                                     @foreach ($kegiatans as $kegiatan)
                                         <tr>
+                                            <td class="text-center">
+                                                {{ $no++ }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->isoFormat('D MMM') . ' s.d. ' . \Carbon\Carbon::parse($kegiatan->tanggal_akhir_kegiatan)->isoFormat('D MMM Y') }}
+                                            </td>
                                             <td class="text-center">{{ $kegiatan->kode_kegiatan }}</td>
                                             <td>{{ $kegiatan->judul_kegiatan }}</td>
                                             <td class="text-center">{{ $kegiatan->kategori->title }}</td>
                                             <td class="text-center">{{ $kegiatan->tahun_kegiatan }}</td>
-                                            <td class="text-center">
-                                                @if ($kegiatan->status == 'open')
-                                                    <span class="text-success">{{ $kegiatan->status }}</span>
-                                                @else
-                                                    <span class="text-danger">{{ $kegiatan->status }}</span>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">{{ $kegiatan->peserta->count() }}</td>
                                             <td class="form-inline d-flex justify-content-center">
+                                                @if ($kegiatan->kategori->title !== 'pkl')
+                                                    <a href="{{ route('kegiatan.print', $kegiatan->id) }}"
+                                                        class="btn btn-warning btn-sm mr-1">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </a>
+                                                @endif
                                                 <a href="{{ route('sertifikat.create.peserta', $kegiatan->id) }}"
                                                     class="btn btn-secondary btn-sm mr-4">
-                                                    Peserta
+                                                    @if ($kegiatan->kategori->title == 'pkl')
+                                                        Siswa
+                                                    @else
+                                                        Peserta
+                                                    @endif
                                                 </a>
                                                 <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="text-primary">
                                                     <i class="fas fa-pen"></i>

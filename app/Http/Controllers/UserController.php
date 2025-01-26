@@ -197,13 +197,7 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
 
-            if ($user->peserta == null) {
-                $user->delete($user);
-            } else {
-                $peserta = Peserta::find($user->peserta->id);
-                $peserta->delete($peserta);
-                $user->delete($user);
-            }
+            $user->delete($user);
 
             return redirect()->route('user.index')->with('success', $user->username . ' berhasil dihapus');
         } catch (\Throwable $th) {

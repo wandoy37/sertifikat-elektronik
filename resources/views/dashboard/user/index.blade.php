@@ -41,7 +41,6 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama</th>
                                         <th>Username</th>
                                         <th>Role</th>
                                         <th>Action</th>
@@ -55,18 +54,7 @@
                                         <tr>
                                             <td>{{ $count++ }}</td>
                                             <td>
-                                                @if ($user->peserta == null)
-                                                    @if ($user->role == 'peserta')
-                                                        <a href="{{ route('peserta.create', $user->username) }}"
-                                                            class="btn btn-outline-primary btn-sm">
-                                                            Lengkapi Profil
-                                                        </a>
-                                                    @else
-                                                        <span class="text-center">admin</span>
-                                                    @endif
-                                                @else
-                                                    {{ $user->peserta->nama ?? '-' }}
-                                                @endif
+                                                {{ $user->username }}
                                             </td>
                                             <td>{{ $user->username }}</td>
                                             <td>{{ $user->role }}</td>

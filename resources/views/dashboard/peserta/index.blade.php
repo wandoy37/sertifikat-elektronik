@@ -23,24 +23,27 @@
                                 width="100%">
                                 <thead>
                                     <tr>
-                                        <th>Username</th>
                                         <th>Nama</th>
+                                        <th>jenis_kelamin</th>
                                         <th>No. Identitas</th>
-                                        <th>Action</th>
+                                        <th>Pangkat/Golongan</th>
+                                        <th>Jabatan</th>
+                                        <th>Instansi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($pesertas as $peserta)
                                         <tr>
-                                            <td>{{ $peserta->user->username }}</td>
-                                            <td>{{ $peserta->nama }}</td>
-                                            <td>{{ $peserta->nomor_identitas }}</td>
-                                            <td class="form-inline">
-                                                <a href="{{ route('peserta.edit', $peserta->user->username) }}"
-                                                    class="text-primary">
-                                                    <i class="fas fa-pen"></i>
-                                                </a>
+                                            <td>{{ $peserta['peserta_nama'] }}</td>
+                                            <td>{{ $peserta['peserta_jenis_kelamin'] ?? '-' }}</td>
+                                            <td>
+                                                <span>NIK : {{ $peserta['peserta_nik'] ?? '-' }}</span>
+                                                <br>
+                                                <span>NIP : {{ $peserta['peserta_nip'] ?? '-' }}</span>
                                             </td>
+                                            <td>{{ $peserta['peserta_pangkat_golongan'] }}</td>
+                                            <td>{{ $peserta['peserta_jabatan'] }}</td>
+                                            <td>{{ $peserta['peserta_instansi'] }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

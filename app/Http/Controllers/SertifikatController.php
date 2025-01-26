@@ -3,98 +3,178 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\Narasumber;
+use App\Models\Orang;
 use App\Models\Peserta;
 use App\Models\Sertifikat;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+use Illuminate\Support\Str;
 
 class SertifikatController extends Controller
 {
     //
     public function index()
     {
-        if (Auth::user()->role == 'peserta') {
-            $sertifikats = DB::table('sertifikats')
-                ->select(
-                    'sertifikats.id',
-                    'sertifikats.status',
-                    'sertifikats.tanggal_terbit',
-                    'kegiatans.judul_kegiatan AS judul_kegiatan',
-                    'pesertas.nama AS nama_peserta',
-                    'kategoris.title AS kategori_kegiatan',
-                )
-                ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
-                ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
-                ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
-                ->where('sertifikats.peserta_id', Auth::user()->peserta->id)
-                ->where('sertifikats.status', 'terbit')
-                ->get();
-            return view('dashboard.sertifikat.index', compact('sertifikats'));
-        } else {
-            $sertifikats = DB::table('sertifikats')
-                ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
-                ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
-                ->select(
-                    'sertifikats.id',
-                    'sertifikats.status',
-                    'kegiatans.judul_kegiatan AS judul_kegiatan',
-                    'pesertas.nama AS nama_peserta',
-                )
-                ->get();
-            return view('dashboard.sertifikat.index', compact('sertifikats'));
-        }
+        $sertifikats = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+            ->select(
+                'sertifikats.id',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
+                'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
+                'sertifikats.orang_id',
+                'sertifikats.narasumber_id',
+                'sertifikats.status',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'kategoris.title AS kategori_kegiatan',
+            )
+            ->get();
+        return view('dashboard.sertifikat.index', compact('sertifikats'));
     }
 
     public function createPeserta($id)
     {
         $kegiatan = Kegiatan::find($id);
-        $pesertas = Peserta::all();
 
-        $sertifikats = DB::table('sertifikats')->where('kegiatan_id', $id)
+        // If Peserta Kegiatan
+        if ($kegiatan->kategori->title == 'pelatihan') {
+            $client = new Client();
+            $response = $client->get(env('SIMPELTAN_API_DATA_PESERTA'));
+            $dataPeserta = json_decode($response->getBody(), true);
+        }
+        // If Bimtek Kegiatan
+        if ($kegiatan->kategori->title == 'bimtek') {
+            $dataPeserta = Orang::all();
+        }
+        // If PKL Kegiatan
+        if ($kegiatan->kategori->title == 'pkl') {
+            $dataPeserta = Siswa::all();
+        }
+
+        $sertifikats = DB::table('sertifikats')
             ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
-            ->join('pesertas', 'sertifikats.peserta_id', '=', 'pesertas.id')
             ->select(
                 'sertifikats.id',
-                'sertifikats.status',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
                 'kegiatans.judul_kegiatan AS judul_kegiatan',
-                'pesertas.nama AS nama_peserta',
+                'sertifikats.tanggal_terbit',
+                'sertifikats.status',
+                'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
+                'sertifikats.narasumber_id',
+                'sertifikats.orang_id',
             )
+            ->where('sertifikats.kegiatan_id', '=', $kegiatan->id)
             ->get();
 
-        return view('dashboard.sertifikat.create_peserta', compact('kegiatan', 'pesertas', 'sertifikats'));
+        $narasumbers = Narasumber::all();
+
+        return view('dashboard.sertifikat.create_peserta', compact('kegiatan', 'sertifikats', 'dataPeserta', 'narasumbers'));
     }
 
     public function store(Request $request)
     {
-        // Validator
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'peserta_id' => 'required',
-            ],
-            [],
-        );
+        $kegiatan = Kegiatan::find($request->kegiatan_id);
 
-        // If validator fails.
+        // If Peserta Kegiatan
+        if ($kegiatan->kategori->title == 'pelatihan') {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'peserta_id' => 'required',
+                ],
+                [],
+            );
+        }
+        // If Bimtek Kegiatan
+        if ($kegiatan->kategori->title == 'bimtek') {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'orang_id' => 'required',
+                ],
+                [],
+            );
+        }
+        // If PKL Kegiatan
+        if ($kegiatan->kategori->title == 'pkl') {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'siswa_id' => 'required',
+                ],
+                [],
+            );
+        }
+
         if ($validator->fails()) {
             return redirect()->back()->withInput($request->all())->withErrors($validator);
         }
 
         DB::beginTransaction();
         try {
-            Sertifikat::create([
-                'kegiatan_id' => $request->kegiatan_id,
-                'peserta_id' => $request->peserta_id,
-                'tanggal_terbit' => '-',
-            ]);
-            if (Auth::user()->role == 'admin') {
-                return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
+            // ======================================1St Metode==========================================
+            // Last data
+            $currentYear = $kegiatan->tahun_kegiatan;
+            $lastSertifikat = Sertifikat::max('tahun');
+
+            if ($lastSertifikat !== $currentYear) {
+                // Jika tahun berubah, atur $lastSertifikat ke 1
+                $lastSertifikat = 1;
             } else {
-                return redirect()->route('dashboard.index')->with('success', 'Anda berhasil mendaftar kegiatan');
+                // Jika tahun sama, ambil nomor sertifikat terakhir dan tambahkan 1
+                $lastSertifikat = Sertifikat::where('tahun', $currentYear)->max('nomor_sertifikat');
+                $lastSertifikat++;
             }
+            // ======================================End 1St Metode======================================
+            if ($kegiatan->kategori->title == 'pelatihan') {
+                Sertifikat::create([
+                    'verified_code' => Str::random(20),
+                    'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                    'kegiatan_id' => $request->kegiatan_id,
+                    'peserta_id' => $request->peserta_id,
+                    'tanggal_terbit' => '-',
+                    'tahun' => $kegiatan->tahun_kegiatan,
+                    'siswa_id' => '-',
+                    'orang_id' => '-',
+                ]);
+            }
+            if ($kegiatan->kategori->title == 'bimtek') {
+                Sertifikat::create([
+                    'verified_code' => Str::random(20),
+                    'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                    'kegiatan_id' => $request->kegiatan_id,
+                    'peserta_id' => '-',
+                    'tanggal_terbit' => '-',
+                    'tahun' => $kegiatan->tahun_kegiatan,
+                    'siswa_id' => '-',
+                    'orang_id' => $request->orang_id,
+                ]);
+            }
+            if ($kegiatan->kategori->title == 'pkl') {
+                Sertifikat::create([
+                    'verified_code' => Str::random(20),
+                    'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                    'kegiatan_id' => $request->kegiatan_id,
+                    'peserta_id' => '-',
+                    'tanggal_terbit' => '-',
+                    'tahun' => $kegiatan->tahun_kegiatan,
+                    'siswa_id' => $request->siswa_id,
+                    'orang_id' => '-',
+                ]);
+            }
+
+            return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollBack();
             if (Auth::user()->role == 'admin') {
@@ -102,7 +182,6 @@ class SertifikatController extends Controller
             } else {
                 return redirect()->route('dashboard.index')->with('fails', 'Gagal mendaftar kegiatan');
             }
-            // return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('fails', 'Peserta Baru Gagal Di Tambahkan');
         } finally {
             DB::commit();
         }
@@ -153,5 +232,64 @@ class SertifikatController extends Controller
     {
         $filePath = public_path("sertifikat/" . 'doc-sertifikat-' . $id . '.' . 'pdf');
         return response()->download($filePath);
+    }
+
+    // Narasumber Store
+    public function storeNarasumber(Request $request)
+    {
+        $kegiatan = Kegiatan::find($request->kegiatan_id);
+
+        // Validator
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'narasumber_id' => 'required',
+            ],
+            [],
+        );
+        // If validator fails.
+        if ($validator->fails()) {
+            return redirect()->back()->withInput($request->all())->withErrors($validator);
+        }
+
+        DB::beginTransaction();
+        try {
+            // ======================================1St Metode==========================================
+            // Last data
+            $currentYear = $kegiatan->tahun_kegiatan;
+            $lastSertifikat = Sertifikat::max('tahun');
+
+            if ($lastSertifikat !== $currentYear) {
+                // Jika tahun berubah, atur $lastSertifikat ke 1
+                $lastSertifikat = 1;
+            } else {
+                // Jika tahun sama, ambil nomor sertifikat terakhir dan tambahkan 1
+                $lastSertifikat = Sertifikat::where('tahun', $currentYear)->max('nomor_sertifikat');
+                $lastSertifikat++;
+            }
+            // ======================================End 1St Metode======================================
+
+            Sertifikat::create([
+                'verified_code' => Str::random(20),
+                'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                'kegiatan_id' => $request->kegiatan_id,
+                'peserta_id' => '-',
+                'tanggal_terbit' => '-',
+                'tahun' => $kegiatan->tahun_kegiatan,
+                'siswa_id' => '-',
+                'narasumber_id' => $request->narasumber_id,
+            ]);
+
+            return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Narasumber Baru Berhasil Di Tambahkan');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            if (Auth::user()->role == 'admin') {
+                return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('fails', 'Narasumber Baru Gagal Di Tambahkan');
+            } else {
+                return redirect()->route('dashboard.index')->with('fails', 'Gagal mendaftar kegiatan');
+            }
+        } finally {
+            DB::commit();
+        }
     }
 }

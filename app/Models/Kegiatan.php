@@ -17,13 +17,18 @@ class Kegiatan extends Model
         return $this->belongsTo(Kategori::class);
     }
 
+    public function penandatangan()
+    {
+        return $this->belongsTo(Penandatangan::class);
+    }
+
     public function peserta()
     {
         return $this->belongsToMany(Peserta::class, 'sertifikats');
     }
 
-    public function sertifikat()
+    public function sertifikats()
     {
-        return $this->belongsToMany(Sertifikat::class, 'sertifikats');
+        return $this->hasMany(Sertifikat::class);
     }
 }
