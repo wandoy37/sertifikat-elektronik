@@ -197,6 +197,7 @@ return [
         App\Providers\FortifyServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Riskihajar\Terbilang\TerbilangServiceProvider::class,
 
     ],
 
@@ -215,6 +216,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Terbilang' => Riskihajar\Terbilang\Facades\Terbilang::class,
     ])->toArray(),
 
 ];

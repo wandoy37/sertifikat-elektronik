@@ -4,14 +4,10 @@
 @section('content')
     <div class="page-inner">
         <div class="page-header">
-            <h4 class="page-title">Kegiatan</h4>
-            <ul class="breadcrumbs">
-                <li class="nav-home">
-                    <a href="#">
-                        <i class="fas fa-podcast"></i>
-                    </a>
-                </li>
-            </ul>
+            <h4 class="page-title">
+                <i class="fas fa-chalkboard-teacher"></i>
+                Kegiatan
+            </h4>
         </div>
 
         {{-- Notify --}}
@@ -35,12 +31,11 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th>No</th>
-                                        <th>Tanggal Kegiatan</th>
-                                        <th>Kode</th>
-                                        <th>Judul</th>
+                                        <th>Nama Kegiatan</th>
+                                        <th>Periode</th>
                                         <th>Kategori</th>
                                         <th>Tahun</th>
-                                        <th>Aksi</th>
+                                        <th width="18%">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -52,14 +47,31 @@
                                             <td class="text-center">
                                                 {{ $no++ }}
                                             </td>
+                                            <td>{{ $kegiatan->judul_kegiatan }}</td>
                                             <td class="text-center">
                                                 {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->isoFormat('D MMM') . ' s.d. ' . \Carbon\Carbon::parse($kegiatan->tanggal_akhir_kegiatan)->isoFormat('D MMM Y') }}
                                             </td>
-                                            <td class="text-center">{{ $kegiatan->kode_kegiatan }}</td>
-                                            <td>{{ $kegiatan->judul_kegiatan }}</td>
-                                            <td class="text-center">{{ $kegiatan->kategori->title }}</td>
+                                            <td class="text-center text-uppercase">{{ $kegiatan->kategori->title }}</td>
                                             <td class="text-center">{{ $kegiatan->tahun_kegiatan }}</td>
                                             <td class="form-inline d-flex justify-content-center">
+                                                <a href="{{ route('kegiatan.show', $kegiatan->id) }}"
+                                                    class="badge badge-success mr-3">
+                                                    Detail
+                                                </a>
+                                                <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="text-primary">
+                                                    <i class="fas fa-pen"></i>
+                                                </a>
+                                                <form id="form-delete-{{ $kegiatan->id }}"
+                                                    action="{{ route('kegiatan.delete', $kegiatan->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                                <button type="button" class="btn btn-link text-danger"
+                                                    onclick="btnDelete( {{ $kegiatan->id }} )">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                            {{-- <td class="form-inline d-flex justify-content-center">
                                                 @if ($kegiatan->kategori->title !== 'pkl')
                                                     <a href="{{ route('kegiatan.print', $kegiatan->id) }}"
                                                         class="btn btn-warning btn-sm mr-1">
@@ -86,7 +98,7 @@
                                                     onclick="btnDelete( {{ $kegiatan->id }} )">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>

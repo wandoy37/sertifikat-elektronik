@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::table('kegiatans', function (Blueprint $table) {
+            $table->text('lokasi_kegiatan')->after('total_jam_kegiatan')->nullable();
+            $table->string('daftar_mata_pelatihan')->after('lokasi_kegiatan')->nullable();
         });
     }
 
@@ -26,8 +27,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('kegiatans', function (Blueprint $table) {
-            $table->text('lokasi_kegiatan')->nullable()->after('total_jam_kegiatan');
-            $table->text('daftar_mata_pelatihan')->nullable()->after('lokasi_kegiatan');
+            $table->dropColumn('lokasi_kegiatan');
+            $table->dropColumn('daftar_mata_pelatihan');
         });
     }
 };

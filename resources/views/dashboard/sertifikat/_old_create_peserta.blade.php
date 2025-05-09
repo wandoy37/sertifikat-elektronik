@@ -49,22 +49,7 @@
                             <div class="form-group">
                                 <label class="fw-bold">Peserta</label>
                                 <div class="select2-input">
-                                    @if ($kegiatan->kategori->title == 'pkl')
-                                        <select id="basic" name="siswa_id" class="form-control">
-                                            <option value="">-pilih peserta-</option>
-                                            @foreach ($dataPeserta as $peserta)
-                                                @if (old('siswa_id') == $peserta->id)
-                                                    <option value="{{ $peserta->id }}" selected>
-                                                        {{ $peserta->nama }}
-                                                    </option>
-                                                @else
-                                                    <option value="{{ $peserta->id }}">
-                                                        {{ $peserta->nama }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    @else
+                                    @if ($kegiatan->kategori->title == 'pelatihan')
                                         <select id="basic" name="peserta_id" class="form-control">
                                             <option value="">-pilih peserta-</option>
                                             @foreach ($dataPeserta as $peserta)
@@ -80,8 +65,50 @@
                                             @endforeach
                                         </select>
                                     @endif
+
+                                    @if ($kegiatan->kategori->title == 'bimtek')
+                                        <select id="basic" name="orang_id" class="form-control">
+                                            <option value="">-pilih peserta-</option>
+                                            @foreach ($dataPeserta as $orang)
+                                                @if (old('orang_id') == $orang->id)
+                                                    <option value="{{ $orang->id }}" selected>
+                                                        {{ $orang->nama }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $orang->id }}">
+                                                        {{ $orang->nama }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    @endif
+
+                                    @if ($kegiatan->kategori->title == 'pkl')
+                                        <select id="basic" name="siswa_id" class="form-control">
+                                            <option value="">-pilih peserta-</option>
+                                            @foreach ($dataPeserta as $peserta)
+                                                @if (old('siswa_id') == $peserta->id)
+                                                    <option value="{{ $peserta->id }}" selected>
+                                                        {{ $peserta->nama }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $peserta->id }}">
+                                                        {{ $peserta->nama }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    @endif
                                 </div>
                                 @error('peserta_id')
+                                    <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                @enderror
+
+                                @error('orang_id')
+                                    <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
+                                @enderror
+
+                                @error('siswa_id')
                                     <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
                                 @enderror
                             </div>
@@ -100,6 +127,7 @@
             {{-- End Section Tambah Peserta --}}
 
             {{-- Section Narasumber --}}
+            {{-- @if ($kegiatan->kategori->title == 'pelatihan') --}}
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header d-flex align-items-center bd-highlight">
@@ -136,7 +164,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    php
                                     @foreach ($sertifikats as $sertifikat)
                                         @if ($sertifikat->narasumber_id !== '-')
                                             <tr class="text-center">
@@ -150,7 +177,8 @@
                                                     {{ $narasumber->nama }}
                                                 </td>
                                                 <td class="form-inline d-flex justify-content-center">
-                                                    <a href="#" class="fw-bold text-primary mr-3 text-capitalize">
+                                                    <a href="{{ route('sertifikat.narasumber.generate', $sertifikat->id) }}"
+                                                        class="fw-bold text-primary mr-3 text-capitalize">
                                                         <i class="fas fa-print"></i>
                                                     </a>
                                                     <form id="form-delete-{{ $sertifikat->id }}"
@@ -173,6 +201,7 @@
                     </div>
                 </div>
             </div>
+            {{-- @endif --}}
             {{-- End Section Narasumber --}}
 
             {{-- List Peserta --}}
@@ -216,55 +245,126 @@
                                         $counter = 1;
                                     @endphp
                                     @foreach ($sertifikats as $sertifikat)
-                                        <tr class="text-center">
-                                            <td class="text-center" width="25px;">{{ $counter++ }}</td>
-                                            <td>{{ $sertifikat->nomor_sertifikat }}</td>
-                                            <td>
-                                                @if ($kegiatan->kategori->title == 'pkl')
-                                                    @php
-                                                        $siswa = DB::table('siswas')
-                                                            ->where('id', '=', $sertifikat->siswa_id)
-                                                            ->first();
-                                                    @endphp
-                                                    {{ $siswa->nama }}
-                                                @else
-                                                    @php
-                                                        $peserta_id = $sertifikat->peserta_id;
-                                                        $url = "http://simpeltan.test/api/data-peserta/{$sertifikat->peserta_id}";
-                                                        $response = file_get_contents($url);
-                                                        $data = json_decode($response, true);
-                                                    @endphp
-                                                    @if ($sertifikat->peserta_id !== '-')
+                                        @if ($kegiatan->kategori->title == 'pelatihan')
+                                            @if ($sertifikat->peserta_id !== '-')
+                                                <tr class="text-center">
+                                                    <td class="text-center" width="25px;">{{ $counter++ }}</td>
+                                                    <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                                    <td>
+                                                        @php
+                                                            $peserta_id = $sertifikat->peserta_id;
+                                                            $url =
+                                                                env('SIMPELTAN_API_DATA_PESERTA') .
+                                                                "/{$sertifikat->peserta_id}";
+                                                            $response = file_get_contents($url);
+                                                            $data = json_decode($response, true);
+                                                        @endphp
                                                         {{ $data[0]['peserta_nama'] }}
-                                                    @endif
-                                                @endif
-                                            </td>
-                                            <td class="form-inline d-flex justify-content-center">
-                                                @if ($sertifikat->status == 'belum terbit')
-                                                    <a href="{{ route('sertifikat.peserta.terbitkan', $sertifikat->id) }}"
-                                                        target=”_blank” class="btn btn-outline-primary btn-sm float-right">
-                                                        <i class="fas fa-certificate"></i>
-                                                        Terbitkan
-                                                    </a>
-                                                @else
-                                                    <a href="{{ route('home.show', $sertifikat->verified_code) }}"
-                                                        class="fw-bold text-primary mr-3 text-capitalize" target="_blank">
-                                                        <i class="fas fa-print"></i>
-                                                        {{ $sertifikat->status }}
-                                                    </a>
-                                                @endif
-                                                <form id="form-delete-{{ $sertifikat->id }}"
-                                                    action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                <button type="button" class="btn btn-link text-danger"
-                                                    onclick="btnDelete( {{ $sertifikat->id }} )">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                                    </td>
+                                                    <td class="form-inline d-flex justify-content-center">
+                                                        <a href="{{ route('home.show', $sertifikat->verified_code) }}"
+                                                            class="fw-bold text-primary mr-3 text-capitalize"
+                                                            target="_blank">
+                                                            <i class="fas fa-download"></i>
+                                                            Download
+                                                        </a>
+                                                        <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
+                                                            class="btn btn-info btn-sm" target="_blank">
+                                                            <i class="fas fa-certificate"></i>
+                                                            Cetak {{ $sertifikat->id }}
+                                                        </a>
+                                                        <form id="form-delete-{{ $sertifikat->id }}"
+                                                            action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button type="button" class="btn btn-link text-danger"
+                                                            onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endif
+                                        @if ($kegiatan->kategori->title == 'bimtek')
+                                            @if ($sertifikat->orang_id !== '-')
+                                                <tr class="text-center">
+                                                    <td class="text-center" width="25px;">{{ $counter++ }}</td>
+                                                    <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                                    <td>
+                                                        @php
+                                                            $orang = DB::table('orangs')
+                                                                ->where('id', '=', $sertifikat->orang_id)
+                                                                ->first();
+                                                        @endphp
+                                                        {{ $orang->nama }}
+                                                    </td>
+                                                    <td class="form-inline d-flex justify-content-center">
+                                                        <a href="{{ route('home.show', $sertifikat->verified_code) }}"
+                                                            class="fw-bold text-primary mr-3 text-capitalize"
+                                                            target="_blank">
+                                                            <i class="fas fa-download"></i>
+                                                            Download
+                                                        </a>
+                                                        <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
+                                                            class="btn btn-info btn-sm" target="_blank">
+                                                            <i class="fas fa-certificate"></i>
+                                                            Cetak {{ $sertifikat->id }}
+                                                        </a>
+                                                        <form id="form-delete-{{ $sertifikat->id }}"
+                                                            action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button type="button" class="btn btn-link text-danger"
+                                                            onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endif
+                                        @if ($kegiatan->kategori->title == 'pkl')
+                                            @if ($sertifikat->siswa_id !== '-')
+                                                <tr class="text-center">
+                                                    <td class="text-center" width="25px;">{{ $counter++ }}</td>
+                                                    <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                                    <td>
+                                                        @php
+                                                            $siswa = DB::table('siswas')
+                                                                ->where('id', '=', $sertifikat->siswa_id)
+                                                                ->first();
+                                                        @endphp
+                                                        {{ $siswa->nama }}
+                                                    </td>
+                                                    <td class="form-inline d-flex justify-content-center">
+                                                        <a href="{{ route('home.show', $sertifikat->verified_code) }}"
+                                                            class="fw-bold text-primary mr-3 text-capitalize"
+                                                            target="_blank">
+                                                            <i class="fas fa-download"></i>
+                                                            Download
+                                                        </a>
+                                                        <a href="{{ route('sertifikat.peserta.generate', $sertifikat->id) }}"
+                                                            class="btn btn-info btn-sm" target="_blank">
+                                                            <i class="fas fa-certificate"></i>
+                                                            Cetak {{ $sertifikat->id }}
+                                                        </a>
+                                                        <form id="form-delete-{{ $sertifikat->id }}"
+                                                            action="{{ route('sertifikat.peserta.delete', $sertifikat->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button type="button" class="btn btn-link text-danger"
+                                                            onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>

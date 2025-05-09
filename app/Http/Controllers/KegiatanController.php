@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use App\Models\Kegiatan;
+use App\Models\Narasumber;
+use App\Models\Orang;
 use App\Models\Penandatangan;
 use App\Models\Sertifikat;
+use App\Models\Siswa;
 use App\Services\KegiatanGenerate;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class KegiatanController extends Controller
 {
@@ -58,14 +63,16 @@ class KegiatanController extends Controller
             $request->all(),
             [
                 'kode_kegiatan' => 'required',
-                'judul_kegiatan' => 'required',
-                'kategori_id' => 'required',
-                'tahun_kegiatan' => 'required',
+                'nama_kegiatan' => 'required',
                 'tanggal_mulai_kegiatan' => 'required',
                 'tanggal_akhir_kegiatan' => 'required',
+                'kategori_id' => 'required',
+                'tahun_kegiatan' => 'required',
+                'lokasi_kegiatan' => 'required',
                 'total_jam_kegiatan' => 'required',
                 'penandatangan_id' => 'required',
                 'tanggal_penandatanganan' => 'required',
+                'daftar_mata_pelatihan' => 'required|file|mimes:pdf|max:2048',
             ],
             [],
         );
@@ -77,15 +84,19 @@ class KegiatanController extends Controller
 
         DB::beginTransaction();
         try {
+            $path = $request->file('daftar_mata_pelatihan')->store('daftar_mata_pelatihan', 'public');
+
             Kegiatan::create([
                 'kode_kegiatan' => $request->kode_kegiatan,
-                'judul_kegiatan' => $request->judul_kegiatan,
-                'slug' => Str::slug($request->judul_kegiatan, '-'),
+                'judul_kegiatan' => $request->nama_kegiatan,
+                'slug' => Str::slug($request->nama_kegiatan, '-'),
                 'kategori_id' => $request->kategori_id,
                 'tahun_kegiatan' => $request->tahun_kegiatan,
                 'tanggal_mulai_kegiatan' => $request->tanggal_mulai_kegiatan,
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
+                'lokasi_kegiatan' => $request->lokasi_kegiatan,
+                'daftar_mata_pelatihan' => 'storage/' . $path,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
                 'status' => 'open'
@@ -107,7 +118,45 @@ class KegiatanController extends Controller
      */
     public function show($id)
     {
-        //
+        $kegiatan = Kegiatan::find($id);
+
+        // If Peserta Kegiatan
+        if ($kegiatan->kategori->title == 'pelatihan') {
+            $client = new Client();
+            $response = $client->get(env('SIMPELTAN_API_DATA_PESERTA'));
+            $dataPesertas = json_decode($response->getBody(), true);
+        }
+        // If Bimtek Kegiatan
+        if ($kegiatan->kategori->title == 'bimtek') {
+            $dataPesertas = Orang::all();
+        }
+        // If PKL Kegiatan
+        if ($kegiatan->kategori->title == 'pkl') {
+            $dataPesertas = Siswa::all();
+        }
+
+        // Narasumber
+        $narasumbers = Narasumber::all();
+
+        $sertifikats = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->select(
+                'sertifikats.id',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'sertifikats.tanggal_terbit',
+                'sertifikats.status',
+                'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
+                'sertifikats.narasumber_id',
+                'sertifikats.orang_id',
+            )
+            ->where('sertifikats.kegiatan_id', '=', $kegiatan->id)
+            ->get();
+
+
+        return view('dashboard.kegiatan.show', compact('kegiatan', 'dataPesertas', 'narasumbers', 'sertifikats'));
     }
 
     /**
@@ -138,14 +187,16 @@ class KegiatanController extends Controller
             $request->all(),
             [
                 'kode_kegiatan' => 'required',
-                'judul_kegiatan' => 'required',
-                'kategori_id' => 'required',
-                'tahun_kegiatan' => 'required',
+                'nama_kegiatan' => 'required',
                 'tanggal_mulai_kegiatan' => 'required',
                 'tanggal_akhir_kegiatan' => 'required',
+                'kategori_id' => 'required',
+                'tahun_kegiatan' => 'required',
+                'lokasi_kegiatan' => 'required',
                 'total_jam_kegiatan' => 'required',
                 'penandatangan_id' => 'required',
                 'tanggal_penandatanganan' => 'required',
+                'daftar_mata_pelatihan' => 'nullable|file|mimes:pdf|max:2048',
             ],
             [],
         );
@@ -157,25 +208,39 @@ class KegiatanController extends Controller
 
         DB::beginTransaction();
         try {
-            $kegiatan = Kegiatan::find($id);
+            $kegiatan = Kegiatan::findOrFail($id);
+
+            // Cek apakah ada file baru
+            if ($request->hasFile('daftar_mata_pelatihan')) {
+                // Hapus file lama jika ada
+                if ($kegiatan->daftar_mata_pelatihan && Storage::exists(str_replace('storage/', '', $kegiatan->daftar_mata_pelatihan))) {
+                    Storage::delete(str_replace('storage/', '', $kegiatan->daftar_mata_pelatihan)); // Hapus file lama
+                }
+
+                // Upload file baru
+                $path = $request->file('daftar_mata_pelatihan')->store('daftar_mata_pelatihan', 'public');
+                $kegiatan->update(['daftar_mata_pelatihan' => 'storage/' . $path]);
+            }
 
             $kegiatan->update([
                 'kode_kegiatan' => $request->kode_kegiatan,
-                'judul_kegiatan' => $request->judul_kegiatan,
-                'slug' => Str::slug($request->judul_kegiatan, '-'),
+                'judul_kegiatan' => $request->nama_kegiatan,
+                'slug' => Str::slug($request->nama_kegiatan, '-'),
                 'kategori_id' => $request->kategori_id,
                 'tahun_kegiatan' => $request->tahun_kegiatan,
                 'tanggal_mulai_kegiatan' => $request->tanggal_mulai_kegiatan,
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
+                'lokasi_kegiatan' => $request->lokasi_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
-                'status' => 'open',
+                'status' => 'open'
             ]);
-            return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Updae');
+            return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Update');
         } catch (\Throwable $th) {
+            dd(vars: $th);
             DB::rollBack();
-            return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Gagal Di Updae');
+            return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Baru Gagal Di Update');
         } finally {
             DB::commit();
         }
@@ -211,6 +276,11 @@ class KegiatanController extends Controller
                 $fileQr = 'qr_sertifikat_' . $sertifikat->id . '.' . 'png';
                 if (file_exists($pathQr . $fileQr)) {
                     unlink($pathQr . $fileQr);
+                }
+
+                // Hapus file daftar_mata_pelatihan jika ada
+                if ($kegiatan->daftar_mata_pelatihan && Storage::exists(str_replace('storage/', '', $kegiatan->daftar_mata_pelatihan))) {
+                    Storage::delete(str_replace('storage/', '', $kegiatan->daftar_mata_pelatihan));
                 }
 
                 // Hapus data sertifikat dari database

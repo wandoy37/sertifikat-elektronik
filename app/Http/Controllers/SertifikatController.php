@@ -13,12 +13,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
+use App\Services\SertifikatGenerate;
 use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 
 class SertifikatController extends Controller
 {
+    protected $sertifikatGenerate;
+
+    public function __construct(SertifikatGenerate $sertifikatGenerate)
+    {
+        $this->sertifikatGenerate = $sertifikatGenerate;
+    }
     //
     public function index()
     {
@@ -174,29 +180,72 @@ class SertifikatController extends Controller
                 ]);
             }
 
-            return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
+            return redirect()->route('kegiatan.show', $request->kegiatan_id)->with('success', 'Peserta Baru Berhasil Di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollBack();
             if (Auth::user()->role == 'admin') {
-                return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('fails', 'Peserta Baru Gagal Di Tambahkan');
+                return redirect()->route('kegiatan.show', $request->kegiatan_id)->with('fails', 'Peserta Baru Gagal Di Tambahkan');
             } else {
-                return redirect()->route('dashboard.index')->with('fails', 'Gagal mendaftar kegiatan');
+                return redirect()->route('kegiatan.show')->with('fails', 'Gagal mendaftar kegiatan');
             }
         } finally {
             DB::commit();
         }
     }
 
-    public function deletePeserta($id)
+    public function preview($id)
+    {
+        $sertifikat = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+            ->join('penandatangans', 'kegiatans.penandatangan_id', '=', 'penandatangans.id')
+            ->where('sertifikats.id', $id)
+            ->select(
+                'sertifikats.id',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
+                'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
+                'sertifikats.orang_id',
+                'kegiatans.kode_kegiatan AS kode_kegiatan',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'kategoris.title AS kategori_kegiatan',
+                'kategoris.template AS template_sertifikat',
+                'kegiatans.tahun_kegiatan AS tahun_kegiatan',
+                'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
+                'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
+                'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
+                'kegiatans.tanggal_penandatanganan AS tanggal_penandatanganan',
+                'kegiatans.lokasi_kegiatan AS lokasi_kegiatan',
+                'penandatangans.nama AS nama_penandatangan',
+                'penandatangans.nip AS nip_penandatangan',
+                'penandatangans.pangkat_golongan AS pangkat_golongan_penandatangan',
+                'penandatangans.jabatan AS jabatan_penandatangan',
+                'sertifikats.status',
+            )
+            ->first();
+
+        if ($sertifikat->kategori_kegiatan == 'pelatihan') {
+            $this->sertifikatGenerate->previewSertifikatPelatihan($sertifikat);
+        }
+        if ($sertifikat->kategori_kegiatan == 'bimtek') {
+            $this->sertifikatGenerate->prosesSingleGenerateBimtek($sertifikat);
+        }
+        if ($sertifikat->kategori_kegiatan == 'pkl') {
+            $this->sertifikatGenerate->prosesSingleGenerateSiswa($sertifikat);
+        }
+    }
+
+    public function delete(Request $request, $id)
     {
         DB::beginTransaction();
         try {
             $sertifikat = Sertifikat::find($id);
             $sertifikat->delete($sertifikat);
-            return redirect()->route('sertifikat.create.peserta', $sertifikat->kegiatan_id)->with('success', 'Peserta Berhasil Di Hapus');
+            return redirect()->route('kegiatan.show', $request->kegiatan_id)->with('success', 'Peserta Berhasil Di Hapus');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('sertifikat.create.peserta', $sertifikat->kegiatan_id)->with('success', 'Peserta Gagal Di Hapus');
+            return redirect()->route('kegiatan.show', $request->kegiatan_id)->with('success', 'Peserta Gagal Di Hapus');
         } finally {
             DB::commit();
         }
@@ -230,8 +279,45 @@ class SertifikatController extends Controller
 
     public function download($id)
     {
-        $filePath = public_path("sertifikat/" . 'doc-sertifikat-' . $id . '.' . 'pdf');
-        return response()->download($filePath);
+        $sertifikat = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+            ->join('penandatangans', 'kegiatans.penandatangan_id', '=', 'penandatangans.id')
+            ->where('sertifikats.id', $id)
+            ->select(
+                'sertifikats.id',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
+                'sertifikats.peserta_id',
+                'sertifikats.siswa_id',
+                'sertifikats.orang_id',
+                'kegiatans.kode_kegiatan AS kode_kegiatan',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'kategoris.title AS kategori_kegiatan',
+                'kategoris.template AS template_sertifikat',
+                'kegiatans.tahun_kegiatan AS tahun_kegiatan',
+                'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
+                'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
+                'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
+                'kegiatans.tanggal_penandatanganan AS tanggal_penandatanganan',
+                'kegiatans.lokasi_kegiatan AS lokasi_kegiatan',
+                'penandatangans.nama AS nama_penandatangan',
+                'penandatangans.nip AS nip_penandatangan',
+                'penandatangans.pangkat_golongan AS pangkat_golongan_penandatangan',
+                'penandatangans.jabatan AS jabatan_penandatangan',
+                'sertifikats.status',
+            )
+            ->first();
+
+        if ($sertifikat->kategori_kegiatan == 'pelatihan') {
+            $this->sertifikatGenerate->downloadSertifikatPelatihan($sertifikat);
+        }
+        if ($sertifikat->kategori_kegiatan == 'bimtek') {
+            $this->sertifikatGenerate->prosesSingleGenerateBimtek($sertifikat);
+        }
+        if ($sertifikat->kategori_kegiatan == 'pkl') {
+            $this->sertifikatGenerate->prosesSingleGenerateSiswa($sertifikat);
+        }
     }
 
     // Narasumber Store

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
+
     public function index()
     {
         return view('home.index');
@@ -30,6 +31,7 @@ class HomeController extends Controller
             $kegiatan = DB::table('sertifikats')
                 ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
                 ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+                ->join('penandatangans', 'kegiatans.penandatangan_id', '=', 'penandatangans.id')
                 ->where('sertifikats.verified_code', $code)
                 ->select(
                     'sertifikats.id',
@@ -38,12 +40,15 @@ class HomeController extends Controller
                     'sertifikats.siswa_id',
                     'sertifikats.narasumber_id',
                     'sertifikats.orang_id',
+                    'sertifikats.tanggal_terbit AS tanggal_terbit',
                     'kegiatans.judul_kegiatan',
                     'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
                     'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
                     'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
                     'kegiatans.tahun_kegiatan AS tahun_kegiatan',
-                    'kategoris.title AS kategori_kegiatan'
+                    'kategoris.title AS kategori_kegiatan',
+                    'penandatangans.nama AS penandatangan_nama',
+                    'penandatangans.jabatan AS penandatangan_jabatan',
                 )
                 ->first();
         }
@@ -54,11 +59,5 @@ class HomeController extends Controller
     {
         $filePath = public_path("sertifikat/" . 'doc-sertifikat-' . $id . '.' . 'pdf');
         return response()->download($filePath);
-    }
-
-    public function preview($id)
-    {
-        $filePath = public_path("sertifikat/" . 'doc-sertifikat-' . $id . '.' . 'pdf');
-        return response()->file($filePath);
     }
 }

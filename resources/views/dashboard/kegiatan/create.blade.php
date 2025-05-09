@@ -4,14 +4,10 @@
 @section('content')
     <div class="page-inner">
         <div class="page-header">
-            <h4 class="page-title">Tambah Kegiatan</h4>
-            <ul class="breadcrumbs">
-                <li class="nav-home">
-                    <a href="#">
-                        <i class="fas fa-podcast"></i>
-                    </a>
-                </li>
-            </ul>
+            <h4 class="page-title">
+                <i class="fas fa-chalkboard-teacher"></i>
+                Tambah Kegiatan
+            </h4>
         </div>
 
         <div class="row">
@@ -21,164 +17,130 @@
                     Kembali
                 </a>
             </div>
-            <div class="col-md-12">
+            <div class="col-lg-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Buat Kegiatan Baru</h3>
-                    </div>
-                    <form action="{{ route('kegiatan.store') }}" method="post">
+                    <form action="{{ route('kegiatan.store') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="card-body">
-                            <div class="row">
+                            <div class="form-group">
+                                <label class="fw-bold">Kode Kegiatan</label>
+                                <input type="text" class="form-control" name="kode_kegiatan" value="000.9.4" readonly>
+                            </div>
+                            <div class="form-group @error('nama_kegiatan') has-error @enderror">
+                                <label class="fw-bold">Nama Kegiatan</label>
+                                <input type="text" class="form-control" name="nama_kegiatan"
+                                    value="{{ old('nama_kegiatan') }}">
+                            </div>
+                            <div class="row @error('tanggal_mulai_kegiatan', 'tanggal_akhir_kegiatan') has-error @enderror">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text fw-bold">Kode Kegiatan</span>
-                                            </div>
-                                            <input type="text" class="form-control" name="kode_kegiatan"
-                                                value="{{ old('kode_kegiatan') }}">
-                                        </div>
-                                        @error('kode_kegiatan')
-                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="fw-bold">Judul Kegiatan</label>
-                                        <input type="text" class="form-control" name="judul_kegiatan"
-                                            value="{{ old('judul_kegiatan') }}">
-                                        @error('judul_kegiatan')
-                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="fw-bold">Kategori Kegiatan</label>
-                                        <div class="select2-input">
-                                            <select id="basic" name="kategori_id" class="form-control">
-                                                <option value="">-pilih kategori-</option>
-                                                @foreach ($kategories as $kategori)
-                                                    @if (old('kategori_id') == $kategori->id)
-                                                        <option value="{{ $kategori->id }}" selected>{{ $kategori->title }}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{ $kategori->id }}">{{ $kategori->title }}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        @error('kategori_id')
-                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="fw-bold">Penandatangan Kegiatan</label>
-                                        <div class="select2-input">
-                                            <select id="basic2" name="penandatangan_id" class="form-control">
-                                                <option value="">-pilih penandatanga-</option>
-                                                @foreach ($penandatangans as $penandatangan)
-                                                    @if (old('penandatangan_id') == $penandatangan->id)
-                                                        <option value="{{ $penandatangan->id }}" selected>
-                                                            {{ $penandatangan->nama }}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{ $penandatangan->id }}">
-                                                            {{ $penandatangan->nama }}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        @error('penandatangan_id')
-                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Tahun Kegiatan</label>
+                                        <i>Tanggal Mulai</i>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="tahun" name="tahun_kegiatan"
-                                                value="{{ old('tahun_kegiatan') }}">
+                                            <input type="text" class="form-control" id="tanggal_mulai_kegiatan"
+                                                name="tanggal_mulai_kegiatan" value="{{ old('tanggal_mulai_kegiatan') }}">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="fa fa-calendar"></i>
                                                 </span>
                                             </div>
                                         </div>
-                                        @error('tahun_kegiatan')
-                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
-                                        @enderror
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label>Tanggal Mulai</label>
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" id="tanggal_mulai_kegiatan"
-                                                        name="tanggal_mulai_kegiatan"
-                                                        value="{{ old('tanggal_mulai_kegiatan') }}">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                @error('tanggal_mulai_kegiatan')
-                                                    <strong class="text-danger"
-                                                        style="font-size: 10px;">{{ $message }}</strong>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label>Tanggal Berakhir</label>
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" id="tanggal_akhir_kegiatan"
-                                                        name="tanggal_akhir_kegiatan"
-                                                        value="{{ old('tanggal_akhir_kegiatan') }}">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                @error('tanggal_akhir_kegiatan')
-                                                    <strong class="text-danger"
-                                                        style="font-size: 10px;">{{ $message }}</strong>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label class="fw-bold">Total Jam</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" class="form-control" name="total_jam_kegiatan"
-                                                value="{{ old('total_jam_kegiatan') }}">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" id="basic-addon2">Jam</span>
-                                            </div>
-                                        </div>
-                                        @error('total_jam_kegiatan')
-                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Tanggal Penandatangan</label>
+                                        <i>Tanggal Berakhir</i>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="tanggal_penandatanganan"
-                                                name="tanggal_penandatanganan"
-                                                value="{{ old('tanggal_penandatanganan') }}">
+                                            <input type="text" class="form-control" id="tanggal_akhir_kegiatan"
+                                                name="tanggal_akhir_kegiatan" value="{{ old('tanggal_akhir_kegiatan') }}">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="fa fa-calendar"></i>
                                                 </span>
                                             </div>
                                         </div>
-                                        @error('tanggal_penandatanganan')
-                                            <strong class="text-danger" style="font-size: 10px;">{{ $message }}</strong>
-                                        @enderror
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group @error('kategori_id') has-error @enderror">
+                                <label class="fw-bold">Kategori Kegiatan</label>
+                                <div class="select2-input">
+                                    <select id="basic" name="kategori_id" class="form-control">
+                                        <option value="">-pilih kategori-</option>
+                                        @foreach ($kategories as $kategori)
+                                            @if (old('kategori_id') == $kategori->id)
+                                                <option value="{{ $kategori->id }}" selected>{{ $kategori->title }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $kategori->id }}">{{ $kategori->title }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group @error('tahun_kegiatan') has-error @enderror">
+                                <label>Tahun Kegiatan</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="tahun" name="tahun_kegiatan"
+                                        value="{{ old('tahun_kegiatan') }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group @error('lokasi_kegiatan') has-error @enderror">
+                                <label class="fw-bold">Lokasi Kegiatan</label>
+                                <textarea name="lokasi_kegiatan" class="form-control" cols="30" rows="4"></textarea>
+                            </div>
+                            <div class="form-group @error('total_jam_kegiatan') has-error @enderror">
+                                <label>Total Jam</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="total_jam_kegiatan"
+                                        value="{{ old('total_jam_kegiatan') }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-clock"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group @error('penandatangan_id') has-error @enderror">
+                                <label class="fw-bold">Penandatangan</label>
+                                <div class="select2-input">
+                                    <select id="basic2" name="penandatangan_id" class="form-control">
+                                        <option value="">-pilih penandatanga-</option>
+                                        @foreach ($penandatangans as $penandatangan)
+                                            @if (old('penandatangan_id') == $penandatangan->id)
+                                                <option value="{{ $penandatangan->id }}" selected>
+                                                    {{ $penandatangan->nama }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $penandatangan->id }}">
+                                                    {{ $penandatangan->nama }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group @error('tanggal_penandatanganan') has-error @enderror">
+                                <label>Tanggal Penandatangan</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="tanggal_penandatanganan"
+                                        name="tanggal_penandatanganan" value="{{ old('tanggal_penandatanganan') }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group @error('tanggal_penandatanganan') has-error @enderror">
+                                <label>Daftar Mata Pelatihan</label>
+                                <input id="daftar_mata_pelatihan" type="file" class="form-control"
+                                    name="daftar_mata_pelatihan" placeholder="daftar_mata_pelatihan"
+                                    value="{{ old('daftar_mata_pelatihan') }}">
                             </div>
                         </div>
                         <div class="card-footer">

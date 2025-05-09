@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('orangs', function (Blueprint $table) {
-            $table->string('foto_diri')->nullable()->after('nik');
+            $table->string('foto_diri')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('orangs', function (Blueprint $table) {
-            //
+            $table->dropColumn('foto_diri');
         });
     }
 };

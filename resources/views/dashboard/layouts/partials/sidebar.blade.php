@@ -47,7 +47,7 @@
                     </li> --}}
                     <li class="nav-item {{ request()->segment(2) == 'kegiatan' ? 'active' : '' }}">
                         <a href="{{ route('kegiatan.index') }}">
-                            <i class="fas fa-podcast"></i>
+                            <i class="fas fa-chalkboard-teacher"></i>
                             <p>Kegiatan</p>
                         </a>
                     </li>
