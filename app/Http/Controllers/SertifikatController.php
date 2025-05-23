@@ -193,6 +193,63 @@ class SertifikatController extends Controller
         }
     }
 
+    // Narasumber Store
+    public function storeNarasumber(Request $request)
+    {
+        $kegiatan = Kegiatan::find($request->kegiatan_id);
+
+        // Validator
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'narasumber_id' => 'required',
+            ],
+            [],
+        );
+        // If validator fails.
+        if ($validator->fails()) {
+            return redirect()->back()->withInput($request->all())->withErrors($validator);
+        }
+
+        DB::beginTransaction();
+        try {
+            // ======================================1St Metode==========================================
+            // Last data
+            $currentYear = $kegiatan->tahun_kegiatan;
+            $lastSertifikat = Sertifikat::max('tahun');
+
+            if ($lastSertifikat !== $currentYear) {
+                // Jika tahun berubah, atur $lastSertifikat ke 1
+                $lastSertifikat = 1;
+            } else {
+                // Jika tahun sama, ambil nomor sertifikat terakhir dan tambahkan 1
+                $lastSertifikat = Sertifikat::where('tahun', $currentYear)->max('nomor_sertifikat');
+                $lastSertifikat++;
+            }
+            // ======================================End 1St Metode======================================
+
+            Sertifikat::create([
+                'verified_code' => Str::random(20),
+                'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
+                'kegiatan_id' => $request->kegiatan_id,
+                'peserta_id' => '-',
+                'tanggal_terbit' => '-',
+                'tahun' => $kegiatan->tahun_kegiatan,
+                'status' => 'belum terbit',
+                'siswa_id' => '-',
+                'narasumber_id' => $request->narasumber_id,
+                'orang_id' => '-',
+            ]);
+
+            return redirect()->route('kegiatan.show', $request->kegiatan_id)->with('success', 'Narasumber Baru Berhasil Di Tambahkan');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('kegiatan.show', $request->kegiatan_id)->with('fails', 'Narasumber Baru Gagal Di Tambahkan');
+        } finally {
+            DB::commit();
+        }
+    }
+
     public function preview($id)
     {
         $sertifikat = DB::table('sertifikats')
@@ -236,11 +293,57 @@ class SertifikatController extends Controller
         }
     }
 
+    public function narasumber_preview($id)
+    {
+        $sertifikat = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+            ->join('narasumbers', 'sertifikats.narasumber_id', '=', 'narasumbers.id')
+            ->join('penandatangans', 'kegiatans.penandatangan_id', '=', 'penandatangans.id')
+            ->where('sertifikats.id', $id)
+            ->select(
+                'sertifikats.id',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
+                'kegiatans.kode_kegiatan AS kode_kegiatan',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'kategoris.title AS kategori_kegiatan',
+                'kegiatans.tahun_kegiatan AS tahun_kegiatan',
+                'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
+                'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
+                'kegiatans.lokasi_kegiatan AS lokasi_kegiatan',
+                'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
+                'kegiatans.tanggal_penandatanganan AS tanggal_penandatanganan',
+                'narasumbers.nama AS nama',
+                'narasumbers.nip AS nip',
+                'narasumbers.tempat_lahir AS tempat_lahir',
+                'narasumbers.tempat_lahir AS tempat_lahir',
+                'narasumbers.tanggal_lahir AS tanggal_lahir',
+                'narasumbers.pangkat_golongan AS pangkat_golongan',
+                'narasumbers.jabatan AS jabatan',
+                'narasumbers.instansi AS instansi',
+                'penandatangans.nama AS nama_penandatangan',
+                'penandatangans.nip AS nip_penandatangan',
+                'penandatangans.pangkat_golongan AS pangkat_golongan_penandatangan',
+                'penandatangans.jabatan AS jabatan_penandatangan',
+                'sertifikats.status',
+            )
+            ->first();
+
+        $this->sertifikatGenerate->previewSertifikatNarasumber($sertifikat);
+    }
+
     public function delete(Request $request, $id)
     {
         DB::beginTransaction();
         try {
             $sertifikat = Sertifikat::find($id);
+
+            // Hapus QR Code
+            $pathQr = public_path() . '/qrcode/';
+            $fileQr = 'qr_' . $sertifikat->verified_code . '.' . 'png';
+            File::delete($pathQr . $fileQr);
+
             $sertifikat->delete($sertifikat);
             return redirect()->route('kegiatan.show', $request->kegiatan_id)->with('success', 'Peserta Berhasil Di Hapus');
         } catch (\Throwable $th) {
@@ -320,62 +423,43 @@ class SertifikatController extends Controller
         }
     }
 
-    // Narasumber Store
-    public function storeNarasumber(Request $request)
+    public function narasumber_download($id)
     {
-        $kegiatan = Kegiatan::find($request->kegiatan_id);
+        $sertifikat = DB::table('sertifikats')
+            ->join('kegiatans', 'sertifikats.kegiatan_id', '=', 'kegiatans.id')
+            ->join('kategoris', 'kegiatans.kategori_id', '=', 'kategoris.id')
+            ->join('narasumbers', 'sertifikats.narasumber_id', '=', 'narasumbers.id')
+            ->join('penandatangans', 'kegiatans.penandatangan_id', '=', 'penandatangans.id')
+            ->where('sertifikats.id', $id)
+            ->select(
+                'sertifikats.id',
+                'sertifikats.verified_code',
+                'sertifikats.nomor_sertifikat',
+                'kegiatans.kode_kegiatan AS kode_kegiatan',
+                'kegiatans.judul_kegiatan AS judul_kegiatan',
+                'kategoris.title AS kategori_kegiatan',
+                'kegiatans.tahun_kegiatan AS tahun_kegiatan',
+                'kegiatans.tanggal_mulai_kegiatan AS tanggal_mulai_kegiatan',
+                'kegiatans.tanggal_akhir_kegiatan AS tanggal_akhir_kegiatan',
+                'kegiatans.lokasi_kegiatan AS lokasi_kegiatan',
+                'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
+                'kegiatans.tanggal_penandatanganan AS tanggal_penandatanganan',
+                'narasumbers.nama AS nama',
+                'narasumbers.nip AS nip',
+                'narasumbers.tempat_lahir AS tempat_lahir',
+                'narasumbers.tempat_lahir AS tempat_lahir',
+                'narasumbers.tanggal_lahir AS tanggal_lahir',
+                'narasumbers.pangkat_golongan AS pangkat_golongan',
+                'narasumbers.jabatan AS jabatan',
+                'narasumbers.instansi AS instansi',
+                'penandatangans.nama AS nama_penandatangan',
+                'penandatangans.nip AS nip_penandatangan',
+                'penandatangans.pangkat_golongan AS pangkat_golongan_penandatangan',
+                'penandatangans.jabatan AS jabatan_penandatangan',
+                'sertifikats.status',
+            )
+            ->first();
 
-        // Validator
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'narasumber_id' => 'required',
-            ],
-            [],
-        );
-        // If validator fails.
-        if ($validator->fails()) {
-            return redirect()->back()->withInput($request->all())->withErrors($validator);
-        }
-
-        DB::beginTransaction();
-        try {
-            // ======================================1St Metode==========================================
-            // Last data
-            $currentYear = $kegiatan->tahun_kegiatan;
-            $lastSertifikat = Sertifikat::max('tahun');
-
-            if ($lastSertifikat !== $currentYear) {
-                // Jika tahun berubah, atur $lastSertifikat ke 1
-                $lastSertifikat = 1;
-            } else {
-                // Jika tahun sama, ambil nomor sertifikat terakhir dan tambahkan 1
-                $lastSertifikat = Sertifikat::where('tahun', $currentYear)->max('nomor_sertifikat');
-                $lastSertifikat++;
-            }
-            // ======================================End 1St Metode======================================
-
-            Sertifikat::create([
-                'verified_code' => Str::random(20),
-                'nomor_sertifikat' => str_pad($lastSertifikat, 4, '0', STR_PAD_LEFT),
-                'kegiatan_id' => $request->kegiatan_id,
-                'peserta_id' => '-',
-                'tanggal_terbit' => '-',
-                'tahun' => $kegiatan->tahun_kegiatan,
-                'siswa_id' => '-',
-                'narasumber_id' => $request->narasumber_id,
-            ]);
-
-            return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('success', 'Narasumber Baru Berhasil Di Tambahkan');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            if (Auth::user()->role == 'admin') {
-                return redirect()->route('sertifikat.create.peserta', $request->kegiatan_id)->with('fails', 'Narasumber Baru Gagal Di Tambahkan');
-            } else {
-                return redirect()->route('dashboard.index')->with('fails', 'Gagal mendaftar kegiatan');
-            }
-        } finally {
-            DB::commit();
-        }
+        $this->sertifikatGenerate->downloadSertifikatNarasumber($sertifikat);
     }
 }

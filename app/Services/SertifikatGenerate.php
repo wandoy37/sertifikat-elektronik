@@ -13,7 +13,7 @@ use Riskihajar\Terbilang\Facades\Terbilang as FacadesTerbilang;
 
 class SertifikatGenerate
 {
-    // Preview Single Sertifikat Pelatihan
+    //1.  Preview Single Sertifikat Pelatihan
     public function previewSertifikatPelatihan($sertifikat)
     {
         // ============= Get Detail Peserta by API
@@ -124,8 +124,10 @@ class SertifikatGenerate
                 $pdf->Cell(0, 10, 'Pembina Tk. I / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'iv.c') {
                 $pdf->Cell(0, 10, 'Pembina Utama Muda / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
-            } elseif ($pesertaPangkatGolongan == 'non-asn') {
-                $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iv.d') {
+                $pdf->Cell(0, 10, 'Pembina Utama Madya / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'iv.e') {
+                $pdf->Cell(0, 10, 'Pembina Utama / ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'v') {
                 $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'vi') {
@@ -144,6 +146,8 @@ class SertifikatGenerate
                 $pdf->Cell(0, 10, 'Golongan ' . $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'tk2d') {
                 $pdf->Cell(0, 10, 'Tenaga Kerja Kontrak Daerah', 0, 0, 'L');
+            } elseif ($pesertaPangkatGolongan == 'non-asn') {
+                $pdf->Cell(0, 10, 'Non ASN', 0, 0, 'L');
             } elseif ($pesertaPangkatGolongan == 'THL-TBPP') {
                 $pdf->Cell(0, 10, $pesertaPangkatGolonganFormatted, 0, 0, 'L');
             }
@@ -255,8 +259,7 @@ class SertifikatGenerate
 
         exit;
     }
-
-    // Download Single Sertifikat
+    //2. Download Single Sertifikat
     public function downloadSertifikatPelatihan($sertifikat)
     {
         // ============= Get Detail Peserta by API
@@ -500,6 +503,295 @@ class SertifikatGenerate
 
         exit;
     }
+
+    //1.  Preview Single Sertifikat Narasumber
+    public function previewSertifikatNarasumber($sertifikat)
+    {
+        $templatePath = public_path('uploads/template/template_narasumber.pdf');
+        $templateSize = getimagesize($templatePath); // Mendapatkan dimensi template PDF
+
+        $pdf = new FPDI();
+        $pdf->AddPage('L', 'A4');
+        $pdf->setSourceFile($templatePath);
+        $templateId = $pdf->importPage(1); // Ambil halaman pertama dari template PDF
+
+        // Gunakan halaman template sebagai latar belakang
+        $pdf->useTemplate($templateId);
+
+        // Mengatur margin dalam satuan milimeter (mm)
+        $pdf->SetMargins(20, 20, 20); // Kiri, atas, kanan
+        $pdf->SetAutoPageBreak(true, 5); // Mengatur auto page break dengan margin bawah 20 mm
+
+        // Set font dan ukuran
+        $pdf->SetFont('Arial', 'B', 12);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 23);
+        $pdf->SetX(19);
+        $pdf->Cell(0, 79, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        // Informasi Narasumber
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 73);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->nama, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 78.8);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->nip, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 84.6);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->tempat_lahir . ', ' . Carbon::parse($sertifikat->tanggal_lahir)->isoFormat('D MMMM Y'), 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 90.4);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->pangkat_golongan, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 96.2);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->jabatan, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 102);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->instansi, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("arial", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(40, 115); // Set posisi X dan Y awal
+        $pdf->MultiCell(
+            218, // lebar cell, sesuaikan dengan lebar halaman
+            5.5,  // tinggi per baris
+            'Sebagai Narasumber/Pengajar pada ' . $sertifikat->judul_kegiatan . ' yang diselenggarakan oleh UPTD Balai Penyuluhan dan Pengembangan Sumber Daya Manusia Pertanian Provinsi Kalimantan Timur pada tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMM') . ' sampai dengan ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMM Y') . ' di ' . $sertifikat->lokasi_kegiatan . '.',
+            0,   // border (0 = tanpa garis)
+            'C', // alignment (L = kiri)
+            false // fill background
+        );
+
+        // Buat QR Code
+        if ($sertifikat->status == 'belum terbit') {
+            QrCode::Format('png')->color(255, 0, 0)->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+            $pdf->SetFont("helvetica", "", 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(0, 160);
+            $pdf->SetX(45);
+            $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 137.5, 150, 20, 0, 'PNG');
+            $pdf->SetX(12.6);
+        } else {
+            QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .2, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+            $pdf->SetFont("helvetica", "", 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(0, 160);
+            $pdf->SetX(45);
+            $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 137.5, 150, 20, 0, 'PNG');
+            $pdf->SetX(12.6);
+        }
+
+
+        // Penandatangan
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 135);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_penandatanganan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 140.9);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, $sertifikat->jabatan_penandatangan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "UB", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 170);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, $sertifikat->nama_penandatangan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 175);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, $sertifikat->pangkat_golongan_penandatangan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 180);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, 'NIP. ' . $sertifikat->nip_penandatangan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        // Output PDF
+        $pdf->Output('sertifikat-' . $sertifikat->nomor_sertifikat . '.pdf', 'I');
+    }
+    // 2. Downlaod Single Sertifikat Narasumber
+    public function downloadSertifikatNarasumber($sertifikat)
+    {
+        $templatePath = public_path('uploads/template/template_narasumber.pdf');
+        $templateSize = getimagesize($templatePath); // Mendapatkan dimensi template PDF
+
+        $pdf = new FPDI();
+        $pdf->AddPage('L', 'A4');
+        $pdf->setSourceFile($templatePath);
+        $templateId = $pdf->importPage(1); // Ambil halaman pertama dari template PDF
+
+        // Gunakan halaman template sebagai latar belakang
+        $pdf->useTemplate($templateId);
+
+        // Mengatur margin dalam satuan milimeter (mm)
+        $pdf->SetMargins(20, 20, 20); // Kiri, atas, kanan
+        $pdf->SetAutoPageBreak(true, 5); // Mengatur auto page break dengan margin bawah 20 mm
+
+        // Set font dan ukuran
+        $pdf->SetFont('Arial', 'B', 12);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 23);
+        $pdf->SetX(19);
+        $pdf->Cell(0, 79, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        // Informasi Narasumber
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 73);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->nama, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 78.8);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->nip, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 84.6);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->tempat_lahir . ', ' . Carbon::parse($sertifikat->tanggal_lahir)->isoFormat('D MMMM Y'), 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 90.4);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->pangkat_golongan, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 96.2);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->jabatan, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 102);
+        $pdf->SetX(139);
+        $pdf->Cell(0, 10, $sertifikat->instansi, 0, 0, 'L');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("arial", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(40, 115); // Set posisi X dan Y awal
+        $pdf->MultiCell(
+            218, // lebar cell, sesuaikan dengan lebar halaman
+            5.5,  // tinggi per baris
+            'Sebagai Narasumber/Pengajar pada ' . $sertifikat->judul_kegiatan . ' yang diselenggarakan oleh UPTD Balai Penyuluhan dan Pengembangan Sumber Daya Manusia Pertanian Provinsi Kalimantan Timur pada tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMM') . ' sampai dengan ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMM Y') . ' di ' . $sertifikat->lokasi_kegiatan . '.',
+            0,   // border (0 = tanpa garis)
+            'C', // alignment (L = kiri)
+            false // fill background
+        );
+
+        // Buat QR Code
+        if ($sertifikat->status == 'belum terbit') {
+            QrCode::Format('png')->color(255, 0, 0)->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+            $pdf->SetFont("helvetica", "", 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(0, 160);
+            $pdf->SetX(45);
+            $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 137.5, 150, 20, 0, 'PNG');
+            $pdf->SetX(12.6);
+        } else {
+            QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .2, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
+            $pdf->SetFont("helvetica", "", 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(0, 160);
+            $pdf->SetX(45);
+            $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 137.5, 150, 20, 0, 'PNG');
+            $pdf->SetX(12.6);
+        }
+
+
+        // Penandatangan
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 135);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_penandatanganan)->isoFormat('D MMMM Y'), 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 140.9);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, $sertifikat->jabatan_penandatangan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "UB", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 170);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, $sertifikat->nama_penandatangan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 175);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, $sertifikat->pangkat_golongan_penandatangan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        $pdf->SetFont("helvetica", "", 12);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY(0, 180);
+        $pdf->SetX(20);
+        $pdf->Cell(0, 10, 'NIP. ' . $sertifikat->nip_penandatangan, 0, 0, 'C');
+        $pdf->SetX(12.6);
+
+        // Output PDF
+        $pdf->Output('sertifikat-narsum-' . $sertifikat->nomor_sertifikat . '.pdf', 'D');
+    }
+
+
+
+
 
     public function prosesSingleGenerate($sertifikat)
     {
@@ -2327,314 +2619,5 @@ class SertifikatGenerate
         $pdf->Output($outputFilePath, 'I');
 
         $pdf->Output('sertifikat_pada_kegiatan_' . Str::slug($sertifikat->judul_kegiatan, '-') . '.' . 'pdf', 'I');
-    }
-
-    // Cetak Sertifikat Narasumber
-    public function generateSertifikatNarasumber($sertifikat)
-    {
-
-        $templatePath = public_path('uploads/template/template_narasumber.pdf');
-        $templateSize = getimagesize($templatePath); // Mendapatkan dimensi template PDF
-
-        $pdf = new FPDI();
-        $pdf->AddPage('L', 'A4');
-        $pdf->setSourceFile($templatePath);
-        $templateId = $pdf->importPage(1); // Ambil halaman pertama dari template PDF
-
-        // Gunakan halaman template sebagai latar belakang
-        $pdf->useTemplate($templateId);
-
-        // Mengatur margin dalam satuan milimeter (mm)
-        $pdf->SetMargins(20, 20, 20); // Kiri, atas, kanan
-        $pdf->SetAutoPageBreak(true, 20); // Mengatur auto page break dengan margin bawah 20 mm
-
-        // Set font dan ukuran
-        $pdf->SetFont('Arial', 'B', 16);
-
-        $pdf->SetFont("helvetica", "B", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 10);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 90, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        // Pemprov Desc
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 63);
-        $pdf->SetX(45);
-        $pdf->Cell(0, 10, 'Pemerintah Provinsi Kalimantan Timur menyampaikan ucapan terima kasih dan penghargaan, kepada :', 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        // Informasi Narasumber
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 80.5);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->nama, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 86.5);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->nip, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 92.2);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->tempat_lahir . ', ' . Carbon::parse($sertifikat->tanggal_lahir)->isoFormat('D MMMM Y'), 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 98.2);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->pangkat_golongan, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 104.2);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->jabatan, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 109.8);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->instansi, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        // Telah Mengikuti
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 128);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'Sebagai Pelatih pada ' . $sertifikat->judul_kegiatan, 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 133);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'diselenggarakan pada tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' di UPTD Balai Penyuluhan dan Pengembangan', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 138);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'Sumber Daya Manusia Pertanian Provinsi Kalimantan Timur', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        // Buat QR Code
-        QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .3, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 160);
-        $pdf->SetX(45);
-        $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 47, 165, 20, 0, 'PNG');
-        $pdf->SetX(12.6);
-
-        // Penandatangan
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 145.5);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 150);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'an. Gubernur Kalimantan Timur', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 154.8);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'Kepala UPTD BPPSDMP', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 184);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 0, 'Tri Ida Kartini, SP., MP', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 189);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 0, 'NIP. 19740421 200112 2 005', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        // Output PDF
-        $pdf->Output('sertifikat' . Str::slug($sertifikat->nama), 'I');
-
-        exit;
-    }
-
-    public function generateSertifikatNarasumberDownload($sertifikat)
-    {
-
-        $templatePath = public_path('uploads/template/template_narasumber.pdf');
-        $templateSize = getimagesize($templatePath); // Mendapatkan dimensi template PDF
-
-        $pdf = new FPDI();
-        $pdf->AddPage('L', 'A4');
-        $pdf->setSourceFile($templatePath);
-        $templateId = $pdf->importPage(1); // Ambil halaman pertama dari template PDF
-
-        // Gunakan halaman template sebagai latar belakang
-        $pdf->useTemplate($templateId);
-
-        // Mengatur margin dalam satuan milimeter (mm)
-        $pdf->SetMargins(20, 20, 20); // Kiri, atas, kanan
-        $pdf->SetAutoPageBreak(true, 20); // Mengatur auto page break dengan margin bawah 20 mm
-
-        // Set font dan ukuran
-        $pdf->SetFont('Arial', 'B', 16);
-
-        $pdf->SetFont("helvetica", "B", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 10);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 90, 'Nomor : ' . $sertifikat->kode_kegiatan . ' / ' . $sertifikat->nomor_sertifikat . ' / BPPSDMP / ' . $sertifikat->tahun_kegiatan, 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        // Pemprov Desc
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 63);
-        $pdf->SetX(45);
-        $pdf->Cell(0, 10, 'Pemerintah Provinsi Kalimantan Timur menyampaikan ucapan terima kasih dan penghargaan, kepada :', 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        // Informasi Narasumber
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 80.5);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->nama, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 86.5);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->nip, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 92.2);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->tempat_lahir . ', ' . Carbon::parse($sertifikat->tanggal_lahir)->isoFormat('D MMMM Y'), 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 98.2);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->pangkat_golongan, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 104.2);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->jabatan, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 109.8);
-        $pdf->SetX(139);
-        $pdf->Cell(0, 10, $sertifikat->instansi, 0, 0, 'L');
-        $pdf->SetX(12.6);
-
-        // Telah Mengikuti
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 128);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'Sebagai Pelatih pada ' . $sertifikat->judul_kegiatan, 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 133);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'diselenggarakan pada tanggal ' . Carbon::parse($sertifikat->tanggal_mulai_kegiatan)->isoFormat('D MMMM') . ' s.d. ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y') . ' di UPTD Balai Penyuluhan dan Pengembangan', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 138);
-        $pdf->SetX(10.5);
-        $pdf->Cell(0, 10, 'Sumber Daya Manusia Pertanian Provinsi Kalimantan Timur', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        // Buat QR Code
-        QrCode::Format('png')->merge(asset('assets2/img/logo-bppsdmp.png'), .3, true)->errorCorrection('M')->generate(route('home.show', $sertifikat->verified_code), public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png');
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 160);
-        $pdf->SetX(45);
-        $pdf->Image(public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png', 47, 165, 20, 0, 'PNG');
-        $pdf->SetX(12.6);
-
-        // Penandatangan
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 145.5);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'Samarinda, ' . Carbon::parse($sertifikat->tanggal_akhir_kegiatan)->isoFormat('D MMMM Y'), 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 150);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'an. Gubernur Kalimantan Timur', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 154.8);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 10, 'Kepala UPTD BPPSDMP', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 184);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 0, 'Tri Ida Kartini, SP., MP', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        $pdf->SetFont("helvetica", "", 12);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetXY(0, 189);
-        $pdf->SetX(170);
-        $pdf->Cell(0, 0, 'NIP. 19740421 200112 2 005', 0, 0, 'C');
-        $pdf->SetX(12.6);
-
-        // Tempel Tandatangan dan Stempel
-        $imagePath = public_path('/uploads/tanda_tangan_stempel/ttd_tri_ida.png');
-        $pdf->Image($imagePath, 190, 145, 50, 50); // Sesuaikan ukuran dan posisi gambar
-
-        // Output PDF
-        $pdf->Output('sertifikat' . Str::slug($sertifikat->nama), 'I');
-
-        exit;
     }
 }

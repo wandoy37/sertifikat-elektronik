@@ -155,7 +155,6 @@ class KegiatanController extends Controller
             ->where('sertifikats.kegiatan_id', '=', $kegiatan->id)
             ->get();
 
-
         return view('dashboard.kegiatan.show', compact('kegiatan', 'dataPesertas', 'narasumbers', 'sertifikats'));
     }
 

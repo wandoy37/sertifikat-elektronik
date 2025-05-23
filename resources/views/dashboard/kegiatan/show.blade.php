@@ -57,7 +57,7 @@
                 @include('dashboard.kegiatan.tambah_narasumber')
             </div>
             @include('dashboard.kegiatan.daftar_partisipasi')
-
+            @include('dashboard.kegiatan.daftar_narasumber')
         </div>
 
 
@@ -66,6 +66,7 @@
     @push('scripts')
         <script>
             $('#basic-datatables').DataTable();
+            $('#narsum-datatables').DataTable();
 
             // Notify
             var flash = $('#success').data('flash');
