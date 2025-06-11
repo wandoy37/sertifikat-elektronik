@@ -32,6 +32,11 @@
                                 value="{{ $kegiatan->kategori->title }}" disabled>
                         </div>
                         <div class="form-group">
+                            <label>Penyelenggara Kegiatan</label>
+                            <input type="text" class="form-control text-capitalize" placeholder="Penyelenggara Kegiatan"
+                                value="{{ $kegiatan->penyelenggara_kegiatan }}" disabled>
+                        </div>
+                        <div class="form-group">
                             <label>Periode Kegiatan</label>
                             <input type="text" class="form-control" placeholder="Nama Kegiatan"
                                 value="{{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->isoFormat('D MMM') . ' - ' . \Carbon\Carbon::parse($kegiatan->tanggal_akhir_kegiatan)->isoFormat('D MMM Y') }}"

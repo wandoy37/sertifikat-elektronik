@@ -89,6 +89,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group @error('penyelenggara_kegiatan') has-error @enderror">
+                                <label class="fw-bold">Penyelenggara Kegiatan</label>
+                                <textarea name="penyelenggara_kegiatan" class="form-control" cols="30" rows="4">{{ old('penyelenggara_kegiatan') }}</textarea>
+                            </div>
                             <div class="form-group @error('lokasi_kegiatan') has-error @enderror">
                                 <label class="fw-bold">Lokasi Kegiatan</label>
                                 <textarea name="lokasi_kegiatan" class="form-control" cols="30" rows="4"></textarea>

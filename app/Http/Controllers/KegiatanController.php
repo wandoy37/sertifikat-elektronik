@@ -99,7 +99,8 @@ class KegiatanController extends Controller
                 'daftar_mata_pelatihan' => 'storage/' . $path,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
-                'status' => 'open'
+                'status' => 'open',
+                'penyelenggara_kegiatan' => $request->penyelenggara_kegiatan,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Baru Berhasil Di Tambahkan');
         } catch (\Throwable $th) {
@@ -196,6 +197,7 @@ class KegiatanController extends Controller
                 'penandatangan_id' => 'required',
                 'tanggal_penandatanganan' => 'required',
                 'daftar_mata_pelatihan' => 'nullable|file|mimes:pdf|max:2048',
+                'penyelenggara_kegiatan' => 'required',
             ],
             [],
         );
@@ -233,7 +235,8 @@ class KegiatanController extends Controller
                 'lokasi_kegiatan' => $request->lokasi_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
-                'status' => 'open'
+                'status' => 'open',
+                'penyelenggara_kegiatan' => $request->penyelenggara_kegiatan,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Update');
         } catch (\Throwable $th) {
