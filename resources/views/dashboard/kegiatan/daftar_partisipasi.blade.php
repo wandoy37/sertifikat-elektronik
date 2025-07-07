@@ -85,6 +85,57 @@
                                             @endphp
                                             {{ $orang->nama }}
                                         </td>
+                                        <td>
+                                            @if ($sertifikat->status == 'terbit')
+                                                <span class="badge badge-success text-capitalize">
+                                                    {{ $sertifikat->status }}
+                                                </span>
+                                            @else
+                                                <span class="badge badge-count text-capitalize">
+                                                    {{ $sertifikat->status }}
+                                                </span>
+                                            @endif
+
+                                        </td>
+                                        <td class="form-inline d-flex justify-content-center">
+                                            <a href="{{ route('sertifikat.preview', $sertifikat->id) }}"
+                                                class="fw-bold text-dark mr-4 text-capitalize" target="_blank">
+                                                <i class="fas fa-search"></i>
+                                            </a>
+                                            <a href="{{ route('sertifikat.download', $sertifikat->id) }}"
+                                                class="text-dark mr-2" target="_blank">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                            <form id="form-delete-{{ $sertifikat->id }}"
+                                                action="{{ route('sertifikat.delete', $sertifikat->id) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="text" name="kegiatan_id" value="{{ $kegiatan->id }}"
+                                                    hidden>
+                                            </form>
+                                            <button type="button" class="btn btn-link text-danger"
+                                                onclick="btnDelete( {{ $sertifikat->id }} )">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endif
+
+                            {{-- @if ($kegiatan->kategori->title == 'bimtek')
+                                @if ($sertifikat->orang_id !== '-')
+                                    <tr class="text-center">
+                                        <td class="text-center" width="25px;">{{ $counter++ }}</td>
+                                        <td>{{ $sertifikat->nomor_sertifikat }}</td>
+                                        <td>
+                                            @php
+                                                $orang = DB::table('orangs')
+                                                    ->where('id', '=', $sertifikat->orang_id)
+                                                    ->first();
+                                            @endphp
+                                            {{ $orang->nama }}
+                                        </td>
                                         <td class="form-inline d-flex justify-content-center">
                                             <a href="{{ route('home.show', $sertifikat->verified_code) }}"
                                                 class="fw-bold text-primary mr-3 text-capitalize" target="_blank">
@@ -109,7 +160,7 @@
                                         </td>
                                     </tr>
                                 @endif
-                            @endif
+                            @endif --}}
 
                             @if ($kegiatan->kategori->title == 'pkl')
                                 @if ($sertifikat->siswa_id !== '-')

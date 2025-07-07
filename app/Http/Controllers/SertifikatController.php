@@ -274,6 +274,7 @@ class SertifikatController extends Controller
                 'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
                 'kegiatans.tanggal_penandatanganan AS tanggal_penandatanganan',
                 'kegiatans.lokasi_kegiatan AS lokasi_kegiatan',
+                'kegiatans.penyelenggara_kegiatan AS penyelenggara_kegiatan',
                 'penandatangans.nama AS nama_penandatangan',
                 'penandatangans.nip AS nip_penandatangan',
                 'penandatangans.pangkat_golongan AS pangkat_golongan_penandatangan',
@@ -286,7 +287,7 @@ class SertifikatController extends Controller
             $this->sertifikatGenerate->previewSertifikatPelatihan($sertifikat);
         }
         if ($sertifikat->kategori_kegiatan == 'bimtek') {
-            $this->sertifikatGenerate->prosesSingleGenerateBimtek($sertifikat);
+            $this->sertifikatGenerate->previewSertifikatBimtek($sertifikat);
         }
         if ($sertifikat->kategori_kegiatan == 'pkl') {
             $this->sertifikatGenerate->prosesSingleGenerateSiswa($sertifikat);
@@ -340,9 +341,8 @@ class SertifikatController extends Controller
             $sertifikat = Sertifikat::find($id);
 
             // Hapus QR Code
-            $pathQr = public_path() . '/qrcode/';
-            $fileQr = 'qr_' . $sertifikat->verified_code . '.' . 'png';
-            File::delete($pathQr . $fileQr);
+            $pathQr = public_path() . '/qrcode/' . 'qr_' . $sertifikat->verified_code . '.' . 'png';
+            File::delete($pathQr);
 
             $sertifikat->delete($sertifikat);
             return redirect()->route('kegiatan.show', $request->kegiatan_id)->with('success', 'Peserta Berhasil Di Hapus');
@@ -404,6 +404,7 @@ class SertifikatController extends Controller
                 'kegiatans.total_jam_kegiatan AS total_jam_kegiatan',
                 'kegiatans.tanggal_penandatanganan AS tanggal_penandatanganan',
                 'kegiatans.lokasi_kegiatan AS lokasi_kegiatan',
+                'kegiatans.penyelenggara_kegiatan AS penyelenggara_kegiatan',
                 'penandatangans.nama AS nama_penandatangan',
                 'penandatangans.nip AS nip_penandatangan',
                 'penandatangans.pangkat_golongan AS pangkat_golongan_penandatangan',
@@ -416,7 +417,7 @@ class SertifikatController extends Controller
             $this->sertifikatGenerate->downloadSertifikatPelatihan($sertifikat);
         }
         if ($sertifikat->kategori_kegiatan == 'bimtek') {
-            $this->sertifikatGenerate->prosesSingleGenerateBimtek($sertifikat);
+            $this->sertifikatGenerate->downloadSertifikatBimtek($sertifikat);
         }
         if ($sertifikat->kategori_kegiatan == 'pkl') {
             $this->sertifikatGenerate->prosesSingleGenerateSiswa($sertifikat);
