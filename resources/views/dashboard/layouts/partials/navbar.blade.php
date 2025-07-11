@@ -31,9 +31,8 @@
                                             alt="image profile" class="avatar-img rounded-circle"></div>
                                 @endif --}}
                                 <div class="u-text">
-                                    <h4 class="text-capitalize">{{ Auth::user()->name }}</h4>
-                                    <p class="text-muted">{{ Auth::user()->email }}</p><a
-                                        href="{{ route('user.edit', Auth::user()->username) }}"
+                                    <p class="text-muted">{{ Auth::user()->username }}</p>
+                                    <a href="{{ route('user.edit', Auth::user()->username) }}"
                                         class="btn btn-xs btn-secondary btn-sm">Edit Pengguna</a>
                                 </div>
                             </div>

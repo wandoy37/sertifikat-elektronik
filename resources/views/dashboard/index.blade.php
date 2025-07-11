@@ -27,59 +27,57 @@
 
 
         <div class="row">
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body ">
+            <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-primary card-round">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-5">
                                 <div class="icon-big text-center">
-                                    <i class="fas fa-users text-primary"></i>
+                                    <i class="fas fa-chalkboard-teacher"></i>
                                 </div>
                             </div>
                             <div class="col-7 col-stats">
                                 <div class="numbers">
-                                    <p class="card-title">Peserta</p>
-                                    <span class="badge badge-info">{{ count($pesertas) }}</span>
+                                    <p class="card-category">Pelatihan</p>
+                                    <h4 class="card-title fw-bold">{{ $kegiatan_pelatihan->count() }}</h4>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body ">
+            <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-info card-round">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-5">
                                 <div class="icon-big text-center">
-                                    <i class="fas fa-podcast text-primary"></i>
+                                    <i class="fas fa-lightbulb"></i>
                                 </div>
                             </div>
                             <div class="col-7 col-stats">
                                 <div class="numbers">
-                                    <p class="card-title">Kegiatan</p>
-                                    <span class="badge badge-info">{{ $kegiatans->count() }}</span>
+                                    <p class="card-category">Bimbingan Teknis Pertanian</p>
+                                    <h4 class="card-title fw-bold">{{ $kegiatan_bimtek->count() }}</h4>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
+            <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-success card-round">
                     <div class="card-body ">
                         <div class="row">
                             <div class="col-5">
                                 <div class="icon-big text-center">
-                                    <i class="fas fa-certificate text-primary"></i>
+                                    <i class="fas fa-building"></i>
                                 </div>
                             </div>
                             <div class="col-7 col-stats">
                                 <div class="numbers">
-                                    <p class="card-title">Sertifikat</p>
-                                    <span class="badge badge-info">
-                                        {{ $sertifikats->where('status', 'terbit')->count() }}
-                                    </span>
+                                    <p class="card-category">PKL/Magang/Prakerin</p>
+                                    <h4 class="card-title fw-bold">{{ $kegiatan_pkl->count() }}</h4>
                                 </div>
                             </div>
                         </div>

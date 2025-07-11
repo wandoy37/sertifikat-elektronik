@@ -10,24 +10,36 @@ use App\Models\Siswa;
 use GuzzleHttp\Client;
 use App\Models\Narasumber;
 use App\Models\Orang;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
 class DigitalSignaturController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Dapatkan tahun saat ini
-        $tahun_saat_ini = date('Y'); // 'Y' akan mengembalikan tahun dalam format 4 digit (contoh: 2025)
+        $userId = Auth::user();
+        $penandatanganId = Penandatangan::where('user_id', $userId->id)->value('id'); // ambil hanya ID-nya
+        $tahun_saat_ini = date('Y');
         $kategori_yang_diinginkan = [1, 2];
 
-        // Ambil kegiatan yang tahun_kegiatan-nya sama dengan tahun saat ini
-        $kegiatans = Kegiatan::where('tahun_kegiatan', $tahun_saat_ini)
+        // Ambil parameter filter status dari query string
+        $status = $request->query('status', 'unsigned'); // default: unsigned
+
+        // Base query
+        $query = Kegiatan::where('tahun_kegiatan', $tahun_saat_ini)
             ->whereIn('kategori_id', $kategori_yang_diinginkan)
-            ->latest() // Mengurutkan berdasarkan tanggal terbaru jika ada kolom created_at/updated_at
-            ->get();
+            ->where('penandatangan_id', $penandatanganId);
+
+        // Tambahkan kondisi status jika bukan 'all'
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $kegiatans = $query->latest()->get();
         $penandatangans = Penandatangan::all();
+
         return view('dashboard.digital_signature.index', compact('kegiatans', 'penandatangans'));
     }
 

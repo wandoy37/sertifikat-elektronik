@@ -17,6 +17,18 @@
 
         <div class="row">
             <div class="col-lg-12">
+                <div class="float-right mb-4">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a href="{{ route('digital.signature.index', ['status' => 'unsigned']) }}"
+                            class="btn btn-outline-primary {{ request('status') == 'unsigned' || request('status') == null ? 'active' : '' }}">Proses</a>
+                        <a href="{{ route('digital.signature.index', ['status' => 'signed']) }}"
+                            class="btn btn-outline-primary {{ request('status') == 'signed' ? 'active' : '' }}">Selesai</a>
+                        <a href="{{ route('digital.signature.index', ['status' => 'all']) }}"
+                            class="btn btn-outline-primary {{ request('status') == 'all' ? 'active' : '' }}">Semua</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">

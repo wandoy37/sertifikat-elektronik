@@ -119,7 +119,6 @@
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             @endif
-
                                         </td>
                                     </tr>
                                 @endif

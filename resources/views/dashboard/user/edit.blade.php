@@ -89,11 +89,81 @@
                     </form>
                 </div>
             </div>
-            <div class="col-md-6">
-                @if ($penandatangan = $penandatangans->where('user_id', Auth::user()->id)->first())
+            @php
+                $penandatangan = $penandatangans->where('user_id', Auth::user()->id)->first();
+            @endphp
+            @if (is_null($penandatangan))
+                {{-- Form update biodata jika sudah ada --}}
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="fw-bold">BIODATA</h4>
+                            <h4 class="fw-bold">LENGKAPI BIODATA</h4>
+                        </div>
+                        <form action="{{ route('penandatangan.store') }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <input type="text" name="user_id" value="{{ Auth::user()->id }}" hidden>
+                                    <label>Nama</label>
+                                    <input id="nama" type="text"
+                                        class="form-control @error('nama') has-error @enderror" name="nama"
+                                        placeholder="Nama" value="{{ old('nama') }}">
+                                    @error('nama')
+                                        <strong class="text-danger">{{ $message }}</strong>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>NIP</label>
+                                    <input id="nip" type="text" class="form-control" name="nip"
+                                        placeholder="NIP" value="{{ old('nip', Auth::user()->username) }}">
+                                    @error('nip')
+                                        <strong class="text-danger">{{ $message }}</strong>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>Pangkat/Golongan</label>
+                                    <input id="pangkat_golongan" type="text" class="form-control" name="pangkat_golongan"
+                                        placeholder="Pangkat/Golongan" value="{{ old('nip') }}">
+                                    @error('pangkat_golongan')
+                                        <strong class="text-danger">{{ $message }}</strong>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>jabatan</label>
+                                    <input id="jabatan" type="type" name="jabatan" class="form-control"
+                                        placeholder="jabatan" value="{{ old('jabatan') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Passphrase</label>
+                                    <input id="passphrase" type="password" class="form-control" name="passphrase"
+                                        placeholder="passphrase">
+                                    @error('passphrase')
+                                        <strong class="text-danger">{{ $message }}</strong>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>Passphrase Confirmation</label>
+                                    <input id="passphrase_confirmation" type="password" name="passphrase_confirmation"
+                                        class="form-control" placeholder="passphrase Confirmation">
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-action float-right mb-3">
+                                    <button type="submit" class="btn btn-primary btn-rounded btn-login">
+                                        <i class="fas fa-sync"></i>
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @else
+                {{-- Form update biodata jika sudah ada --}}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="fw-bold">UPDATE BIODATA</h4>
                         </div>
                         <form action="{{ route('penandatangan.update', $penandatangan->id) }}" method="post"
                             enctype="multipart/form-data">
@@ -120,8 +190,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Pangkat/Golongan</label>
-                                    <input id="pangkat_golongan" type="text" class="form-control" name="pangkat_golongan"
-                                        placeholder="Pangkat/Golongan"
+                                    <input id="pangkat_golongan" type="text" class="form-control"
+                                        name="pangkat_golongan" placeholder="Pangkat/Golongan"
                                         value="{{ old('nip', $penandatangan->pangkat_golongan) }}">
                                     @error('pangkat_golongan', $penandatangan->pangkat_golongan)
                                         <strong class="text-danger">{{ $message }}</strong>
@@ -156,8 +226,12 @@
                             </div>
                         </form>
                     </div>
-                @endif
-            </div>
+                    {{-- @if ($penandatangan = $penandatangans->where('user_id', Auth::user()->id)->first())
+                        
+                    @endif --}}
+                </div>
+            @endif
+
         </div>
 
 

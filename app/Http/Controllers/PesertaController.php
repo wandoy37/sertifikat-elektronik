@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Penandatangan;
 use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,7 +23,8 @@ class PesertaController extends Controller
     public function index()
     {
         $pesertas = Http::get(env('SIMPELTAN_API_DATA_PESERTA'))->json();
-        return view('dashboard.peserta.index', compact('pesertas'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.peserta.index', compact('pesertas', 'penandatangans'));
 
         // $pesertas = Peserta::latest()->get();
         // return view('dashboard.peserta.index', compact('pesertas'));

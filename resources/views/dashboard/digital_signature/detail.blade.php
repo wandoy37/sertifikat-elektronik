@@ -94,12 +94,6 @@
                     @include('dashboard.digital_signature.form_passphrase')
                 </div>
             @endif
-
-
-            {{-- <div class="col-lg-6">
-                @include('dashboard.kegiatan.tambah_partisipasi')
-                @include('dashboard.kegiatan.tambah_narasumber')
-            </div> --}}
             <div class="col-lg-12">
                 @include('dashboard.kegiatan.daftar_partisipasi')
                 @include('dashboard.kegiatan.daftar_narasumber')
