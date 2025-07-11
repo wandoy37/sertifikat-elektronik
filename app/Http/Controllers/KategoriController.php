@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kategori;
+use App\Models\Penandatangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,8 @@ class KategoriController extends Controller
     public function index()
     {
         $kategoris = Kategori::latest()->get();
-        return view('dashboard.kategori.index', compact('kategoris'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.kategori.index', compact('kategoris', 'penandatangans'));
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Orang;
+use App\Models\Penandatangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,8 @@ class OrangController extends Controller
     public function index()
     {
         $orangs = Orang::all();
-        return view('dashboard.orang.index', compact('orangs'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.orang.index', compact('orangs', 'penandatangans'));
     }
 
     /**
@@ -27,7 +29,8 @@ class OrangController extends Controller
      */
     public function create()
     {
-        return view('dashboard.orang.create');
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.orang.create', compact('penandatangans'));
     }
 
     /**
@@ -88,7 +91,8 @@ class OrangController extends Controller
     public function edit($id)
     {
         $orang = Orang::find($id);
-        return view('dashboard.orang.edit', compact('orang'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.orang.edit', compact('orang', 'penandatangans'));
     }
 
     /**

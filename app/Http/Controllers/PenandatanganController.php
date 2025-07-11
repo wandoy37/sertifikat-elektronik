@@ -30,7 +30,8 @@ class PenandatanganController extends Controller
      */
     public function create()
     {
-        return view('dashboard.penandatangan.create');
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.penandatangan.create', compact('penandatangans'));
     }
 
     /**
@@ -123,7 +124,8 @@ class PenandatanganController extends Controller
     public function edit($id)
     {
         $penandatangan = Penandatangan::find($id);
-        return view('dashboard.penandatangan.edit', compact('penandatangan'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.penandatangan.edit', compact('penandatangan', 'penandatangans'));
     }
 
     /**

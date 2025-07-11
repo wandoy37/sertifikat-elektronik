@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Penandatangan;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,8 @@ class SiswaController extends Controller
     public function index()
     {
         $siswas = Siswa::all();
-        return view('dashboard.siswa.index', compact('siswas'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.siswa.index', compact('siswas', 'penandatangans'));
     }
 
     /**
@@ -27,7 +29,8 @@ class SiswaController extends Controller
      */
     public function create()
     {
-        return view('dashboard.siswa.create');
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.siswa.create', compact('penandatangans'));
     }
 
     /**
@@ -103,7 +106,8 @@ class SiswaController extends Controller
     public function edit($id)
     {
         $siswa = Siswa::find($id);
-        return view('dashboard.siswa.edit', compact('siswa'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.siswa.edit', compact('siswa', 'penandatangans'));
     }
 
     /**
@@ -170,8 +174,8 @@ class SiswaController extends Controller
     public function destroy($id)
     {
         DB::beginTransaction();
+        $siswa = Siswa::find($id);
         try {
-            $siswa = Siswa::find($id);
             $siswa->delete($siswa);
             return redirect()->route('siswa.index')->with('success', 'siswa ' . $siswa->nama . ' Baru Berhasil Di Hapus');
         } catch (\Throwable $th) {

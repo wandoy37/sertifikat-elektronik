@@ -235,7 +235,7 @@ class SertifikatController extends Controller
                 'peserta_id' => '-',
                 'tanggal_terbit' => '-',
                 'tahun' => $kegiatan->tahun_kegiatan,
-                'status' => 'belum terbit',
+                'status' => 'unsigned',
                 'siswa_id' => '-',
                 'narasumber_id' => $request->narasumber_id,
                 'orang_id' => '-',

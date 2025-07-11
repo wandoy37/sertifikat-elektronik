@@ -58,12 +58,12 @@
                         </a>
                     </li>
 
-                    <li class="nav-item {{ request()->segment(2) == 'sertifikat' ? 'active' : '' }}">
+                    {{-- <li class="nav-item {{ request()->segment(2) == 'sertifikat' ? 'active' : '' }}">
                         <a href="{{ route('sertifikat.index') }}">
                             <i class="fas fa-certificate"></i>
                             <p>Sertifikat</p>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>

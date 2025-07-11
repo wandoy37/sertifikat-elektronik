@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Narasumber;
+use App\Models\Penandatangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,8 @@ class NarasumberController extends Controller
     public function index()
     {
         $narasumbers = Narasumber::all();
-        return view('dashboard.narasumber.index', compact('narasumbers'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.narasumber.index', compact('narasumbers', 'penandatangans'));
     }
 
     /**
@@ -29,7 +31,8 @@ class NarasumberController extends Controller
      */
     public function create()
     {
-        return view('dashboard.narasumber.create');
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.narasumber.create', compact('penandatangans'));
     }
 
     /**
@@ -108,7 +111,8 @@ class NarasumberController extends Controller
     public function edit($id)
     {
         $narasumber = Narasumber::find($id);
-        return view('dashboard.narasumber.edit', compact('narasumber'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.narasumber.edit', compact('narasumber', 'penandatangans'));
     }
 
     /**
@@ -178,8 +182,8 @@ class NarasumberController extends Controller
     public function destroy($id)
     {
         DB::beginTransaction();
+        $narasumber = Narasumber::find($id);
         try {
-            $narasumber = Narasumber::find($id);
             $narasumber->delete($narasumber);
             return redirect()->route('narasumber.index')->with('success', 'Narasumber ' . $narasumber->nama . ' Baru Berhasil Di Hapus');
         } catch (\Throwable $th) {
