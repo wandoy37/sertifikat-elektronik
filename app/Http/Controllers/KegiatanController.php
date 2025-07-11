@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use App\Models\Kegiatan;
-use App\Models\Narasumber;
-use App\Models\Orang;
 use App\Models\Penandatangan;
 use App\Models\Sertifikat;
 use App\Models\Siswa;
-use App\Services\KegiatanGenerate;
 use GuzzleHttp\Client;
+use App\Models\Narasumber;
+use App\Models\Orang;
+use App\Services\KegiatanGenerate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +35,8 @@ class KegiatanController extends Controller
     public function index()
     {
         $kegiatans = Kegiatan::latest()->get();
-        return view('dashboard.kegiatan.index', compact('kegiatans'));
+        $penandatangans = Penandatangan::latest()->get();
+        return view('dashboard.kegiatan.index', compact('kegiatans', 'penandatangans'));
     }
 
     /**
@@ -99,7 +100,7 @@ class KegiatanController extends Controller
                 'daftar_mata_pelatihan' => 'storage/' . $path,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
-                'status' => 'open',
+                'status' => 'belum',
                 'penyelenggara_kegiatan' => $request->penyelenggara_kegiatan,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Baru Berhasil Di Tambahkan');
@@ -120,6 +121,7 @@ class KegiatanController extends Controller
     public function show($id)
     {
         $kegiatan = Kegiatan::find($id);
+        $penandatangans = Penandatangan::all();
 
         // If Peserta Kegiatan
         if ($kegiatan->kategori->title == 'pelatihan') {
@@ -156,7 +158,7 @@ class KegiatanController extends Controller
             ->where('sertifikats.kegiatan_id', '=', $kegiatan->id)
             ->get();
 
-        return view('dashboard.kegiatan.show', compact('kegiatan', 'dataPesertas', 'narasumbers', 'sertifikats'));
+        return view('dashboard.kegiatan.show', compact('kegiatan', 'dataPesertas', 'narasumbers', 'sertifikats', 'penandatangans'));
     }
 
     /**
@@ -235,7 +237,7 @@ class KegiatanController extends Controller
                 'lokasi_kegiatan' => $request->lokasi_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
-                'status' => 'open',
+                'status' => 'belum',
                 'penyelenggara_kegiatan' => $request->penyelenggara_kegiatan,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Update');

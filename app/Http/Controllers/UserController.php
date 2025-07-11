@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\NotifyRegister;
 use App\Mail\NotifySertifikat;
+use App\Models\Penandatangan;
 use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -115,7 +116,8 @@ class UserController extends Controller
     public function edit($username)
     {
         $user = User::where('username', $username)->first();
-        return view('dashboard.user.edit', compact('user'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.user.edit', compact('user', 'penandatangans'));
     }
 
     /**
@@ -176,9 +178,9 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => $newPassword ?? $user->password,
             ]);
-            return redirect()->route('dashboard.index')->with('success', $request->username . ' berhasil diupdate');
+            return redirect()->route('user.edit', $user->username)->with('success', 'Pengguna ' . $request->username . ' berhasil di update');
         } catch (\Throwable $th) {
-            return redirect()->route('user.index')->with('fails', $request->username . ' gagal ditambahkan');
+            return redirect()->route('user.edit', $user->username)->with('fails', 'Pengguna ' . $request->username . ' gagal di update');
         } finally {
             DB::commit();
         }

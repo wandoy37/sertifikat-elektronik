@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\Penandatangan;
 use App\Models\Sertifikat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,8 @@ class DashboardController extends Controller
         $pesertas = Http::get(env('SIMPELTAN_API_DATA_PESERTA'))->json();
         $kegiatans = Kegiatan::all();
         $sertifikats = Sertifikat::all();
-        return view('dashboard.index', compact('pesertas', 'kegiatans', 'sertifikats'));
+        $penandatangans = Penandatangan::all();
+        return view('dashboard.index', compact('pesertas', 'kegiatans', 'sertifikats', 'penandatangans'));
         // if (Auth::user()->role == 'admin') {
         //     $pesertas = Peserta::all();
         //     $kegiatans = Kegiatan::all();

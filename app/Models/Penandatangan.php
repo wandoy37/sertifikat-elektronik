@@ -11,4 +11,9 @@ class Penandatangan extends Model
 
     protected $table = 'penandatangans';
     protected $guarded = [];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

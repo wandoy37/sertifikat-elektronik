@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class PenandatanganController extends Controller
 {
@@ -121,6 +123,9 @@ class PenandatanganController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = User::where('id', $request->user_id)->first();
+        $penandatangan = Penandatangan::find($id);
+
         // Validator
         $validator = Validator::make(
             $request->all(),
@@ -138,6 +143,21 @@ class PenandatanganController extends Controller
             ],
         );
 
+        // if request or update passphrase
+        if (request('passphrase')) {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'passphrase' => 'required|confirmed|min:6',
+                ],
+                [
+                    'passphrase.required' => 'passphrase wajib diisi',
+                    'passphrase.confirmed' => 'Konfirmasi passphrase tidak cocok',
+                    'passphrase.min' => 'passphrase minimal 6 huruf',
+                ],
+            );
+        }
+
         // If validator fails.
         if ($validator->fails()) {
             return redirect()->back()->withInput($request->all())->withErrors($validator);
@@ -146,7 +166,6 @@ class PenandatanganController extends Controller
         // If validator success
         DB::beginTransaction();
         try {
-            $penandatangan = Penandatangan::find($id);
 
             // Upload File
             if ($request['tanda_tangan_stempel']) {
@@ -158,17 +177,23 @@ class PenandatanganController extends Controller
                 $request->file('tanda_tangan_stempel')->move(public_path('uploads/tanda_tangan_stempel'), $fileName);
             }
 
+            // New passphrase
+            if (request('passphrase')) {
+                $newpassphrase = Hash::make($request->passphrase);
+            }
+
             $penandatangan->update([
                 'nama' => $request->nama,
                 'nip' => $request->nip,
                 'pangkat_golongan' => $request->pangkat_golongan,
                 'jabatan' => $request->jabatan,
                 'tanda_tangan_stempel' => $fileName ?? $penandatangan->tanda_tangan_stempel,
+                'passphrase' => $newpassphrase,
             ]);
-            return redirect()->route('penandatangan.index')->with('success', $request->nama . ' telah di update.');
+            return redirect()->route('user.edit', $user->username)->with('success', 'Biodata berhasil di update.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('penandatangan.index')->with('fails', $request->nama . ' gagal di update.');
+            return redirect()->route('user.edit', $user->username)->with('fails', 'Biodata gagal di update.');
         } finally {
             DB::commit();
         }

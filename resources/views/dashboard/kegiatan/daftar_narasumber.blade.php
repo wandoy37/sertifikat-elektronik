@@ -34,35 +34,34 @@
                                         {{ $narasumber_name->nama }}
                                     </td>
                                     <td>
-                                        @if ($narasumber->status == 'terbit')
-                                            <span class="badge badge-success text-capitalize">
-                                                {{ $narasumber->status }}
-                                            </span>
-                                        @else
-                                            <span class="badge badge-count text-capitalize">
-                                                {{ $narasumber->status }}
-                                            </span>
-                                        @endif
+                                        <span
+                                            class="badge {{ $narasumber->status == 'signed' ? 'badge-success' : 'badge-warning' }}">
+                                            {{ $narasumber->status }}
+                                        </span>
                                     </td>
                                     <td class="form-inline d-flex justify-content-center">
                                         <a href="{{ route('sertifikat.narasumber.preview', $narasumber->id) }}"
                                             class="fw-bold text-dark mr-4 text-capitalize" target="_blank">
                                             <i class="fas fa-search"></i>
                                         </a>
-                                        <a href="{{ route('sertifikat.narasumber.download', $narasumber->id) }}"
-                                            class="text-dark mr-2" target="_blank">
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                                        <form id="form-delete-{{ $narasumber->id }}"
-                                            action="{{ route('sertifikat.delete', $narasumber->id) }}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="text" name="kegiatan_id" value="{{ $kegiatan->id }}" hidden>
-                                        </form>
-                                        <button type="button" class="btn btn-link text-danger"
-                                            onclick="btnDelete( {{ $narasumber->id }} )">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        @if (!Auth::user()->hasRole('penandatangan'))
+                                            <a href="{{ route('sertifikat.narasumber.download', $narasumber->id) }}"
+                                                class="text-dark mr-2" target="_blank">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                            <form id="form-delete-{{ $narasumber->id }}"
+                                                action="{{ route('sertifikat.delete', $narasumber->id) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="text" name="kegiatan_id" value="{{ $kegiatan->id }}"
+                                                    hidden>
+                                            </form>
+                                            <button type="button" class="btn btn-link text-danger"
+                                                onclick="btnDelete( {{ $narasumber->id }} )">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endif

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DigitalSignaturController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KegiatanController;
@@ -138,6 +139,12 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     // 2. Download 
     Route::get('/sertifikat/narasumber/{id}/download', [SertifikatController::class, 'narasumber_download'])->name('sertifikat.narasumber.download');
 
+    // Digital Signatur
+    Route::get('/digital-signature', [DigitalSignaturController::class, 'index'])->name('digital.signature.index');
+    // Digital Signatur Detail
+    Route::get('/digital-signature/detail/{kegiatan}', [DigitalSignaturController::class, 'detail'])->name('digital.signature.detail');
+    // Bubuhkan Tanda Tangan
+    Route::post('/digital-signature/bubuhkan-tanda-tangan/{kegiatan}', [DigitalSignaturController::class, 'signature'])->name('signature');
 
 
     // Hapus dari tampilan Kegiatan Tambah Peserta

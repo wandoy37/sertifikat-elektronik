@@ -88,6 +88,34 @@
             </div>
         </div>
 
+        @php
+            $penandatanganPengguna = $penandatangans->where('user_id', Auth::user()->id)->first();
+        @endphp
+
+        {{-- @if ($penandatangan = $penandatangans->where('user_id', Auth::user()->id)->isEmpty()) --}}
+        @if (is_null($penandatanganPengguna))
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-danger" role="alert">
+                        Data diri Anda belum lengkap, <a href="{{ route('user.edit', Auth::user()->username) }}"
+                            class="alert-link">Lengkapi Biodata</a>. Silakan
+                        lengkapi data diri Anda untuk dapat menandatangani sertifikat !!!
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if (empty($penandatanganPengguna->passphrase))
+            <div class="alert alert-danger" role="alert">
+                Passphrase Anda belum dibuat, <a href="{{ route('user.edit', Auth::user()->username) }}"
+                    class="alert-link">Buat Passphrase Sekarang</a>.
+                Silakan buat Passphrase Anda untuk dapat menandatangani sertifikat !!!
+            </div>
+        @endif
+
+
+
+
     </div>
 
     @push('scripts')
