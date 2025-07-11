@@ -148,12 +148,12 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
 
 
     // Hapus dari tampilan Kegiatan Tambah Peserta
-    // Route::delete('/sertifikat/peserta/delete/{id}', [SertifikatController::class, 'deletePeserta'])->name('sertifikat.peserta.delete');
+    Route::delete('/sertifikat/peserta/delete/{id}', [SertifikatController::class, 'deletePeserta'])->name('sertifikat.peserta.delete');
     // Hapus dari tampilan sertifikat index
     // Route::delete('/sertifikat/delete/{id}', [SertifikatController::class, 'deleteSertifikat'])->name('sertifikat.delete');
 
     // Buat Sertifikat
-    // Route::get('/sertifikat/peserta/{id}', [SertifikatPdfController::class, 'generateCertificate'])->name('sertifikat.peserta.generate');
+    Route::get('/sertifikat/peserta/{id}', [SertifikatPdfController::class, 'generateCertificate'])->name('sertifikat.peserta.generate');
     // Route::get('/sertifikat/cetak-all/{id}', [SertifikatPdfController::class, 'generateAllCertificate'])->name('sertifikat.all.generate');
     // Route::get('/sertifikat/cetak-all/parts/{id}', [SertifikatPdfController::class, 'generateAllPartsCertificate'])->name('sertifikat.all.parts.generate');
     // Terbitkan Sertifikat
