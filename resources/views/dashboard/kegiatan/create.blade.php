@@ -143,8 +143,7 @@
                             <div class="form-group @error('tanggal_penandatanganan') has-error @enderror">
                                 <label>Daftar Mata Pelatihan</label>
                                 <input id="daftar_mata_pelatihan" type="file" class="form-control"
-                                    name="daftar_mata_pelatihan" placeholder="daftar_mata_pelatihan"
-                                    value="{{ old('daftar_mata_pelatihan') }}">
+                                    name="daftar_mata_pelatihan">
                             </div>
                         </div>
                         <div class="card-footer">

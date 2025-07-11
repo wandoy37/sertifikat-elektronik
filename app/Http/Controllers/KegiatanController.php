@@ -85,7 +85,26 @@ class KegiatanController extends Controller
 
         DB::beginTransaction();
         try {
-            $path = $request->file('daftar_mata_pelatihan')->store('daftar_mata_pelatihan', 'public');
+            if ($request->hasFile('daftar_mata_pelatihan') && $request->file('daftar_mata_pelatihan')->isValid()) {
+                $file = $request->file('daftar_mata_pelatihan');
+                $slug = Str::slug($request->nama_kegiatan, '-');
+                $ext = $file->getClientOriginalExtension();
+                $filename = 'kegiatan-' . $slug . '.' . $ext;
+
+                // Tentukan folder tujuan di dalam folder public
+                $destinationPath = public_path('daftar_mata_pelatihan');
+
+                // Buat folder jika belum ada
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0775, true);
+                }
+
+                // Pindahkan file ke folder tujuan
+                $file->move($destinationPath, $filename);
+
+                // Simpan path relatif (misal untuk ditaruh di database)
+                $daftar_mata_pelatihan_path = 'daftar_mata_pelatihan/' . $filename;
+            }
 
             Kegiatan::create([
                 'kode_kegiatan' => $request->kode_kegiatan,
@@ -97,10 +116,10 @@ class KegiatanController extends Controller
                 'tanggal_akhir_kegiatan' => $request->tanggal_akhir_kegiatan,
                 'total_jam_kegiatan' => $request->total_jam_kegiatan,
                 'lokasi_kegiatan' => $request->lokasi_kegiatan,
-                'daftar_mata_pelatihan' => 'storage/' . $path,
+                'daftar_mata_pelatihan' => $daftar_mata_pelatihan_path,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
-                'status' => 'belum',
+                'status' => 'unsigned',
                 'penyelenggara_kegiatan' => $request->penyelenggara_kegiatan,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Baru Berhasil Di Tambahkan');
@@ -213,16 +232,34 @@ class KegiatanController extends Controller
         try {
             $kegiatan = Kegiatan::findOrFail($id);
 
-            // Cek apakah ada file baru
-            if ($request->hasFile('daftar_mata_pelatihan')) {
-                // Hapus file lama jika ada
-                if ($kegiatan->daftar_mata_pelatihan && Storage::exists(str_replace('storage/', '', $kegiatan->daftar_mata_pelatihan))) {
-                    Storage::delete(str_replace('storage/', '', $kegiatan->daftar_mata_pelatihan)); // Hapus file lama
+            if ($request->hasFile('daftar_mata_pelatihan') && $request->file('daftar_mata_pelatihan')->isValid()) {
+                $file = $request->file('daftar_mata_pelatihan');
+                $slug = Str::slug($request->nama_kegiatan, '-');
+                $ext = $file->getClientOriginalExtension();
+                $filename = 'kegiatan-' . $slug . '.' . $ext;
+
+                // Tentukan folder tujuan di dalam folder public
+                $destinationPath = public_path('daftar_mata_pelatihan');
+
+                // Buat folder jika belum ada
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0775, true);
                 }
 
-                // Upload file baru
-                $path = $request->file('daftar_mata_pelatihan')->store('daftar_mata_pelatihan', 'public');
-                $kegiatan->update(['daftar_mata_pelatihan' => 'storage/' . $path]);
+                // Hapus file lama jika ada
+                if (!empty($kegiatan->daftar_mata_pelatihan)) {
+                    $oldFilePath = public_path($kegiatan->daftar_mata_pelatihan);
+                    if (file_exists($oldFilePath)) {
+                        unlink($oldFilePath);
+                    }
+                }
+
+                // Pindahkan file ke folder tujuan
+                $file->move($destinationPath, $filename);
+
+                // Simpan path relatif (misal untuk ditaruh di database)
+                $daftar_mata_pelatihan_path = 'daftar_mata_pelatihan/' . $filename;
+                $kegiatan->daftar_mata_pelatihan = $daftar_mata_pelatihan_path;
             }
 
             $kegiatan->update([
@@ -237,7 +274,6 @@ class KegiatanController extends Controller
                 'lokasi_kegiatan' => $request->lokasi_kegiatan,
                 'penandatangan_id' => $request->penandatangan_id,
                 'tanggal_penandatanganan' => $request->tanggal_penandatanganan,
-                'status' => 'belum',
                 'penyelenggara_kegiatan' => $request->penyelenggara_kegiatan,
             ]);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $request->judul_kegiatan . ' Berhasil Di Update');
@@ -262,39 +298,16 @@ class KegiatanController extends Controller
         try {
             $kegiatan = Kegiatan::find($id);
 
-            $sertifikats = Sertifikat::where('kegiatan_id', $kegiatan->id)->get();
+            // Hapus semua sertifikat yang berkaitan
+            Sertifikat::where('kegiatan_id', $kegiatan->id)->delete();
 
-
-            foreach ($sertifikats as $sertifikat) {
-                // Hapus Sertifikat & QRCODE Peserta Pada Kegiatan 
-
-                // Hapus sertifikat
-                $path = public_path('sertifikat/');
-                $docSertifikat = 'doc-sertifikat-' . $sertifikat->id . '.' . 'pdf';
-                if (file_exists($path . $docSertifikat)) {
-                    unlink($path . $docSertifikat);
+            // Hapus daftar_mata_pelatihan jika ada
+            if (!empty($kegiatan->daftar_mata_pelatihan)) {
+                $oldFilePath = public_path($kegiatan->daftar_mata_pelatihan);
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
                 }
-
-                // Hapus QR Code
-                $pathQr = public_path('qrcode/');
-                $fileQr = 'qr_sertifikat_' . $sertifikat->id . '.' . 'png';
-                if (file_exists($pathQr . $fileQr)) {
-                    unlink($pathQr . $fileQr);
-                }
-
-                // Hapus file daftar_mata_pelatihan jika ada
-                if ($kegiatan->daftar_mata_pelatihan && Storage::exists(str_replace('storage/', '', $kegiatan->daftar_mata_pelatihan))) {
-                    Storage::delete(str_replace('storage/', '', $kegiatan->daftar_mata_pelatihan));
-                }
-
-                // Hapus data sertifikat dari database
-                $sertifikat->delete();
             }
-
-            // Hapus Sertifikat pada Kegiatan
-            $pathSertifikatKegiatan = public_path('sertifikat/kegiatan/');
-            $docSertifikatKegiatan = 'doc-sertifikat-kegiatan_' . Str::slug($kegiatan->judul_kegiatan, '-') . '.' . 'pdf';
-            File::delete($pathSertifikatKegiatan . $docSertifikatKegiatan);
 
             $kegiatan->delete($kegiatan);
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan ' . $kegiatan->judul_kegiatan . ' Berhasil Di Hapus');
