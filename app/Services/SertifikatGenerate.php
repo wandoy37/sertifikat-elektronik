@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Riskihajar\Terbilang\Facades\Terbilang as FacadesTerbilang;
 
 class SertifikatGenerate
@@ -17,9 +19,33 @@ class SertifikatGenerate
     public function previewSertifikatPelatihan($sertifikat)
     {
         // ============= Get Detail Peserta by API
+        // ============= Get Detail Peserta by API
         $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
-        $response = file_get_contents($url);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Laravel/10.0 Application');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'Content-Type: application/json'
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
         $peserta = json_decode($response, true);
+
+        // $url = env('SIMPELTAN_API_DATA_PESERTA') . "/{$sertifikat->peserta_id}";
+        // $response = file_get_contents($url);
+        // $peserta = json_decode($response, true);
         // ============= END Get Detail Peserta by API
 
         $templatePath = public_path('uploads/template/' . $sertifikat->template_sertifikat);
@@ -74,6 +100,53 @@ class SertifikatGenerate
             $pdf->SetTextColor(0, 0, 0);
             $pdf->SetXY(0, 89.8);
             $pdf->SetX(152);
+
+            // Tampilkan foto profil peserta jika ada
+            if (!empty($peserta[0]['foto_profil'])) {
+                $fotoProfilUrl = 'https://sipp.bppsdmsempaja.kaltimprov.go.id/api/get-foto/' . $peserta[0]['foto_profil'];
+                // Download gambar ke file sementara dengan context yang menonaktifkan verifikasi SSL
+                $context = stream_context_create([
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ]
+                ]);
+                $imageData = @file_get_contents($fotoProfilUrl, false, $context);
+                if ($imageData !== false) {
+                    // Cek tipe gambar
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->buffer($imageData);
+                    $ext = '';
+                    if ($mimeType === 'image/jpeg') {
+                        $ext = 'jpg';
+                    } elseif ($mimeType === 'image/png') {
+                        $ext = 'png';
+                    } elseif ($mimeType === 'image/gif') {
+                        $ext = 'gif';
+                    }
+                    if ($ext) {
+                        $tmpFotoPath = sys_get_temp_dir() . '/foto_profil_' . uniqid() . '.' . $ext;
+                        file_put_contents($tmpFotoPath, $imageData);
+                        // Tampilkan gambar pada PDF (posisi dan ukuran bisa disesuaikan)
+                        $pdf->Image($tmpFotoPath, 67.5, 71.7, 30, 40); // x, y, width, height
+                        // Hapus file sementara setelah digunakan
+                        @unlink($tmpFotoPath);
+                    } else {
+                        Log::warning('Tipe gambar tidak didukung atau file rusak dari URL: ' . $fotoProfilUrl);
+                    }
+                } else {
+                    // Optional: log error jika gambar gagal diambil
+                    Log::warning('Gagal mengambil foto profil peserta dari URL: ' . $fotoProfilUrl);
+                }
+            }
+
+
+            // $pdf->SetFont("helvetica", "", 12);
+            // $pdf->SetTextColor(0, 0, 0);
+            // $pdf->SetXY(0, 50);
+            // $pdf->SetX(152);
+            // $pdf->Cell(0, 10, $peserta[0]['foto_profil'], 0, 0, 'L');
+            // $pdf->SetX(12.6);
 
             // Mengambil nilai pangkat_golongan dari array $peserta
             $pesertaPangkatGolongan = $peserta[0]['peserta_pangkat_golongan'];
