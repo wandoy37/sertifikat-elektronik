@@ -1,20 +1,21 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DigitalSignaturController;
+use App\Mail\NotifySertifikat;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrangController;
+use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NarasumberController;
-use App\Http\Controllers\OrangController;
-use App\Http\Controllers\PenandatanganController;
-use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\PenandatanganController;
 use App\Http\Controllers\SertifikatPdfController;
-use App\Http\Controllers\SiswaController;
-use App\Http\Controllers\UserController;
-use App\Mail\NotifySertifikat;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DigitalSignaturController;
 
 /*
 |--------------------------------------------------------------------------

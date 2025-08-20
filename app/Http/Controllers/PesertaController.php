@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Penandatangan;
-use App\Models\Peserta;
 use App\Models\User;
+use App\Models\Peserta;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Intervention\Image\Facades\Image as ResizeImage;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Penandatangan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image as ResizeImage;
+use App\Services\SimpeltanService;
 
 class PesertaController extends Controller
 {
@@ -20,14 +22,19 @@ class PesertaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    protected $simpeltan;
+
+    public function __construct(SimpeltanService $simpeltan)
+    {
+        $this->simpeltan = $simpeltan;
+    }
+
     public function index()
     {
-        $pesertas = Http::get(env('SIMPELTAN_API_DATA_PESERTA'))->json();
+        $pesertas = $this->simpeltan->getPeserta();
         $penandatangans = Penandatangan::all();
         return view('dashboard.peserta.index', compact('pesertas', 'penandatangans'));
-
-        // $pesertas = Peserta::latest()->get();
-        // return view('dashboard.peserta.index', compact('pesertas'));
     }
 
     /**

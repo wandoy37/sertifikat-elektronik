@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'simpeltan' => [
+        'base_url' => env('URL_CLIENT_SIMPELTAN', 'http://simpeltan.test/api'),
+    ],
+
 ];

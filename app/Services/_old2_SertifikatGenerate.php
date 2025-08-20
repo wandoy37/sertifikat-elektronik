@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use Carbon\Carbon;
-use setasign\Fpdi\Fpdi;
+use App\Mail\NotifySertifikat;
 use App\Models\Sertifikat;
+use setasign\Fpdi\Fpdi;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Riskihajar\Terbilang\Facades\Terbilang as FacadesTerbilang;
 
 class SertifikatGenerate
@@ -1277,7 +1277,7 @@ class SertifikatGenerate
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY(0, 110.5);
         $pdf->SetX(148);
-        $pdf->Cell(0, 3, strtoupper($siswa->tempat_lahir . ', ' . Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMMM Y')), 0, 0, 'L');
+        $pdf->Cell(0, 3, $siswa->tempat_lahir . ', ' . Carbon::parse($siswa->tanggal_lahir)->isoFormat('D MMMM Y'), 0, 0, 'L');
         $pdf->SetX(12.6);
 
         $pdf->SetFont("helvetica", "", 12);
